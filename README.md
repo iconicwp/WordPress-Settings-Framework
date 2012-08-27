@@ -17,49 +17,7 @@ Setting Up Your Plugin
 
 Now you can set up your plugin like:
 
-    class WPSFTest {
-    
-        private $plugin_path;
-        private $wpsf;
-    
-        function __construct() 
-        {	
-            $this->plugin_path = plugin_dir_path( __FILE__ );
-            
-            // Include and create a new WordPressSettingsFramework
-            require_once( $this->plugin_path .'wp-settings-framework.php' );
-            $this->wpsf = new WordPressSettingsFramework( $this->plugin_path .'settings/settings-general.php' );
-            // Add an optional settings validation filter (recommended)
-            add_filter( $this->wpsf->get_option_group() .'_settings_validate', array(&$this, 'validate_settings') );
-            
-            // ...
-        }
-        
-        // This page is added using add_menu_page()
-        function settings_page()
-    	{
-    	    ?>
-    		<div class="wrap">
-    			<div id="icon-options-general" class="icon32"></div>
-    			<h2>WP Settings Framework Example</h2>
-    			<?php 
-    			// Output your settings form
-    			$this->wpsf->settings(); 
-    			?>
-    		</div>
-    		<?php
-    	}
-    	
-    	function validate_settings( $input )
-    	{
-    	    // Do your settings validation here
-    	    // Same as $sanitize_callback from http://codex.wordpress.org/Function_Reference/register_setting
-        	return $input;
-    	}
-        
-        // ...
-        
-    }
+https://gist.github.com/3489815
     
 Your settings values can be accessed by getting the whole array:
 
@@ -158,6 +116,20 @@ Credits
 
 The WordPress Settings Framework was created by [Gilbert Pellegrom](http://gilbert.pellegrom.me) from [Dev7studios](http://dev7studios.com)
 
-The WordPress Settings Framework is released under the **MIT license** and is free to use and abuse.
-
 Please contribute by [reporting bugs](WordPress-Settings-Framework/issues) and submitting [pull requests](WordPress-Settings-Framework/pulls).
+
+License (MIT)
+-------------
+Copyright © 2012 Dev7studios
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation 
+files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, 
+modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software 
+is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE 
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 
+IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
