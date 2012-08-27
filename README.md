@@ -2,7 +2,7 @@ WordPress Settings Framework
 ============================
 
 The WordPress Settings Framework aims to take the pain out of creating settings pages for your WordPress plugins
-by effectively creating a wrapper around the WordPress settings API and making super simple to create and maintain
+by effectively creating a wrapper around the WordPress settings API and making it super simple to create and maintain
 settings pages.
 
 This repo is actually a working plugin which demonstrates how to implement WPSF in your plugins. See `wpsf-test.php`
