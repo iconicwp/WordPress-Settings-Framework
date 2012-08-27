@@ -156,8 +156,8 @@ Note: You can use `wpsf_get_option_group()` to get the option group id from the 
 Credits
 -------
 
-The WordPress Settings Framework was created by [Gilbert Pellegrom](http://gilbert.pellegrom.me) from (Dev7studios)[http://dev7studios.com]
+The WordPress Settings Framework was created by [Gilbert Pellegrom](http://gilbert.pellegrom.me) from [Dev7studios](http://dev7studios.com)
 
 The WordPress Settings Framework is released under the **MIT license** and is free to use and abuse.
 
-Please contribute by [reporting bugs](issues) and submitting [pull requests](pulls).
+Please contribute by [reporting bugs](WordPress-Settings-Framework/issues) and submitting [pull requests](WordPress-Settings-Framework/pulls).
