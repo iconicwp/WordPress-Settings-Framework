@@ -17,7 +17,49 @@ Setting Up Your Plugin
 
 Now you can set up your plugin like:
 
-<script src="https://gist.github.com/3489815.js"> </script>
+class WPSFTest {
+
+    private $plugin_path;
+    private $wpsf;
+
+    function __construct() 
+    {	
+        $this->plugin_path = plugin_dir_path( __FILE__ );
+        
+        // Include and create a new WordPressSettingsFramework
+        require_once( $this->plugin_path .'wp-settings-framework.php' );
+        $this->wpsf = new WordPressSettingsFramework( $this->plugin_path .'settings/settings-general.php' );
+        // Add an optional settings validation filter (recommended)
+        add_filter( $this->wpsf->get_option_group() .'_settings_validate', array(&$this, 'validate_settings') );
+        
+        // ...
+    }
+    
+    // This page is added using add_menu_page()
+    function settings_page()
+	{
+	    ?>
+		<div class="wrap">
+			<div id="icon-options-general" class="icon32"></div>
+			<h2>WP Settings Framework Example</h2>
+			<?php 
+			// Output your settings form
+			$this->wpsf->settings(); 
+			?>
+		</div>
+		<?php
+	}
+	
+	function validate_settings( $input )
+	{
+	    // Do your settings validation here
+	    // Same as $sanitize_callback from http://codex.wordpress.org/Function_Reference/register_setting
+    	return $input;
+	}
+    
+    // ...
+    
+}
     
 Your settings values can be accessed by getting the whole array:
 
