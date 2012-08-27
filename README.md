@@ -17,7 +17,7 @@ Setting Up Your Plugin
 
 Now you can set up your plugin like:
 
-https://gist.github.com/3489815
+<script src="https://gist.github.com/3489815.js"> </script>
     
 Your settings values can be accessed by getting the whole array:
 
