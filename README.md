@@ -113,7 +113,7 @@ Valid `fields` values are:
 * `id` - Field ID
 * `title` - Field title
 * `desc` - Field description
-* `type` - Field type (text/textarea/select/radio/checkbox/checkboxes)
+* `type` - Field type (text/textarea/select/radio/checkbox/checkboxes/color/file)
 * `std` - Default value (or selected option)
 * `choices` - Array of options (for select/radio/checkboxes)
 
@@ -128,7 +128,7 @@ API Details
 Creates a new settings [option_group](http://codex.wordpress.org/Function_Reference/register_setting) based on a setttings file.
 
 * `$settings_file` - path to the settings file
-* `$option_group` - optional "option_group" override (be default this will be set to the basename of the settings file)
+* `$option_group` - optional "option_group" override (by default this will be set to the basename of the settings file)
 
 <pre>wpsf_get_option_group( $settings_file )</pre>
     

@@ -4,7 +4,7 @@
  * 
  * @author Gilbert Pellegrom
  * @link http://dev7studios.com
- * @version 1.0
+ * @version 1.1
  * @license MIT
  */
 
@@ -36,6 +36,7 @@ if( !class_exists('WordPressSettingsFramework') ){
              
             add_action('admin_init', array(&$this, 'admin_init'));
             add_action('admin_notices', array(&$this, 'admin_notices'));
+            add_action('admin_enqueue_scripts', array(&$this, 'admin_enqueue_scripts'));
         }
         
         /**
@@ -63,6 +64,20 @@ if( !class_exists('WordPressSettingsFramework') ){
         function admin_notices()
     	{
         	settings_errors();
+    	}
+    	
+    	/**
+         * Enqueue scripts and styles
+         */
+    	function admin_enqueue_scripts()
+    	{
+            wp_enqueue_style('farbtastic');
+            wp_enqueue_style('thickbox');
+            
+            wp_enqueue_script('jquery');
+            wp_enqueue_script('farbtastic');
+            wp_enqueue_script('media-upload');
+            wp_enqueue_script('thickbox');
     	}
     	
     	/**
@@ -198,6 +213,47 @@ if( !class_exists('WordPressSettingsFramework') ){
     		        }
     		        if($desc)  echo '<p class="description">'. $desc .'</p>';
     		        break;
+    		    case 'color':
+                    $val = esc_attr(stripslashes($val));
+                    echo '<div style="position:relative;">';
+    		        echo '<input type="text" name="'. $this->option_group .'_settings['. $el_id .']" id="'. $el_id .'" value="'. $val .'" class="'. $class .'" />';
+    		        echo '<div id="'. $el_id .'_cp" style="position:absolute;top:0;left:190px;background:#fff;"></div>';
+    		        if($desc)  echo '<p class="description">'. $desc .'</p>';
+    		        echo '<script type="text/javascript">
+    		        jQuery(document).ready(function($){ 
+                        var colorPicker = $("#'. $el_id .'_cp");
+                        colorPicker.farbtastic("#'. $el_id .'");
+                        colorPicker.hide();
+                        $("#'. $el_id .'").live("focus", function(){
+                            colorPicker.show();
+                        });
+                        $("#'. $el_id .'").live("blur", function(){
+                            colorPicker.hide();
+                            if($(this).val() == "") $(this).val("#");
+                        });
+                    });
+                    </script></div>';
+    		        break;
+    		    case 'file':
+                    $val = esc_attr($val);
+    		        echo '<input type="text" name="'. $this->option_group .'_settings['. $el_id .']" id="'. $el_id .'" value="'. $val .'" class="regular-text '. $class .'" /> ';
+                    echo '<input type="button" class="button wpsf-browse" id="'. $el_id .'_button" value="Browse" />';
+                    echo '<script type="text/javascript">
+                    jQuery(document).ready(function($){
+                		$("#'. $el_id .'_button").click(function() {
+                			tb_show("", "media-upload.php?post_id=0&amp;type=image&amp;TB_iframe=true");
+                			window.original_send_to_editor = window.send_to_editor;
+                        	window.send_to_editor = function(html) {
+                        		var imgurl = $("img",html).attr("src");
+                        		$("#'. $el_id .'").val(imgurl);
+                        		tb_remove();
+                        		window.send_to_editor = window.original_send_to_editor;
+                        	};
+                			return false;
+                		});
+                    });
+                    </script>';
+                    break;
         		default:
         		    break;
     		}

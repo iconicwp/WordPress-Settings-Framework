@@ -68,6 +68,20 @@ $wpsf_settings[] = array(
                 'green' => 'Green',
                 'blue' => 'Blue'
             )
+        ),
+        array(
+            'id' => 'color',
+            'title' => 'Color',
+            'desc' => 'This is a description.',
+            'type' => 'color',
+            'std' => '#ffffff'
+        ),
+        array(
+            'id' => 'file',
+            'title' => 'File',
+            'desc' => 'This is a description.',
+            'type' => 'file',
+            'std' => ''
         )
     )
 );
