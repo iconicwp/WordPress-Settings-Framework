@@ -17,59 +17,65 @@ Setting Up Your Plugin
 
 Now you can set up your plugin like:
 
-    class WPSFTest {
-    
-        private $plugin_path;
-        private $wpsf;
-    
-        function __construct() 
-        {	
-            $this->plugin_path = plugin_dir_path( __FILE__ );
-            
-            // Include and create a new WordPressSettingsFramework
-            require_once( $this->plugin_path .'wp-settings-framework.php' );
-            $this->wpsf = new WordPressSettingsFramework( $this->plugin_path .'settings/settings-general.php' );
-            // Add an optional settings validation filter (recommended)
-            add_filter( $this->wpsf->get_option_group() .'_settings_validate', array(&$this, 'validate_settings') );
-            
-            // ...
-        }
+```php
+class WPSFTest {
+
+    private $plugin_path;
+    private $wpsf;
+
+    function __construct() 
+    {	
+        $this->plugin_path = plugin_dir_path( __FILE__ );
         
-        // This page is added using add_menu_page()
-        function settings_page()
-    	{
-    	    ?>
-    		<div class="wrap">
-    			<div id="icon-options-general" class="icon32"></div>
-    			<h2>WP Settings Framework Example</h2>
-    			<?php 
-    			// Output your settings form
-    			$this->wpsf->settings(); 
-    			?>
-    		</div>
-    		<?php
-    	}
-    	
-    	function validate_settings( $input )
-    	{
-    	    // Do your settings validation here
-    	    // Same as $sanitize_callback from http://codex.wordpress.org/Function_Reference/register_setting
-        	return $input;
-    	}
+        // Include and create a new WordPressSettingsFramework
+        require_once( $this->plugin_path .'wp-settings-framework.php' );
+        $this->wpsf = new WordPressSettingsFramework( $this->plugin_path .'settings/settings-general.php' );
+        // Add an optional settings validation filter (recommended)
+        add_filter( $this->wpsf->get_option_group() .'_settings_validate', array(&$this, 'validate_settings') );
         
         // ...
-        
     }
+    
+    // This page is added using add_menu_page()
+    function settings_page()
+	{
+	    ?>
+		<div class="wrap">
+			<div id="icon-options-general" class="icon32"></div>
+			<h2>WP Settings Framework Example</h2>
+			<?php 
+			// Output your settings form
+			$this->wpsf->settings(); 
+			?>
+		</div>
+		<?php
+	}
+	
+	function validate_settings( $input )
+	{
+	    // Do your settings validation here
+	    // Same as $sanitize_callback from http://codex.wordpress.org/Function_Reference/register_setting
+    	return $input;
+	}
+    
+    // ...
+    
+}
+```
     
 Your settings values can be accessed by getting the whole array:
 
-    // Get settings
-	$settings = wpsf_get_settings( $this->plugin_path .'settings/settings-general.php' );
+```php
+// Get settings
+$settings = wpsf_get_settings( $this->plugin_path .'settings/settings-general.php' );
+```
 		
 Or by getting individual settings:
 
-	// Get individual setting
-	$setting = wpsf_get_setting( wpsf_get_option_group( $this->plugin_path .'settings/settings-general.php' ), 'general', 'text' );
+```php
+// Get individual setting
+$setting = wpsf_get_setting( wpsf_get_option_group( $this->plugin_path .'settings/settings-general.php' ), 'general', 'text' );
+```
 	
 
 The Settings Files
@@ -77,36 +83,38 @@ The Settings Files
 
 The settings files work by filling the global `$wpsf_settings` array with data in the following format:
 
-    $wpsf_settings[] = array(
-        'section_id' => 'general', // The section ID (required)
-        'section_title' => 'General Settings', // The section title (required)
-        'section_description' => 'Some intro description about this section.', // The section description (optional)
-        'section_order' => 5, // The order of the section (required)
-        'fields' => array(
-            array(
-                'id' => 'text',
-                'title' => 'Text',
-                'desc' => 'This is a description.',
-                'type' => 'text',
-                'std' => 'This is std'
-            ),
-            array(
-                'id' => 'select',
-                'title' => 'Select',
-                'desc' => 'This is a description.',
-                'type' => 'select',
-                'std' => 'green',
-                'choices' => array(
-                    'red' => 'Red',
-                    'green' => 'Green',
-                    'blue' => 'Blue'
-                )
-            ),
-            
-            // add as many fields as you need...
-            
-        )
-    );
+```php
+$wpsf_settings[] = array(
+    'section_id' => 'general', // The section ID (required)
+    'section_title' => 'General Settings', // The section title (required)
+    'section_description' => 'Some intro description about this section.', // The section description (optional)
+    'section_order' => 5, // The order of the section (required)
+    'fields' => array(
+        array(
+            'id' => 'text',
+            'title' => 'Text',
+            'desc' => 'This is a description.',
+            'type' => 'text',
+            'std' => 'This is std'
+        ),
+        array(
+            'id' => 'select',
+            'title' => 'Select',
+            'desc' => 'This is a description.',
+            'type' => 'select',
+            'std' => 'green',
+            'choices' => array(
+                'red' => 'Red',
+                'green' => 'Green',
+                'blue' => 'Blue'
+            )
+        ),
+        
+        // add as many fields as you need...
+        
+    )
+);
+```
     
 Valid `fields` values are:
 
