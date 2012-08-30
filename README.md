@@ -153,6 +153,13 @@ Get a setting from an option group
 
 Note: You can use `wpsf_get_option_group()` to get the option group id from the settings file path.
 
+Hooks & Filters
+---------------
+
+**Filters**
+
+`[option_group_id]_settings_validate` - Basically the `$sanitize_callback` from [register_setting](http://codex.wordpress.org/Function_Reference/register_setting)
+
 Credits
 -------
 
