@@ -158,10 +158,10 @@ Hooks & Filters
 
 **Filters**
 
-* `[option_group_id]_settings_validate` - Basically the `$sanitize_callback` from [register_setting](http://codex.wordpress.org/Function_Reference/register_setting). Use `$this->wpsf->get_option_group()` to get the option group id.
+* `[option_group_id]_settings_validate` - Basically the `$sanitize_callback` from [register_setting](http://codex.wordpress.org/Function_Reference/register_setting). Use `$wpsf->get_option_group()` to get the option group id.
 * `wpsf_defaults` - Default args for a settings field
 
-** Hooks **
+**Hooks**
 
 * `wpsf_before_field` - Before a field HTML is output
 * `wpsf_before_field_[field_id]` - Before a field HTML is output
