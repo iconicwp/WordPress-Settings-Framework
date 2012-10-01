@@ -2,7 +2,7 @@
 /*
 Plugin Name: WP Settings Framework Example
 Description: An example of the WP Settings Framework in action.
-Version: 1.1
+Version: 1.2
 Author: Gilbert Pellegrom
 Author URI: http://dev7studios.com
 */

@@ -4,7 +4,7 @@
  * 
  * @author Gilbert Pellegrom
  * @link http://dev7studios.com
- * @version 1.1
+ * @version 1.2
  * @license MIT
  */
 
@@ -254,6 +254,10 @@ if( !class_exists('WordPressSettingsFramework') ){
                     });
                     </script>';
                     break;
+                case 'editor':
+    		        wp_editor( $val, $el_id, array( 'textarea_name' => $this->option_group .'_settings['. $el_id .']' ) );
+    		        if($desc)  echo '<p class="description">'. $desc .'</p>';
+    		        break;
         		default:
         		    break;
     		}

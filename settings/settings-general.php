@@ -82,6 +82,13 @@ $wpsf_settings[] = array(
             'desc' => 'This is a description.',
             'type' => 'file',
             'std' => ''
+        ),
+        array(
+            'id' => 'editor',
+            'title' => 'Editor',
+            'desc' => 'This is a description.',
+            'type' => 'editor',
+            'std' => ''
         )
     )
 );
