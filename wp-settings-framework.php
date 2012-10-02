@@ -3,7 +3,7 @@
  * WordPress Settings Framework
  * 
  * @author Gilbert Pellegrom
- * @link http://dev7studios.com
+ * @link https://github.com/gilbitron/WordPress-Settings-Framework
  * @version 1.2
  * @license MIT
  */
