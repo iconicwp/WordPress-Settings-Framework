@@ -4,7 +4,7 @@
  * 
  * @author Gilbert Pellegrom
  * @link https://github.com/gilbitron/WordPress-Settings-Framework
- * @version 1.2
+ * @version 1.3
  * @license MIT
  */
 
@@ -217,7 +217,7 @@ if( !class_exists('WordPressSettingsFramework') ){
                     $val = esc_attr(stripslashes($val));
                     echo '<div style="position:relative;">';
     		        echo '<input type="text" name="'. $this->option_group .'_settings['. $el_id .']" id="'. $el_id .'" value="'. $val .'" class="'. $class .'" />';
-    		        echo '<div id="'. $el_id .'_cp" style="position:absolute;top:0;left:190px;background:#fff;"></div>';
+    		        echo '<div id="'. $el_id .'_cp" style="position:absolute;top:0;left:190px;background:#fff;z-index:9999;"></div>';
     		        if($desc)  echo '<p class="description">'. $desc .'</p>';
     		        echo '<script type="text/javascript">
     		        jQuery(document).ready(function($){ 
@@ -257,6 +257,9 @@ if( !class_exists('WordPressSettingsFramework') ){
                 case 'editor':
     		        wp_editor( $val, $el_id, array( 'textarea_name' => $this->option_group .'_settings['. $el_id .']' ) );
     		        if($desc)  echo '<p class="description">'. $desc .'</p>';
+    		        break;
+    		    case 'custom':
+    		        echo $std;
     		        break;
         		default:
         		    break;
