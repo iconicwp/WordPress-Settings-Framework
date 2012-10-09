@@ -4,7 +4,7 @@
  * 
  * @author Gilbert Pellegrom
  * @link https://github.com/gilbitron/WordPress-Settings-Framework
- * @version 1.3
+ * @version 1.4
  * @license MIT
  */
 
@@ -329,6 +329,20 @@ if( !function_exists('wpsf_get_setting') ){
         $options = get_option( $option_group .'_settings' );
         if(isset($options[$option_group .'_'. $section_id .'_'. $field_id])) return $options[$option_group .'_'. $section_id .'_'. $field_id];
         return false;
+    }
+}
+
+if( !function_exists('wpsf_delete_settings') ){
+    /**
+     * Delete all the saved settings from a settings file/option group
+     * 
+     * @param string path to settings file
+     * @param string optional "option_group" override
+     */
+    function wpsf_delete_settings( $settings_file, $option_group = '' ){
+        $opt_group = preg_replace("/[^a-z0-9]+/i", "", basename( $settings_file, '.php' ));
+        if( $option_group ) $opt_group = $option_group;
+        delete_option( $opt_group .'_settings' );
     }
 }
 

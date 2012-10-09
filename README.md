@@ -161,6 +161,13 @@ Get a setting from an option group
 
 Note: You can use `wpsf_get_option_group()` to get the option group id from the settings file path.
 
+<pre>wpsf_delete_settings( string $settings_file [, string $option_group = ''] )</pre>
+    
+Delete all the saved settings from a settings file/option group
+
+* `$settings_file` - path to the settings file
+* `$option_group` - optional "option_group" override
+
 Hooks & Filters
 ---------------
 
