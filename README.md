@@ -122,6 +122,7 @@ Valid `fields` values are:
 * `id` - Field ID
 * `title` - Field title
 * `desc` - Field description
+* `placeholder` - Field placeholder
 * `type` - Field type (text/textarea/select/radio/checkbox/checkboxes/color/file)
 * `std` - Default value (or selected option)
 * `choices` - Array of options (for select/radio/checkboxes)
