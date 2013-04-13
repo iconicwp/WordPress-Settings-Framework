@@ -13,6 +13,7 @@ $wpsf_settings[] = array(
             'id' => 'text',
             'title' => 'Text',
             'desc' => 'This is a description.',
+			'placeholder' => 'This is a placeholder.',
             'type' => 'text',
             'std' => 'This is std'
         ),
@@ -20,6 +21,7 @@ $wpsf_settings[] = array(
             'id' => 'textarea',
             'title' => 'Textarea',
             'desc' => 'This is a description.',
+			'placeholder' => 'This is a placeholder.',
             'type' => 'textarea',
             'std' => 'This is std'
         ),

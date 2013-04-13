@@ -94,6 +94,7 @@ $wpsf_settings[] = array(
             'id' => 'text',
             'title' => 'Text',
             'desc' => 'This is a description.',
+            'placeholder' => 'This is a placeholder.',
             'type' => 'text',
             'std' => 'This is std'
         ),
