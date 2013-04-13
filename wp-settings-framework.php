@@ -158,7 +158,7 @@ if( !class_exists('WordPressSettingsFramework') ){
         		'desc'  	  => '',
         		'std'    	  => '',
         		'type'   	  => 'text',
-				'placeholder' => '',
+        		'placeholder' => '',
         		'choices'     => array(),
         		'class'       => ''
         	);
