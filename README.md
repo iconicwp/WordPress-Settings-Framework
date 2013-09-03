@@ -193,6 +193,8 @@ The WordPress Settings Framework was created by [Gilbert Pellegrom](http://gilbe
 
 Please contribute by [reporting bugs](WordPress-Settings-Framework/issues) and submitting [pull requests](WordPress-Settings-Framework/pulls).
 
+Want to say thanks? [Consider tipping me](https://www.gittip.com/gilbitron).
+
 License (MIT)
 -------------
 Copyright © 2012 Dev7studios
