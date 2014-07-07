@@ -153,13 +153,14 @@ if( !class_exists('WordPressSettingsFramework') ){
     	{
     	    $section = $args['section'];
             $defaults = array(
-        		'id'      => 'default_field',
-        		'title'   => 'Default Field',
-        		'desc'    => '',
-        		'std'     => '',
-        		'type'    => 'text',
-        		'choices' => array(),
-        		'class'   => ''
+        		'id'     	  => 'default_field',
+        		'title'  	  => 'Default Field',
+        		'desc'  	  => '',
+        		'std'    	  => '',
+        		'type'   	  => 'text',
+        		'placeholder' => '',
+        		'choices'     => array(),
+        		'class'       => ''
         	);
         	$defaults = apply_filters( 'wpsf_defaults', $defaults );
         	extract( wp_parse_args( $args['field'], $defaults ) );
@@ -173,7 +174,7 @@ if( !class_exists('WordPressSettingsFramework') ){
     		switch( $type ){
     		    case 'text':
     		        $val = esc_attr(stripslashes($val));
-    		        echo '<input type="text" name="'. $this->option_group .'_settings['. $el_id .']" id="'. $el_id .'" value="'. $val .'" class="regular-text '. $class .'" />';
+    		        echo '<input type="text" name="'. $this->option_group .'_settings['. $el_id .']" id="'. $el_id .'" value="'. $val .'" placeholder="'. $placeholder .'" class="regular-text '. $class .'" />';
     		        if($desc)  echo '<p class="description">'. $desc .'</p>';
     		        break;
                 case 'password':
@@ -183,7 +184,7 @@ if( !class_exists('WordPressSettingsFramework') ){
                     break;
     		    case 'textarea':
     		        $val = esc_html(stripslashes($val));
-    		        echo '<textarea name="'. $this->option_group .'_settings['. $el_id .']" id="'. $el_id .'" rows="5" cols="60" class="'. $class .'">'. $val .'</textarea>';
+    		        echo '<textarea name="'. $this->option_group .'_settings['. $el_id .']" id="'. $el_id .'" placeholder="'. $placeholder .'" rows="5" cols="60" class="'. $class .'">'. $val .'</textarea>';
     		        if($desc)  echo '<p class="description">'. $desc .'</p>';
     		        break;
     		    case 'select':
