@@ -176,6 +176,11 @@ if( !class_exists('WordPressSettingsFramework') ){
     		        echo '<input type="text" name="'. $this->option_group .'_settings['. $el_id .']" id="'. $el_id .'" value="'. $val .'" class="regular-text '. $class .'" />';
     		        if($desc)  echo '<p class="description">'. $desc .'</p>';
     		        break;
+                case 'password':
+                    $val = esc_attr(stripslashes($val));
+                    echo '<input type="password" name="'. $this->option_group .'_settings['. $el_id .']" id="'. $el_id .'" value="'. $val .'" class="regular-text '. $class .'" />';
+                    if($desc)  echo '<p class="description">'. $desc .'</p>';
+                    break;
     		    case 'textarea':
     		        $val = esc_html(stripslashes($val));
     		        echo '<textarea name="'. $this->option_group .'_settings['. $el_id .']" id="'. $el_id .'" rows="5" cols="60" class="'. $class .'">'. $val .'</textarea>';
