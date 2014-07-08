@@ -140,19 +140,19 @@ Creates a new settings [option_group](http://codex.wordpress.org/Function_Refere
 * `$settings_file` - path to the settings file
 * `$option_group` - optional "option_group" override (by default this will be set to the basename of the settings file)
 
-<pre>wpsf_get_option_group( $settings_file )</pre>
+    wpsf_get_option_group( $settings_file )
 
 Converts the settings file name to option group id
 
 * `$settings_file` - path to the settings file
 
-<pre>wpsf_get_settings( string $option_group )</pre>
+    wpsf_get_settings( $option_group )
 
 Get an array of settings by the option group id
 
 * `$option_group` - option group id
 
-<pre>wpsf_get_setting( $option_group, $section_id, $field_id )</pre>
+    wpsf_get_setting( $option_group, $section_id, $field_id )
 
 Get a setting from an option group
 
@@ -162,7 +162,7 @@ Get a setting from an option group
 
 Note: You can use `wpsf_get_option_group()` to get the option group id from the settings file path.
 
-<pre>wpsf_delete_settings( string $option_group )</pre>
+    wpsf_delete_settings( $option_group )
 
 Delete all the saved settings from a option group
 
