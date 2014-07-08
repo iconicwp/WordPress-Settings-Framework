@@ -192,7 +192,7 @@ Credits
 
 The WordPress Settings Framework was created by [Gilbert Pellegrom](http://gilbert.pellegrom.me) from [Dev7studios](http://dev7studios.com).
 
-Please contribute by [reporting bugs](WordPress-Settings-Framework/issues) and submitting [pull requests](WordPress-Settings-Framework/pulls).
+Please contribute by [reporting bugs](https://github.com/gilbitron/WordPress-Settings-Framework/issues) and submitting [pull requests](https://github.com/gilbitron/WordPress-Settings-Framework/pulls).
 
 Want to say thanks? [Consider tipping me](https://www.gittip.com/gilbitron).
 
