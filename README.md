@@ -23,19 +23,19 @@ class WPSFTest {
     private $plugin_path;
     private $wpsf;
 
-    function __construct() 
-    {	
+    function __construct()
+    {
         $this->plugin_path = plugin_dir_path( __FILE__ );
-        
+
         // Include and create a new WordPressSettingsFramework
         require_once( $this->plugin_path .'wp-settings-framework.php' );
-        $this->wpsf = new WordPressSettingsFramework( $this->plugin_path .'settings/settings-general.php' );
+        $this->wpsf = new WordPressSettingsFramework( $this->plugin_path .'settings/settings-general.php', 'prefix_settings_general' );
         // Add an optional settings validation filter (recommended)
         add_filter( $this->wpsf->get_option_group() .'_settings_validate', array(&$this, 'validate_settings') );
-        
+
         // ...
     }
-    
+
     // This page is added using add_menu_page()
     function settings_page()
 	{
@@ -43,40 +43,40 @@ class WPSFTest {
 		<div class="wrap">
 			<div id="icon-options-general" class="icon32"></div>
 			<h2>WP Settings Framework Example</h2>
-			<?php 
+			<?php
 			// Output your settings form
-			$this->wpsf->settings(); 
+			$this->wpsf->settings();
 			?>
 		</div>
 		<?php
 	}
-	
+
 	function validate_settings( $input )
 	{
 	    // Do your settings validation here
 	    // Same as $sanitize_callback from http://codex.wordpress.org/Function_Reference/register_setting
     	return $input;
 	}
-    
+
     // ...
-    
+
 }
 ```
-    
+
 Your settings values can be accessed by getting the whole array:
 
 ```php
 // Get settings
-$settings = wpsf_get_settings( $this->plugin_path .'settings/settings-general.php' );
+$settings = wpsf_get_settings( 'prefix_settings_general' );
 ```
-		
+
 Or by getting individual settings:
 
 ```php
 // Get individual setting
-$setting = wpsf_get_setting( wpsf_get_option_group( $this->plugin_path .'settings/settings-general.php' ), 'general', 'text' );
+$setting = wpsf_get_setting( 'prefix_settings_general', 'general', 'text' );
 ```
-	
+
 
 The Settings Files
 ------------------
@@ -110,48 +110,47 @@ $wpsf_settings[] = array(
                 'blue' => 'Blue'
             )
         ),
-        
+
         // add as many fields as you need...
-        
+
     )
 );
 ```
-    
+
 Valid `fields` values are:
 
 * `id` - Field ID
 * `title` - Field title
 * `desc` - Field description
 * `placeholder` - Field placeholder
-* `type` - Field type (text/textarea/select/radio/checkbox/checkboxes/color/file)
+* `type` - Field type (text/password/textarea/select/radio/checkbox/checkboxes/color/file)
 * `std` - Default value (or selected option)
 * `choices` - Array of options (for select/radio/checkboxes)
 
-See `settings/settings-general.php` for an example of possible values.
+See `settings/example-settings.php` for an example of possible values.
 
 
 API Details
 -----------
 
     new WordPressSettingsFramework( string $settings_file [, string $option_group = ''] )
-    
+
 Creates a new settings [option_group](http://codex.wordpress.org/Function_Reference/register_setting) based on a setttings file.
 
 * `$settings_file` - path to the settings file
 * `$option_group` - optional "option_group" override (by default this will be set to the basename of the settings file)
 
 <pre>wpsf_get_option_group( $settings_file )</pre>
-    
+
 Converts the settings file name to option group id
 
 * `$settings_file` - path to the settings file
 
-<pre>wpsf_get_settings( string $settings_file [, string $option_group = ''] )</pre>
-    
-Get an array of settings by the settings file or option_group
+<pre>wpsf_get_settings( string $option_group )</pre>
 
-* `$settings_file` - path to the settings file
-* `$option_group` - optional "option_group" override
+Get an array of settings by the option group id
+
+* `$option_group` - option group id
 
 <pre>wpsf_get_setting( $option_group, $section_id, $field_id )</pre>
 
@@ -163,18 +162,18 @@ Get a setting from an option group
 
 Note: You can use `wpsf_get_option_group()` to get the option group id from the settings file path.
 
-<pre>wpsf_delete_settings( string $settings_file [, string $option_group = ''] )</pre>
-    
-Delete all the saved settings from a settings file/option group
+<pre>wpsf_delete_settings( string $option_group )</pre>
 
-* `$settings_file` - path to the settings file
-* `$option_group` - optional "option_group" override
+Delete all the saved settings from a option group
+
+* `$option_group` - option group id
 
 Hooks & Filters
 ---------------
 
 **Filters**
 
+* `wpsf_register_settings` - The filter used to register your settings. See `settings/example-settings.php` for an example.
 * `[option_group_id]_settings_validate` - Basically the `$sanitize_callback` from [register_setting](http://codex.wordpress.org/Function_Reference/register_setting). Use `$wpsf->get_option_group()` to get the option group id.
 * `wpsf_defaults` - Default args for a settings field
 
@@ -201,14 +200,14 @@ License (MIT)
 -------------
 Copyright © 2012 Dev7studios
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation 
-files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, 
-modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software 
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
+files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy,
+modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
 is furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE 
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR 
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
 IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

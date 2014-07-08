@@ -1,0 +1,24 @@
+*** WordPress Settings Framework Changelog ***
+
+2014.07.08 - version 1.5.0
+ * [New] Added "password" field
+ * [New] Added "placeholder" attribute to text/password/textarea fields
+ * [New] Added "wpsf_register_settings" filter
+ * [Changed] No longer use the $wpsf_settings global
+ * [Changed] wpsf_ functions now require an option group id
+
+2012.10.09 - version 1.4.0
+ * [New] Added wpsf_delete_settings()
+
+2012.10.04 - version 1.3.0
+ * [New] Added "custom" field
+ * [Fixed] Color picker z-index issue
+
+2012.10.01 - version 1.2.0
+ * [New] Added an "editor" field
+
+2012.08.27 - version 1.1.0
+ * [New] Added "color" and "file" fields
+
+2012.08.27 - version 1.0.0
+ * Initial release
