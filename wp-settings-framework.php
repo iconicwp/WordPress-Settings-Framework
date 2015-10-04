@@ -69,13 +69,16 @@ if( !class_exists('WordPressSettingsFramework') ){
 
             $this->construct_settings();
 
-            add_action( 'admin_init',            array( $this, 'admin_init') );
-            add_action( 'admin_notices',         array( $this, 'admin_notices') );
-            add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts') );
+            add_action( 'admin_init',                array( $this, 'admin_init') );
+            add_action( 'admin_notices',             array( $this, 'admin_notices') );
+            add_action( 'admin_enqueue_scripts',     array( $this, 'admin_enqueue_scripts') );
+            add_action( 'wpsf_do_settings_sections', array( $this, 'do_tabless_settings_sections'), 10 );
             
-            // if we have tabs to display
-            if( !empty( $this->tabs ) ) {
-                add_action( 'wpsf_before_settings',  array( $this, 'tab_links' ) );
+            if( $this->has_tabs() ) {
+                add_action( 'wpsf_before_settings',         array( $this, 'tab_links' ) );
+                
+                remove_action( 'wpsf_do_settings_sections', array( $this, 'do_tabless_settings_sections'), 10 );
+                add_action( 'wpsf_do_settings_sections',    array( $this, 'do_tabbed_settings_sections'), 10 );
             }
             
         }
@@ -174,12 +177,18 @@ if( !class_exists('WordPressSettingsFramework') ){
     	public function section_intro( $args ) {
         	
         	if(!empty($this->settings)){
+            	
         		foreach($this->settings as $section){
+            		
                     if($section['section_id'] == $args['id']){
+                        
                         if(isset($section['section_description']) && $section['section_description']) echo '<p>'. $section['section_description'] .'</p>';
                         break;
+                        
                     }
+                    
         		}
+        		
             }
             
     	}
@@ -190,19 +199,34 @@ if( !class_exists('WordPressSettingsFramework') ){
     	private function process_settings() {
         	
         	if( !empty($this->settings) ){
+            	
         	    usort($this->settings, array( $this, 'sort_array'));
+        	    
         		foreach( $this->settings as $section ){
+            		
             		if( isset($section['section_id']) && $section['section_id'] && isset($section['section_title']) ){
-                		add_settings_section( $section['section_id'], $section['section_title'], array( $this, 'section_intro'), $this->option_group );
+                		
+                		$page_name = ( $this->has_tabs() ) ? sprintf( '%s_%s', $this->option_group, $section['tab_id'] ) : $this->option_group;
+                		
+                		add_settings_section( $section['section_id'], $section['section_title'], array( $this, 'section_intro'), $page_name );
+                		
                 		if( isset($section['fields']) && is_array($section['fields']) && !empty($section['fields']) ){
+                    		
                     		foreach( $section['fields'] as $field ){
+                        		
                         		if( isset($field['id']) && $field['id'] && isset($field['title']) ){
-                        		    add_settings_field( $field['id'], $field['title'], array( $this, 'generate_setting'), $this->option_group, $section['section_id'], array('section' => $section, 'field' => $field) );
+                            		                            		
+                        		    add_settings_field( $field['id'], $field['title'], array( $this, 'generate_setting'), $page_name, $section['section_id'], array('section' => $section, 'field' => $field) );
+                        		    
                         		}
                     		}
+                    		
                 		}
+                		
             		}
+            		
         		}
+        		
     		}
     		
     	}
@@ -232,7 +256,7 @@ if( !class_exists('WordPressSettingsFramework') ){
         	extract( wp_parse_args( $args['field'], $this->setting_defaults ) );
 
         	$options = get_option( $this->option_group .'_settings' );
-        	$el_id = $this->option_group .'_'. $section['section_id'] .'_'. $id;
+        	$el_id = sprintf( '%s_%s', $section['section_id'], $id );
         	$val = (isset($options[$el_id])) ? $options[$el_id] : $std;
 
         	do_action( 'wpsf_before_field' );
@@ -351,12 +375,44 @@ if( !class_exists('WordPressSettingsFramework') ){
             <form action="options.php" method="post">
                 <?php do_action( 'wpsf_before_settings_fields' ); ?>
                 <?php settings_fields( $this->option_group ); ?>
-        		<?php do_settings_sections( $this->option_group ); ?>
+                
+                <?php do_action( 'wpsf_do_settings_sections' ); ?>
+                
         		<p class="submit"><input type="submit" class="button-primary" value="<?php _e( 'Save Changes' ); ?>" /></p>
 			</form>
     		<?php
     		do_action( 'wpsf_after_settings' );
     		
+        }
+        
+        /**
+         * Tabless Settings sections
+         */
+         
+        public function do_tabless_settings_sections() {
+            
+            do_settings_sections( $this->option_group );
+            
+        }
+        
+        /**
+         * Tabbed Settings sections
+         */
+         
+        public function do_tabbed_settings_sections() {
+            
+            $i = 0; 
+            foreach ( $this->tabs as $tab_data ) {
+                ?>
+            	<div id="tab-<?php echo $tab_data['id']; ?>" class="wpsf-tab wpsf-tab--<?php echo $tab_data['id']; ?> <?php if($i == 0) echo 'wpsf-tab--active'; ?>">
+            		<div class="postbox">
+            			<?php do_settings_sections( sprintf( '%s_%s', $this->option_group, $tab_data['id'] ) ); ?>
+            		</div>
+            	</div>
+            	<?php 
+                $i++; 
+            }
+                        
         }
         
         /**
@@ -382,6 +438,25 @@ if( !class_exists('WordPressSettingsFramework') ){
 		    </h2>            
             <?php 
             do_action( 'wpsf_after_tab_links' );
+            
+        }
+        
+        /**
+         * Output the opening tab wrapper
+         */        
+        public function open_tab_wrapper( $section ) {
+            echo '<pre>'; print_r($section['tab_id']); echo '</pre>'; 
+        }
+        
+        /**
+         * Check if this settings instance has tabs
+         */
+        public function has_tabs() {
+            
+            if( !empty( $this->tabs ) )
+                return true;
+                
+            return false;
             
         }
 
