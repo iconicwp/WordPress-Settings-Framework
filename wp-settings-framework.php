@@ -92,6 +92,8 @@ if( !class_exists('WordPressSettingsFramework') ){
                 if( $this->has_tabs() ) {
                     
                     add_action( 'wpsf_before_settings_'.$this->option_group,         array( $this, 'tab_links' ) );
+                    add_action( 'wpsf_before_settings_'.$this->option_group,         array( $this, 'tab_styles' ) );
+                    add_action( 'wpsf_before_settings_'.$this->option_group,         array( $this, 'tab_scripts' ) );
                     
                     remove_action( 'wpsf_do_settings_sections_'.$this->option_group, array( $this, 'do_tabless_settings_sections'), 10 );
                     add_action( 'wpsf_do_settings_sections_'.$this->option_group,    array( $this, 'do_tabbed_settings_sections'), 10 );
@@ -266,7 +268,7 @@ if( !class_exists('WordPressSettingsFramework') ){
             		
                     if($section['section_id'] == $args['id']){
                         
-                        if(isset($section['section_description']) && $section['section_description']) echo '<p>'. $section['section_description'] .'</p>';
+                        if(isset($section['section_description']) && $section['section_description']) echo '<p class="wpsf-section-description">'. $section['section_description'] .'</p>';
                         break;
                         
                     }
@@ -514,7 +516,7 @@ if( !class_exists('WordPressSettingsFramework') ){
                 foreach ( $this->tabs as $tab_data ) {
     		        $active = $i == 0 ? 'nav-tab-active' : ''; 
     		        ?>
-    		        <a class="nav-tab triggerTab <?php echo $active; ?>" href="#tab-<?php echo $tab_data['id']; ?>"><?php echo $tab_data['title']; ?></a>
+    		        <a class="nav-tab wpsf-tab-link <?php echo $active; ?>" href="#tab-<?php echo $tab_data['id']; ?>"><?php echo $tab_data['title']; ?></a>
                     <?php 
                 $i++;
                 }
@@ -523,6 +525,127 @@ if( !class_exists('WordPressSettingsFramework') ){
             <?php 
             do_action( 'wpsf_after_tab_links_'.$this->option_group );
             
+        }
+        
+        /**
+         * Output Tab Styles
+         */
+        public function tab_styles() {
+            ?>
+            <style type="text/css">
+                
+                .nav-tab-wrapper {
+                    min-height: 35px;
+                }
+                
+                .wpsf-tab {
+                    display: none;
+                }
+                
+                .wpsf-tab--active {
+                    display: block;
+                }
+                
+                    .wpsf-tab .postbox {
+                        margin: 20px 0;
+                    }
+                    
+                    .wpsf-tab .postbox h3 {
+                        padding: 8px 2%;
+                        border: none;
+                        margin-top: 25px;
+                        background: #333333;
+                        color: #ffffff;
+                        -webkit-font-smoothing: antialiased;
+                        -moz-font-smoothing: antialiased;
+                        -o-font-smoothing: antialiased;
+                        font-smoothing: antialiased;
+                        font-size: 1.25em;
+                    }
+                    
+                    .wpsf-tab .postbox h3:first-child {
+                        margin-top: 0;
+                    }
+                    
+                    .js .wpsf-tab .postbox h3 {
+                        cursor: default;
+                    }
+                    
+                    .wpsf-tab .postbox table.form-table,
+                    .wpsf-tab .wpsf-section-description {
+                        margin: 0 2%;
+                        width: 96%;
+                    }
+                    
+                    .wpsf-tab .postbox table.form-table {
+                        margin-bottom: 20px;
+                    }
+                    
+                    .wpsf-tab .wpsf-section-description {
+                        margin-top: 20px;
+                        margin-bottom: 20px;
+                        padding-bottom: 20px;
+                        border-bottom: 1px solid #eeeeee;
+                    }
+                
+            </style>
+            <?php
+        }
+        
+        /**
+         * Output Tab Scripts
+         */
+        public function tab_scripts() {
+            ?>
+            <script>
+                (function($, document) {
+    
+                    var wpsf = {
+                        
+                        cache: function() {
+                            wpsf.els = {};
+                            wpsf.vars = {};
+                            
+                            // common elements
+                            wpsf.els.tab_links = $('.wpsf-tab-link');
+                            
+                        },
+                 
+                        on_ready: function() {
+                            
+                            // on ready stuff here
+                            wpsf.cache();
+                            wpsf.setup_tabs();
+                            
+                        },
+                     
+                        setup_tabs: function() {
+                            
+                            wpsf.els.tab_links.on('click', function(){
+		
+                        		// Set tab link active class
+                        		wpsf.els.tab_links.removeClass('nav-tab-active');
+                        		$(this).addClass('nav-tab-active');
+                        		
+                        		// Show tab
+                        		var tab_id = $(this).attr('href');
+                        		
+                        		$('.wpsf-tab').removeClass('wpsf-tab--active');
+                        		$(tab_id).addClass('wpsf-tab--active');
+                        		
+                            	return false;
+                            	
+                        	});
+                            
+                        }
+                     
+                    };
+                    
+                	$(document).ready( wpsf.on_ready() );
+                
+                }(jQuery, document));
+            </script>
+            <?php
         }
         
         /**
