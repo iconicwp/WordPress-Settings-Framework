@@ -37,6 +37,12 @@ if( !class_exists('WordPressSettingsFramework') ){
          * @var string
          */
         private $option_group;
+        
+        /**
+         * @access private
+         * @var array
+         */
+        private $settings_page = array();
 
         /**
          * @access protected
@@ -61,24 +67,30 @@ if( !class_exists('WordPressSettingsFramework') ){
          */
         public function __construct( $settings_file, $option_group = '' ) {
             
-            if( !is_file($settings_file) ) return;
-            require_once( $settings_file );
-
-            $this->option_group = preg_replace("/[^a-z0-9]+/i", "", basename($settings_file, '.php'));
-            if( $option_group ) $this->option_group = $option_group;
-
-            $this->construct_settings();
-
-            add_action( 'admin_init',                array( $this, 'admin_init') );
-            add_action( 'admin_notices',             array( $this, 'admin_notices') );
-            add_action( 'admin_enqueue_scripts',     array( $this, 'admin_enqueue_scripts') );
-            add_action( 'wpsf_do_settings_sections', array( $this, 'do_tabless_settings_sections'), 10 );
-            
-            if( $this->has_tabs() ) {
-                add_action( 'wpsf_before_settings',         array( $this, 'tab_links' ) );
+            if( is_admin() ) {
                 
-                remove_action( 'wpsf_do_settings_sections', array( $this, 'do_tabless_settings_sections'), 10 );
-                add_action( 'wpsf_do_settings_sections',    array( $this, 'do_tabbed_settings_sections'), 10 );
+                if( !is_file($settings_file) ) return;
+                require_once( $settings_file );
+    
+                $this->option_group = preg_replace("/[^a-z0-9]+/i", "", basename($settings_file, '.php'));
+                if( $option_group ) $this->option_group = $option_group;
+                
+                $this->construct_settings();
+
+                add_action( 'admin_init',                                     array( $this, 'admin_init') );
+                add_action( 'admin_notices',                                  array( $this, 'admin_notices') );
+                add_action( 'admin_enqueue_scripts',                          array( $this, 'admin_enqueue_scripts') );
+                
+                add_action( 'wpsf_do_settings_sections_'.$this->option_group, array( $this, 'do_tabless_settings_sections'), 10 );
+                
+                if( $this->has_tabs() ) {
+                    
+                    add_action( 'wpsf_before_settings_'.$this->option_group,         array( $this, 'tab_links' ) );
+                    
+                    remove_action( 'wpsf_do_settings_sections_'.$this->option_group, array( $this, 'do_tabless_settings_sections'), 10 );
+                    add_action( 'wpsf_do_settings_sections_'.$this->option_group,    array( $this, 'do_tabbed_settings_sections'), 10 );
+                }
+            
             }
             
         }
@@ -91,7 +103,7 @@ if( !class_exists('WordPressSettingsFramework') ){
         public function construct_settings() {
             
             $this->settings_wrapper = array();
-            $this->settings_wrapper = apply_filters( 'wpsf_register_settings', $this->settings_wrapper );
+            $this->settings_wrapper = apply_filters( 'wpsf_register_settings_'.$this->option_group, $this->settings_wrapper );
             
             if( !is_array($this->settings_wrapper) ){
                 return new WP_Error( 'broke', __( 'WPSF settings must be an array' ) );
@@ -132,6 +144,69 @@ if( !class_exists('WordPressSettingsFramework') ){
     		$this->process_settings();
     		
     	}
+    	
+    	/**
+    	 * Add Settings Page
+    	 *
+    	 * @param array $args
+    	 */
+    	 
+        public function add_settings_page( $args ) {
+            
+            $defaults = array(
+                'parent_slug' => false,
+                'page_title'  => "",
+                'menu_title'  => "",
+                'capability'  => 'manage_options'
+            );
+            
+            $args = wp_parse_args( $args, $defaults );
+            
+            $this->settings_page['title'] = $args['page_title'];
+            $this->settings_page['slug'] = sprintf( '%s-%s', $this->option_group, sanitize_title_with_dashes($args['page_title']) );
+            
+            if( $args['parent_slug'] ) {
+            
+                add_submenu_page( 
+                    $args['parent_slug'], 
+                    $this->settings_page['title'], 
+                    $args['menu_title'], 
+                    $args['capability'], 
+                    $this->settings_page['slug'], 
+                    array( $this, 'settings_page_content' ) 
+                );
+            
+            } else {
+                
+                add_menu_page(
+                    $this->settings_page['title'], 
+                    $args['menu_title'], 
+                    $args['capability'], 
+                    $this->settings_page['slug'], 
+                    array( $this, 'settings_page_content' ) 
+                );
+                
+            }
+            
+        }
+        
+        /**
+         * Settings Page Content
+         */
+         
+        public function settings_page_content() {
+            ?>
+    		<div class="wrap">
+    			<div id="icon-options-general" class="icon32"></div>
+    			<h2><?php echo $this->settings_page['title']; ?></h2>
+    			<?php    			
+    			// Output your settings form
+    			$this->settings();
+    			?>
+    		</div>
+    		<?php
+            
+        }
 
         /**
          * Displays any errors from the WordPress settings API
@@ -252,15 +327,15 @@ if( !class_exists('WordPressSettingsFramework') ){
     	public function generate_setting( $args ) {
         	
     	    $section = $args['section'];
-        	$this->setting_defaults = apply_filters( 'wpsf_defaults', $this->setting_defaults );
+        	$this->setting_defaults = apply_filters( 'wpsf_defaults_'.$this->option_group, $this->setting_defaults );
         	extract( wp_parse_args( $args['field'], $this->setting_defaults ) );
 
         	$options = get_option( $this->option_group .'_settings' );
         	$el_id = sprintf( '%s_%s', $section['section_id'], $id );
         	$val = (isset($options[$el_id])) ? $options[$el_id] : $std;
 
-        	do_action( 'wpsf_before_field' );
-        	do_action( 'wpsf_before_field_'. $el_id );
+        	do_action( 'wpsf_before_field_'.$this->option_group );
+        	do_action( 'wpsf_before_field__'.$this->option_group. $el_id );
     		switch( $type ){
     		    case 'text':
     		        $val = esc_attr(stripslashes($val));
@@ -360,8 +435,8 @@ if( !class_exists('WordPressSettingsFramework') ){
         		default:
         		    break;
     		}
-    		do_action( 'wpsf_after_field' );
-        	do_action( 'wpsf_after_field_'. $el_id );
+    		do_action( 'wpsf_after_field_'.$this->option_group );
+        	do_action( 'wpsf_after_field__'.$this->option_group. $el_id );
         	
     	}
 
@@ -370,18 +445,18 @@ if( !class_exists('WordPressSettingsFramework') ){
          */
         public function settings() {
             
-            do_action( 'wpsf_before_settings' );
+            do_action( 'wpsf_before_settings_'.$this->option_group );
             ?>
             <form action="options.php" method="post">
-                <?php do_action( 'wpsf_before_settings_fields' ); ?>
+                <?php do_action( 'wpsf_before_settings_fields_'.$this->option_group ); ?>
                 <?php settings_fields( $this->option_group ); ?>
                 
-                <?php do_action( 'wpsf_do_settings_sections' ); ?>
+                <?php do_action( 'wpsf_do_settings_sections_'.$this->option_group ); ?>
                 
         		<p class="submit"><input type="submit" class="button-primary" value="<?php _e( 'Save Changes' ); ?>" /></p>
 			</form>
     		<?php
-    		do_action( 'wpsf_after_settings' );
+    		do_action( 'wpsf_after_settings_'.$this->option_group );
     		
         }
         
@@ -420,7 +495,7 @@ if( !class_exists('WordPressSettingsFramework') ){
          */
         public function tab_links() {
             
-            do_action( 'wpsf_before_tab_links' );
+            do_action( 'wpsf_before_tab_links_'.$this->option_group );
 		
 		    screen_icon();
 		    ?>
@@ -437,7 +512,7 @@ if( !class_exists('WordPressSettingsFramework') ){
     		    ?>
 		    </h2>            
             <?php 
-            do_action( 'wpsf_after_tab_links' );
+            do_action( 'wpsf_after_tab_links_'.$this->option_group );
             
         }
         
@@ -461,21 +536,6 @@ if( !class_exists('WordPressSettingsFramework') ){
         }
 
     }
-}
-
-if( !function_exists('wpsf_get_option_group') ){
-    
-    /**
-     * Converts the settings file name to option group id
-     *
-     * @param string settings file
-     * @return string option group id
-     */
-    function wpsf_get_option_group( $settings_file ){
-        $option_group = preg_replace("/[^a-z0-9]+/i", "", basename( $settings_file, '.php' ));
-        return $option_group;
-    }
-    
 }
 
 if( !function_exists('wpsf_get_settings') ){
