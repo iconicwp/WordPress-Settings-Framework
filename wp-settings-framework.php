@@ -67,17 +67,17 @@ if( !class_exists('WordPressSettingsFramework') ){
          */
         public function __construct( $settings_file, $option_group = '' ) {
             
+            if( !is_file($settings_file) ) return;
+            require_once( $settings_file );
+
+            $this->option_group = preg_replace("/[^a-z0-9]+/i", "", basename($settings_file, '.php'));
+            if( $option_group ) $this->option_group = $option_group;
+            
+            $this->construct_settings();
+            
             if( is_admin() ) {
                 
                 global $pagenow;
-                
-                if( !is_file($settings_file) ) return;
-                require_once( $settings_file );
-    
-                $this->option_group = preg_replace("/[^a-z0-9]+/i", "", basename($settings_file, '.php'));
-                if( $option_group ) $this->option_group = $option_group;
-                
-                $this->construct_settings();
                 
                 add_action( 'admin_init',                                     array( $this, 'admin_init') );                
                 add_action( 'wpsf_do_settings_sections_'.$this->option_group, array( $this, 'do_tabless_settings_sections'), 10 );
@@ -143,6 +143,57 @@ if( !class_exists('WordPressSettingsFramework') ){
         public function get_option_group() {
             
             return $this->option_group;
+            
+        }
+        
+        /**
+         * Get Settings
+         */
+        public function get_settings() {
+            
+            $settings = $this->get_saved_settings();
+            
+            if( !$settings )
+                $settings = $this->get_default_settings();
+                
+            return $settings;
+        }
+        
+        /**
+         * Get Saved Settings
+         */
+        public function get_saved_settings() {
+            return get_option( $this->option_group .'_settings' );
+        }
+        
+        /**
+         * Get Default Settings
+         */
+        public function get_default_settings() {
+            
+            $settings = array();
+            
+            if( $this->settings && !empty( $this->settings ) ) {
+                
+                foreach( $this->settings as $section ) {
+                    
+                    if( $section['fields'] && !empty( $section['fields'] ) ) {
+                        
+                        foreach( $section['fields'] as $field ) {
+                            
+                            $setting_key = sprintf('%s_%s', $section['section_id'], $field['id']);
+                    
+                            $settings[$setting_key] = ( isset( $field['default'] ) ) ? $field['default'] : false;
+                            
+                        }
+                        
+                    }
+                    
+                }
+                    
+            }
+            
+            return $settings;
             
         }
 
