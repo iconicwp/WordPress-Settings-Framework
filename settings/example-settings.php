@@ -148,8 +148,6 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 
 /**
  * Tabbed example
- * 
- * See line for a tabbed example
  */
 
 function wpsf_tabbed_settings( $wpsf_settings ) {
