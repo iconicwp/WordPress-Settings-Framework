@@ -4,7 +4,7 @@
  *
  * @author Gilbert Pellegrom, James Kemp
  * @link https://github.com/gilbitron/WordPress-Settings-Framework
- * @version 1.6.0
+ * @version 1.6.1
  * @license MIT
  */
 
@@ -131,7 +131,7 @@ if( !class_exists('WordPressSettingsFramework') ){
                 
             }
             
-            $this->settings_page['slug'] = sprintf( '%s-settings', $this->option_group );
+            $this->settings_page['slug'] = sprintf( '%s-settings', str_replace('_', '-', $this->option_group ) );
             
         }
 
