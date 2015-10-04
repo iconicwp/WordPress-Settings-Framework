@@ -40,7 +40,7 @@ function wpsf_tabless_settings( $wpsf_settings ) {
                 'desc' => 'This is a description.',
                 'placeholder' => 'This is a placeholder.',
                 'type' => 'text',
-                'std' => 'This is std'
+                'default' => 'This is std'
             ),
             array(
                 'id' => 'password',
@@ -48,7 +48,7 @@ function wpsf_tabless_settings( $wpsf_settings ) {
                 'desc' => 'This is a description.',
                 'placeholder' => 'This is a placeholder.',
                 'type' => 'password',
-                'std' => 'Example'
+                'default' => 'Example'
             ),
             array(
                 'id' => 'textarea',
@@ -56,14 +56,14 @@ function wpsf_tabless_settings( $wpsf_settings ) {
                 'desc' => 'This is a description.',
                 'placeholder' => 'This is a placeholder.',
                 'type' => 'textarea',
-                'std' => 'This is std'
+                'default' => 'This is std'
             ),
             array(
                 'id' => 'select',
                 'title' => 'Select',
                 'desc' => 'This is a description.',
                 'type' => 'select',
-                'std' => 'green',
+                'default' => 'green',
                 'choices' => array(
                     'red' => 'Red',
                     'green' => 'Green',
@@ -75,7 +75,7 @@ function wpsf_tabless_settings( $wpsf_settings ) {
                 'title' => 'Radio',
                 'desc' => 'This is a description.',
                 'type' => 'radio',
-                'std' => 'green',
+                'default' => 'green',
                 'choices' => array(
                     'red' => 'Red',
                     'green' => 'Green',
@@ -87,14 +87,14 @@ function wpsf_tabless_settings( $wpsf_settings ) {
                 'title' => 'Checkbox',
                 'desc' => 'This is a description.',
                 'type' => 'checkbox',
-                'std' => 1
+                'default' => 1
             ),
             array(
                 'id' => 'checkboxes',
                 'title' => 'Checkboxes',
                 'desc' => 'This is a description.',
                 'type' => 'checkboxes',
-                'std' => array(
+                'default' => array(
                     'red',
                     'blue'
                 ),
@@ -109,21 +109,21 @@ function wpsf_tabless_settings( $wpsf_settings ) {
                 'title' => 'Color',
                 'desc' => 'This is a description.',
                 'type' => 'color',
-                'std' => '#ffffff'
+                'default' => '#ffffff'
             ),
             array(
                 'id' => 'file',
                 'title' => 'File',
                 'desc' => 'This is a description.',
                 'type' => 'file',
-                'std' => ''
+                'default' => ''
             ),
             array(
                 'id' => 'editor',
                 'title' => 'Editor',
                 'desc' => 'This is a description.',
                 'type' => 'editor',
-                'std' => ''
+                'default' => ''
             )
         )
     );
@@ -139,7 +139,7 @@ function wpsf_tabless_settings( $wpsf_settings ) {
                 'title' => 'More Text',
                 'desc' => 'This is a description.',
                 'type' => 'text',
-                'std' => 'This is std'
+                'default' => 'This is std'
             ),
         )
     );
@@ -181,7 +181,7 @@ function wpsf_tabbed_settings( $wpsf_settings ) {
                 'title' => 'Text',
                 'desc' => 'This is a description.',
                 'type' => 'text',
-                'std' => 'This is std'
+                'default' => 'This is std'
             ),
         )
     );
@@ -198,7 +198,7 @@ function wpsf_tabbed_settings( $wpsf_settings ) {
                 'title' => 'Text',
                 'desc' => 'This is a description.',
                 'type' => 'text',
-                'std' => 'This is std'
+                'default' => 'This is std'
             ),
         )
     );
@@ -215,7 +215,7 @@ function wpsf_tabbed_settings( $wpsf_settings ) {
                 'title' => 'Text',
                 'desc' => 'This is a description.',
                 'type' => 'text',
-                'std' => 'This is std'
+                'default' => 'This is std'
             ),
         )
     );
