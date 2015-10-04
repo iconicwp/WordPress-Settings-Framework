@@ -4,7 +4,7 @@
  *
  * @author Gilbert Pellegrom, James Kemp
  * @link https://github.com/gilbitron/WordPress-Settings-Framework
- * @version 1.6.1
+ * @version 1.6.2
  * @license MIT
  */
 
@@ -52,7 +52,7 @@ if( !class_exists('WordPressSettingsFramework') ){
             'id'     	  => 'default_field',
             'title'  	  => 'Default Field',
             'desc'  	  => '',
-            'std'    	  => '',
+            'default'     => '',
             'type'   	  => 'text',
             'placeholder' => '',
             'choices'     => array(),
@@ -343,7 +343,7 @@ if( !class_exists('WordPressSettingsFramework') ){
 
         	$options = get_option( $this->option_group .'_settings' );
         	$el_id = sprintf( '%s_%s', $section['section_id'], $id );
-        	$val = (isset($options[$el_id])) ? $options[$el_id] : $std;
+        	$val = (isset($options[$el_id])) ? $options[$el_id] : $default;
 
         	do_action( 'wpsf_before_field_'.$this->option_group );
         	do_action( 'wpsf_before_field__'.$this->option_group. $el_id );
@@ -388,7 +388,7 @@ if( !class_exists('WordPressSettingsFramework') ){
     		        foreach($choices as $ckey=>$cval){
     		            $val = '';
     		            if(isset($options[$el_id .'_'. $ckey])) $val = $options[$el_id .'_'. $ckey];
-    		            elseif(is_array($std) && in_array($ckey, $std)) $val = $ckey;
+    		            elseif(is_array($default) && in_array($ckey, $default)) $val = $ckey;
     		            $val = esc_html(esc_attr($val));
         		        echo '<input type="hidden" name="'. $this->option_group .'_settings['. $el_id .'_'. $ckey .']" value="0" />';
         		        echo '<label><input type="checkbox" name="'. $this->option_group .'_settings['. $el_id .'_'. $ckey .']" id="'. $el_id .'_'. $ckey .'" value="'. $ckey .'" class="'. $class .'"'. (($ckey == $val) ? ' checked="checked"' : '') .' /> '. $cval .'</label><br />';
@@ -441,7 +441,7 @@ if( !class_exists('WordPressSettingsFramework') ){
     		        if($desc)  echo '<p class="description">'. $desc .'</p>';
     		        break;
     		    case 'custom':
-    		        echo $std;
+    		        echo $default;
     		        break;
         		default:
         		    break;
