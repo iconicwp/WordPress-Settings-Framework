@@ -22,7 +22,7 @@ add_filter( 'wpsf_register_settings_my_example_settings', 'wpsf_tabless_settings
 /**
  * Tabless example
  * 
- * See line 155 for a tabbed example
+ * See line 153 for a tabbed example
  */
 function wpsf_tabless_settings( $wpsf_settings ) {
 
