@@ -15,7 +15,7 @@ class WPSFTest {
     function __construct()
     {
         $this->plugin_path = plugin_dir_path( __FILE__ );
-        add_action( 'admin_menu', array( $this, 'init_settings' ) );
+        add_action( 'admin_menu', array( $this, 'init_settings' ), 99 );
 
         // Include and create a new WordPressSettingsFramework
         require_once( $this->plugin_path .'wp-settings-framework.php' );
