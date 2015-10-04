@@ -15,14 +15,15 @@
  * 
  * Your "options_group" is the second param you use when running new WordPressSettingsFramework()
  * from your init function. It's importnant as it differentiates your options from others.
+ * 
+ * To use the tabbed example, simply change the second param in the filter below to 'wpsf_tabbed_settings'
+ * and check out the tabbed settings function on line 156.
  */
  
 add_filter( 'wpsf_register_settings_my_example_settings', 'wpsf_tabless_settings' );
 
 /**
  * Tabless example
- * 
- * See line 153 for a tabbed example
  */
 function wpsf_tabless_settings( $wpsf_settings ) {
 
