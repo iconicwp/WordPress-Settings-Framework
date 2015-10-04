@@ -2,16 +2,29 @@
 /**
  * WordPress Settings Framework
  *
- * @author Gilbert Pellegrom
+ * @author Gilbert Pellegrom, James Kemp
  * @link https://github.com/gilbitron/WordPress-Settings-Framework
  * @license MIT
  */
 
 /**
  * Define your settings
+ * 
+ * The first parameter of this filter should be wpsf_register_settings_[options_group],
+ * in this case "my_example_settings".
+ * 
+ * Your "options_group" is the second param you use when running new WordPressSettingsFramework()
+ * from your init function. It's importnant as it differentiates your options from others.
  */
-add_filter( 'wpsf_register_settings', 'wpsf_example_settings' );
-function wpsf_example_settings( $wpsf_settings ) {
+ 
+add_filter( 'wpsf_register_settings_my_example_settings', 'wpsf_tabless_settings' );
+
+/**
+ * Tabless example
+ * 
+ * See line 155 for a tabbed example
+ */
+function wpsf_tabless_settings( $wpsf_settings ) {
 
     // General Settings section
     $wpsf_settings[] = array(
@@ -123,6 +136,84 @@ function wpsf_example_settings( $wpsf_settings ) {
             array(
                 'id' => 'more-text',
                 'title' => 'More Text',
+                'desc' => 'This is a description.',
+                'type' => 'text',
+                'std' => 'This is std'
+            ),
+        )
+    );
+
+    return $wpsf_settings;
+}
+
+/**
+ * Tabbed example
+ * 
+ * See line for a tabbed example
+ */
+
+function wpsf_tabbed_settings( $wpsf_settings ) {
+    
+    // Tabs
+    
+    // Tab 1
+    $wpsf_settings['tabs'][] = array(
+		'id' => 'tab_1',
+		'title' => __('Tab 1'),
+	);
+	
+	// Tab 2
+	$wpsf_settings['tabs'][] = array(
+		'id' => 'tab_2',
+		'title' => __('Tab 2'),
+	);
+	
+	// Settings
+
+    // Settings Section
+    $wpsf_settings['sections'][] = array(
+        'tab_id' => 'tab_1',
+        'section_id' => 'section_1',
+        'section_title' => 'Section 1',
+        'section_order' => 10,
+        'fields' => array(
+            array(
+                'id' => 'text-1',
+                'title' => 'Text',
+                'desc' => 'This is a description.',
+                'type' => 'text',
+                'std' => 'This is std'
+            ),
+        )
+    );
+    
+    // Settings Section
+    $wpsf_settings['sections'][] = array(
+        'tab_id' => 'tab_1',
+        'section_id' => 'section_2',
+        'section_title' => 'Section 2',
+        'section_order' => 10,
+        'fields' => array(
+            array(
+                'id' => 'text-2',
+                'title' => 'Text',
+                'desc' => 'This is a description.',
+                'type' => 'text',
+                'std' => 'This is std'
+            ),
+        )
+    );
+    
+    // Settings Section
+    $wpsf_settings['sections'][] = array(
+        'tab_id' => 'tab_2',
+        'section_id' => 'section_3',
+        'section_title' => 'Section 3',
+        'section_order' => 10,
+        'fields' => array(
+            array(
+                'id' => 'text-3',
+                'title' => 'Text',
                 'desc' => 'This is a description.',
                 'type' => 'text',
                 'std' => 'This is std'
