@@ -73,6 +73,11 @@ if( !class_exists('WordPressSettingsFramework') ){
             add_action( 'admin_notices',         array( $this, 'admin_notices') );
             add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts') );
             
+            // if we have tabs to display
+            if( !empty( $this->tabs ) ) {
+                add_action( 'wpsf_before_settings',  array( $this, 'tab_links' ) );
+            }
+            
         }
         
         /**
@@ -352,6 +357,32 @@ if( !class_exists('WordPressSettingsFramework') ){
     		<?php
     		do_action( 'wpsf_after_settings' );
     		
+        }
+        
+        /**
+         * Output the tab links
+         */
+        public function tab_links() {
+            
+            do_action( 'wpsf_before_tab_links' );
+		
+		    screen_icon();
+		    ?>
+		    <h2 class="nav-tab-wrapper">
+    		    <?php
+                $i = 0; 
+                foreach ( $this->tabs as $tab_data ) {
+    		        $active = $i == 0 ? 'nav-tab-active' : ''; 
+    		        ?>
+    		        <a class="nav-tab triggerTab <?php echo $active; ?>" href="#tab-<?php echo $tab_data['id']; ?>"><?php echo $tab_data['title']; ?></a>
+                    <?php 
+                $i++;
+                }
+    		    ?>
+		    </h2>            
+            <?php 
+            do_action( 'wpsf_after_tab_links' );
+            
         }
 
     }
