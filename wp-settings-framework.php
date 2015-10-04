@@ -69,6 +69,8 @@ if( !class_exists('WordPressSettingsFramework') ){
             
             if( is_admin() ) {
                 
+                global $pagenow;
+                
                 if( !is_file($settings_file) ) return;
                 require_once( $settings_file );
     
@@ -76,12 +78,16 @@ if( !class_exists('WordPressSettingsFramework') ){
                 if( $option_group ) $this->option_group = $option_group;
                 
                 $this->construct_settings();
-
-                add_action( 'admin_init',                                     array( $this, 'admin_init') );
-                add_action( 'admin_notices',                                  array( $this, 'admin_notices') );
-                add_action( 'admin_enqueue_scripts',                          array( $this, 'admin_enqueue_scripts') );
                 
+                add_action( 'admin_init',                                     array( $this, 'admin_init') );                
                 add_action( 'wpsf_do_settings_sections_'.$this->option_group, array( $this, 'do_tabless_settings_sections'), 10 );
+                
+                if( isset( $_GET['page'] ) && $_GET['page'] === $this->settings_page['slug'] ) {
+                    
+                    if( $pagenow !== "options-general.php" ) add_action( 'admin_notices', array( $this, 'admin_notices') );
+                    add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts') );
+                
+                }
                 
                 if( $this->has_tabs() ) {
                     
@@ -89,6 +95,7 @@ if( !class_exists('WordPressSettingsFramework') ){
                     
                     remove_action( 'wpsf_do_settings_sections_'.$this->option_group, array( $this, 'do_tabless_settings_sections'), 10 );
                     add_action( 'wpsf_do_settings_sections_'.$this->option_group,    array( $this, 'do_tabbed_settings_sections'), 10 );
+                    
                 }
             
             }
@@ -121,6 +128,8 @@ if( !class_exists('WordPressSettingsFramework') ){
                 $this->settings = $this->settings_wrapper;
                 
             }
+            
+            $this->settings_page['slug'] = sprintf( '%s-settings', $this->option_group );
             
         }
 
@@ -155,6 +164,7 @@ if( !class_exists('WordPressSettingsFramework') ){
             
             $defaults = array(
                 'parent_slug' => false,
+                'page_slug'   => "",
                 'page_title'  => "",
                 'menu_title'  => "",
                 'capability'  => 'manage_options'
@@ -163,7 +173,6 @@ if( !class_exists('WordPressSettingsFramework') ){
             $args = wp_parse_args( $args, $defaults );
             
             $this->settings_page['title'] = $args['page_title'];
-            $this->settings_page['slug'] = sprintf( '%s-%s', $this->option_group, sanitize_title_with_dashes($args['page_title']) );
             
             if( $args['parent_slug'] ) {
             
@@ -194,7 +203,7 @@ if( !class_exists('WordPressSettingsFramework') ){
          * Settings Page Content
          */
          
-        public function settings_page_content() {
+        public function settings_page_content() {            
             ?>
     		<div class="wrap">
     			<div id="icon-options-general" class="icon32"></div>
