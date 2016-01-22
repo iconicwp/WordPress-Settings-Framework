@@ -559,10 +559,10 @@ if( !class_exists('WordPressSettingsFramework') ){
                         margin: 20px 0;
                     }
 
-                    .wpsf-tab .postbox h3 {
-                        padding: 8px 2%;
+                    .wpsf-tab .postbox h2 {
+                        padding: 15px 2%;
                         border: none;
-                        margin-top: 25px;
+                        margin: 0 0 20px;
                         background: #333333;
                         color: #ffffff;
                         -webkit-font-smoothing: antialiased;
