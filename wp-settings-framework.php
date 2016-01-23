@@ -65,19 +65,23 @@ if( !class_exists('WordPressSettingsFramework') ){
          * @param string path to settings file
          * @param string optional "option_group" override
          */
-        public function __construct( $settings_file, $option_group = '' ) {
+        public function __construct( $settings_file, $option_group = false ) {
+
+            if( !is_file($settings_file) )
+                return;
+
+            require_once( $settings_file );
+
+            $this->option_group = preg_replace("/[^a-z0-9]+/i", "", basename($settings_file, '.php'));
+
+            if( $option_group )
+                $this->option_group = $option_group;
+
+            $this->construct_settings();
 
             if( is_admin() ) {
 
                 global $pagenow;
-
-                if( !is_file($settings_file) ) return;
-                require_once( $settings_file );
-
-                $this->option_group = preg_replace("/[^a-z0-9]+/i", "", basename($settings_file, '.php'));
-                if( $option_group ) $this->option_group = $option_group;
-
-                $this->construct_settings();
 
                 add_action( 'admin_init',                                     array( $this, 'admin_init') );
                 add_action( 'wpsf_do_settings_sections_'.$this->option_group, array( $this, 'do_tabless_settings_sections'), 10 );
@@ -111,8 +115,7 @@ if( !class_exists('WordPressSettingsFramework') ){
          */
         public function construct_settings() {
 
-            $this->settings_wrapper = array();
-            $this->settings_wrapper = apply_filters( 'wpsf_register_settings_'.$this->option_group, $this->settings_wrapper );
+            $this->settings_wrapper = apply_filters( 'wpsf_register_settings_'.$this->option_group, array() );
 
             if( !is_array($this->settings_wrapper) ){
                 return new WP_Error( 'broke', __( 'WPSF settings must be an array' ) );
@@ -348,6 +351,9 @@ if( !class_exists('WordPressSettingsFramework') ){
 
     	    $section = $args['section'];
         	$this->setting_defaults = apply_filters( 'wpsf_defaults_'.$this->option_group, $this->setting_defaults );
+
+        	error_log( print_r( $this->setting_defaults, true ) );
+
         	extract( wp_parse_args( $args['field'], $this->setting_defaults ) );
 
         	$options = get_option( $this->option_group .'_settings' );
@@ -356,6 +362,7 @@ if( !class_exists('WordPressSettingsFramework') ){
 
         	do_action( 'wpsf_before_field_'.$this->option_group );
         	do_action( 'wpsf_before_field__'.$this->option_group. $el_id );
+
     		switch( $type ){
     		    case 'text':
     		        $val = esc_attr(stripslashes($val));
@@ -477,6 +484,32 @@ if( !class_exists('WordPressSettingsFramework') ){
 			</form>
     		<?php
     		do_action( 'wpsf_after_settings_'.$this->option_group );
+
+        }
+
+        /**
+         * Helper: Get Settings
+         *
+         * @return arr
+         */
+        public function get_settings() {
+
+        	$options = get_option($this->option_group.'_settings');
+
+        	if($options)
+        	    return $options;
+
+        	$options = array();
+
+        	error_log( print_r( $this, true ) );
+
+        	foreach($this->settings as $section){
+        		foreach($section['fields'] as $field){
+        			$options[ sprintf('%s_%s', $section['section_id'], $field['id']) ] = (isset($field['default'])) ? $field['default'] : false;
+        		}
+        	}
+
+        	return $options;
 
         }
 
