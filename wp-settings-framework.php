@@ -352,120 +352,304 @@ if( !class_exists('WordPressSettingsFramework') ){
     	    $section = $args['section'];
         	$this->setting_defaults = apply_filters( 'wpsf_defaults_'.$this->option_group, $this->setting_defaults );
 
-        	error_log( print_r( $this->setting_defaults, true ) );
-
-        	extract( wp_parse_args( $args['field'], $this->setting_defaults ) );
+        	$args = wp_parse_args( $args['field'], $this->setting_defaults );
 
         	$options = get_option( $this->option_group .'_settings' );
-        	$el_id = sprintf( '%s_%s', $section['section_id'], $id );
-        	$val = (isset($options[$el_id])) ? $options[$el_id] : $std;
+        	$args['id'] = sprintf( '%s_%s', $section['section_id'], $args['id'] );
+        	$args['value'] = (isset($options[$args['id']])) ? $options[$args['id']] : $args['default'];
+        	$args['name'] = $this->generate_field_name( $args['id'] );
 
-        	do_action( 'wpsf_before_field_'.$this->option_group );
-        	do_action( 'wpsf_before_field__'.$this->option_group. $el_id );
+        	do_action( 'wpsf_before_field_' . $this->option_group );
+        	do_action( 'wpsf_before_field_' . $this->option_group . '_' . $args['id'] );
 
-    		switch( $type ){
-    		    case 'text':
-    		        $val = esc_attr(stripslashes($val));
-    		        echo '<input type="text" name="'. $this->option_group .'_settings['. $el_id .']" id="'. $el_id .'" value="'. $val .'" placeholder="'. $placeholder .'" class="regular-text '. $class .'" />';
-    		        if($desc)  echo '<p class="description">'. $desc .'</p>';
-    		        break;
-                case 'password':
-                    $val = esc_attr(stripslashes($val));
-                    echo '<input type="password" name="'. $this->option_group .'_settings['. $el_id .']" id="'. $el_id .'" value="'. $val .'" placeholder="'. $placeholder .'" class="regular-text '. $class .'" />';
-                    if($desc)  echo '<p class="description">'. $desc .'</p>';
-                    break;
-    		    case 'textarea':
-    		        $val = esc_html(stripslashes($val));
-    		        echo '<textarea name="'. $this->option_group .'_settings['. $el_id .']" id="'. $el_id .'" placeholder="'. $placeholder .'" rows="5" cols="60" class="'. $class .'">'. $val .'</textarea>';
-    		        if($desc)  echo '<p class="description">'. $desc .'</p>';
-    		        break;
-    		    case 'select':
-    		        $val = esc_html(esc_attr($val));
-    		        echo '<select name="'. $this->option_group .'_settings['. $el_id .']" id="'. $el_id .'" class="'. $class .'">';
-    		        foreach($choices as $ckey=>$cval){
-        		        echo '<option value="'. $ckey .'"'. (($ckey == $val) ? ' selected="selected"' : '') .'>'. $cval .'</option>';
-    		        }
-    		        echo '</select>';
-    		        if($desc)  echo '<p class="description">'. $desc .'</p>';
-    		        break;
-    		    case 'radio':
-    		        $val = esc_html(esc_attr($val));
-    		        foreach($choices as $ckey=>$cval){
-        		        echo '<label><input type="radio" name="'. $this->option_group .'_settings['. $el_id .']" id="'. $el_id .'_'. $ckey .'" value="'. $ckey .'" class="'. $class .'"'. (($ckey == $val) ? ' checked="checked"' : '') .' /> '. $cval .'</label><br />';
-    		        }
-    		        if($desc)  echo '<p class="description">'. $desc .'</p>';
-    		        break;
-    		    case 'checkbox':
-    		        $val = esc_attr(stripslashes($val));
-    		        echo '<input type="hidden" name="'. $this->option_group .'_settings['. $el_id .']" value="0" />';
-    		        echo '<label><input type="checkbox" name="'. $this->option_group .'_settings['. $el_id .']" id="'. $el_id .'" value="1" class="'. $class .'"'. (($val) ? ' checked="checked"' : '') .' /> '. $desc .'</label>';
-    		        break;
-    		    case 'checkboxes':
-    		        foreach($choices as $ckey=>$cval){
-    		            $val = '';
-    		            if(isset($options[$el_id .'_'. $ckey])) $val = $options[$el_id .'_'. $ckey];
-    		            elseif(is_array($std) && in_array($ckey, $std)) $val = $ckey;
-    		            $val = esc_html(esc_attr($val));
-        		        echo '<input type="hidden" name="'. $this->option_group .'_settings['. $el_id .'_'. $ckey .']" value="0" />';
-        		        echo '<label><input type="checkbox" name="'. $this->option_group .'_settings['. $el_id .'_'. $ckey .']" id="'. $el_id .'_'. $ckey .'" value="'. $ckey .'" class="'. $class .'"'. (($ckey == $val) ? ' checked="checked"' : '') .' /> '. $cval .'</label><br />';
-    		        }
-    		        if($desc)  echo '<p class="description">'. $desc .'</p>';
-    		        break;
-    		    case 'color':
-                    $val = esc_attr(stripslashes($val));
-                    echo '<div style="position:relative;">';
-    		        echo '<input type="text" name="'. $this->option_group .'_settings['. $el_id .']" id="'. $el_id .'" value="'. $val .'" class="'. $class .'" />';
-    		        echo '<div id="'. $el_id .'_cp" style="position:absolute;top:0;left:190px;background:#fff;z-index:9999;"></div>';
-    		        if($desc)  echo '<p class="description">'. $desc .'</p>';
-    		        echo '<script type="text/javascript">
-    		        jQuery(document).ready(function($){
-                        var colorPicker = $("#'. $el_id .'_cp");
-                        colorPicker.farbtastic("#'. $el_id .'");
-                        colorPicker.hide();
-                        $("#'. $el_id .'").live("focus", function(){
-                            colorPicker.show();
-                        });
-                        $("#'. $el_id .'").live("blur", function(){
-                            colorPicker.hide();
-                            if($(this).val() == "") $(this).val("#");
-                        });
-                    });
-                    </script></div>';
-    		        break;
-    		    case 'file':
-                    $val = esc_attr($val);
-    		        echo '<input type="text" name="'. $this->option_group .'_settings['. $el_id .']" id="'. $el_id .'" value="'. $val .'" class="regular-text '. $class .'" /> ';
-                    echo '<input type="button" class="button wpsf-browse" id="'. $el_id .'_button" value="Browse" />';
-                    echo '<script type="text/javascript">
-                    jQuery(document).ready(function($){
-                		$("#'. $el_id .'_button").click(function() {
-                			tb_show("", "media-upload.php?post_id=0&amp;type=image&amp;TB_iframe=true");
-                			window.original_send_to_editor = window.send_to_editor;
-                        	window.send_to_editor = function(html) {
-                        		var imgurl = $("img",html).attr("src");
-                        		$("#'. $el_id .'").val(imgurl);
-                        		tb_remove();
-                        		window.send_to_editor = window.original_send_to_editor;
-                        	};
-                			return false;
-                		});
-                    });
-                    </script>';
-                    break;
-                case 'editor':
-    		        wp_editor( $val, $el_id, array( 'textarea_name' => $this->option_group .'_settings['. $el_id .']' ) );
-    		        if($desc)  echo '<p class="description">'. $desc .'</p>';
-    		        break;
-    		    case 'custom':
-    		        echo $std;
-    		        break;
-        		default:
-        		    break;
-    		}
-    		do_action( 'wpsf_after_field_'.$this->option_group );
-        	do_action( 'wpsf_after_field__'.$this->option_group. $el_id );
+        	$generate_field_method = sprintf('generate_%s_field', $args['type']);
+
+            if( method_exists($this, $generate_field_method) )
+                $this->$generate_field_method( $args );
+
+    		do_action( 'wpsf_after_field_' . $this->option_group );
+        	do_action( 'wpsf_after_field_' . $this->option_group . '_' . $args['id'] );
 
     	}
+
+        /**
+         * Generate: Text field
+         *
+         * @param arr $args
+         */
+        public function generate_text_field( $args ) {
+
+            $args['value'] = esc_attr( stripslashes( $args['value'] ) );
+
+            echo '<input type="text" name="'. $args['name'] .'" id="'. $args['id'] .'" value="'. $args['value'] .'" placeholder="'. $args['placeholder'] .'" class="regular-text '. $args['class'] .'" />';
+
+            $this->generate_description( $args['desc'] );
+
+        }
+
+        /**
+         * Generate: Select field
+         *
+         * @param arr $args
+         */
+        public function generate_select_field( $args ) {
+
+            $args['value'] = esc_html( esc_attr( $args['value'] ) );
+
+            echo '<select name="'. $args['name'] .'" id="'. $args['id'] .'" class="'. $args['class'] .'">';
+
+                foreach($args['choices'] as $value => $text ){
+
+                    $selected = $value == $args['value'] ? 'selected="selected"' : '';
+
+                    echo sprintf('<option value="%s" %s>%s</option>', $value, $selected, $text);
+
+                }
+
+            echo '</select>';
+
+            $this->generate_description( $args['desc'] );
+
+        }
+
+        /**
+         * Generate: Password field
+         *
+         * @param arr $args
+         */
+        public function generate_password_field( $args ) {
+
+            $args['value'] = esc_attr( stripslashes( $args['value'] ) );
+
+            echo '<input type="password" name="'. $args['name'] .'" id="'. $args['id'] .'" value="'. $args['value'] .'" placeholder="'. $args['placeholder'] .'" class="regular-text '. $args['class'] .'" />';
+
+            $this->generate_description( $args['desc'] );
+
+        }
+
+        /**
+         * Generate: Textarea field
+         *
+         * @param arr $args
+         */
+        public function generate_textarea_field( $args ) {
+
+            $args['value'] = esc_html( esc_attr( $args['value'] ) );
+
+            echo '<textarea name="'. $args['name'] .'" id="'. $args['id'] .'" placeholder="'. $args['placeholder'] .'" rows="5" cols="60" class="'. $args['class'] .'">'. $args['value'] .'</textarea>';
+
+            $this->generate_description( $args['desc'] );
+
+        }
+
+        /**
+         * Generate: Radio field
+         *
+         * @param arr $args
+         */
+        public function generate_radio_field( $args ) {
+
+            $args['value'] = esc_html( esc_attr( $args['value'] ) );
+
+            foreach( $args['choices'] as $value => $text ){
+
+                $field_id = sprintf('%s_%s', $args['id'], $value);
+                $checked = $value == $args['value'] ? 'checked="checked"' : '';
+
+                echo sprintf('<label><input type="radio" name="%s" id="%s" value="%s" class="%s" %s> %s</label><br />', $args['name'], $args['id'], $field_id, $value, $args['class'], $checked, $text);
+
+            }
+
+            $this->generate_description( $args['desc'] );
+
+        }
+
+        /**
+         * Generate: Checkbox field
+         *
+         * @param arr $args
+         */
+        public function generate_checkbox_field( $args ) {
+
+            $args['value'] = esc_attr( stripslashes( $args['value'] ) );
+            $checked = $args['value'] ? 'checked="checked"' : '';
+
+            echo '<input type="hidden" name="'. $args['name'] .'" value="0" />';
+            echo '<label><input type="checkbox" name="'. $args['name'] .'" id="'. $args['id'] .'" value="1" class="'. $args['class'] .'" '.$checked.'> '. $args['desc'] .'</label>';
+
+        }
+
+        /**
+         * Generate: Checkboxes field
+         *
+         * @param arr $args
+         */
+        public function generate_checkboxes_field( $args ) {
+
+            echo '<input type="hidden" name="'. $args['name'] .'" value="0" />';
+
+            foreach($args['choices'] as $value => $text){
+
+                $checked = is_array( $args['value'] ) && in_array($value, $args['value'])  ? 'checked="checked"' : '';
+                $field_id = sprintf('%s_%s', $args['id'], $value);
+
+                echo sprintf('<label><input type="checkbox" name="%s[]" id="%s" value="%s" class="%s" %s> %s</label><br />', $args['name'], $field_id, $value, $args['class'], $checked, $text);
+
+            }
+
+            $this->generate_description( $args['desc'] );
+        }
+
+        /**
+         * Generate: Color field
+         *
+         * @param arr $args
+         */
+        public function generate_color_field( $args ) {
+
+            $color_picker_id = sprintf('%s_cp', $args['id']);
+            $args['value'] = esc_attr( stripslashes( $args['value'] ) );
+
+            echo '<div style="position:relative;">';
+
+                echo sprintf('<input type="text" name="%s" id="%s" value="%s" class="%s">', $args['name'], $args['id'], $args['value'], $args['class']);
+
+                echo sprintf('<div id="%s" style="position:absolute;top:0;left:190px;background:#fff;z-index:9999;"></div>', $color_picker_id);
+
+                $this->generate_description( $args['desc'] );
+
+                echo '<script type="text/javascript">
+                jQuery(document).ready(function($){
+                    var colorPicker = $("#'. $color_picker_id .'");
+                    colorPicker.farbtastic("#'. $args['id'] .'");
+                    colorPicker.hide();
+                    $("#'. $args['id'] .'").live("focus", function(){
+                        colorPicker.show();
+                    });
+                    $("#'. $args['id'] .'").live("blur", function(){
+                        colorPicker.hide();
+                        if($(this).val() == "") $(this).val("#");
+                    });
+                });
+                </script>';
+
+            echo '</div>';
+
+        }
+
+        /**
+         * Generate: File field
+         *
+         * @param arr $args
+         */
+        public function generate_file_field( $args ) {
+
+            $args['value'] = esc_attr( $args['value'] );
+            $button_id = sprintf('%s_button', $args['id']);
+
+            echo sprintf('<input type="text" name="%s" id="%s" value="%s" class="regular-text %s"> ', $args['name'], $args['id'], $args['value'], $args['class']);
+
+            echo sprintf('<input type="button" class="button wpsf-browse" id="%s" value="Browse" />', $button_id);
+
+            echo '<script type="text/javascript">
+                jQuery(document).ready(function($){
+                    $("#'. $button_id .'").click(function() {
+
+                        tb_show("", "media-upload.php?post_id=0&amp;type=image&amp;TB_iframe=true");
+
+                        window.original_send_to_editor = window.send_to_editor;
+
+                        window.send_to_editor = function(html) {
+                            var imgurl = $("img",html).attr("src");
+                            $("#'. $args['id'] .'").val(imgurl);
+                            tb_remove();
+                            window.send_to_editor = window.original_send_to_editor;
+                        };
+
+                        return false;
+
+                    });
+                });
+            </script>';
+
+        }
+
+        /**
+         * Generate: Editor field
+         *
+         * @param arr $args
+         */
+        public function generate_editor_field( $args ) {
+
+            wp_editor( $args['value'], $args['id'], array( 'textarea_name' => $args['name'] ) );
+
+            $this->generate_description( $args['desc'] );
+
+        }
+
+        /**
+         * Generate: Custom field
+         *
+         * @param arr $args
+         */
+        public function generate_custom_field( $args ) {
+
+            echo $args['default'];
+
+        }
+
+        /**
+         * Generate: Multi Inputs field
+         *
+         * @param arr $args
+         */
+        public function generate_multiinputs_field( $args ) {
+
+            $field_titles = array_keys( $args['default'] );
+            $values = array_values( $args['value'] );
+
+            echo '<div class="multifields">';
+
+        		$i = 0; while($i < count($values)):
+
+        		    $field_id = sprintf('%s_%s', $args['value'], $i);
+        		    $value = esc_attr( stripslashes( $values[$i] ) );
+
+	        		echo '<div class="multifield">';
+						echo '<input type="text" name="'. $args['name'] .'[]" id="'. $field_id .'" value="'. $value .'" class="regular-text '. $args['class'] .'" placeholder="'. $args['placeholder'] .'" />';
+						echo '<br><span>'.$field_titles[$i].'</span>';
+	        		echo '</div>';
+
+	        	$i++; endwhile;
+
+        	echo '</div>';
+
+            $this->generate_description( $args['desc'] );
+
+        }
+
+
+        /**
+         * Generate: Field ID
+         *
+         * @param mixed $id
+         */
+        public function generate_field_name( $id ) {
+
+            return sprintf('%s_settings[%s]', $this->option_group, $id);
+
+        }
+
+        /**
+         * Generate: Description
+         *
+         * @param mixed $description
+         */
+        public function generate_description( $description ) {
+
+            if( $description && $description !== "" ) echo '<p class="description">'. $description .'</p>';
+
+        }
 
     	/**
          * Output the settings form
@@ -500,8 +684,6 @@ if( !class_exists('WordPressSettingsFramework') ){
         	    return $options;
 
         	$options = array();
-
-        	error_log( print_r( $this, true ) );
 
         	foreach($this->settings as $section){
         		foreach($section['fields'] as $field){
