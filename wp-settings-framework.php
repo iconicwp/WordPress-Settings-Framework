@@ -612,7 +612,7 @@ if( !class_exists('WordPressSettingsFramework') ){
 
         		$i = 0; while($i < count($values)):
 
-        		    $field_id = sprintf('%s_%s', $args['value'], $i);
+        		    $field_id = sprintf('%s_%s', $args['id'], $i);
         		    $value = esc_attr( stripslashes( $values[$i] ) );
 
 	        		echo '<div class="multifield">';
@@ -811,6 +811,28 @@ if( !class_exists('WordPressSettingsFramework') ){
                         padding-bottom: 20px;
                         border-bottom: 1px solid #eeeeee;
                     }
+
+
+                .multifields {
+                    width: 25em;
+                }
+
+                    .multifields .multifield {
+                        width: 20%;
+                        float: left;
+                        margin-right: 4%;
+                    }
+
+                        .multifields .multifield span {
+                            font-style: italic;
+                            font-size: 90%;
+                            display: block;
+                            margin: 4px 0 0 2px;
+                        }
+
+                        .multifields .multifield input {
+                            width: 100%;
+                        }
 
             </style>
             <?php
