@@ -687,6 +687,11 @@ if( !class_exists('WordPressSettingsFramework') ){
 
         	foreach($this->settings as $section){
         		foreach($section['fields'] as $field){
+
+            		if( !empty( $field['default'] ) && is_array( $field['default'] ) ) {
+            		    $field['default'] = array_values( $field['default'] );
+            		}
+
         			$options[ sprintf('%s_%s', $section['section_id'], $field['id']) ] = (isset($field['default'])) ? $field['default'] : false;
         		}
         	}
