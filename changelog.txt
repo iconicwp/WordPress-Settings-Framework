@@ -1,5 +1,8 @@
 *** WordPress Settings Framework Changelog ***
 
+2016.04.14 - version 1.6.2
+ * [Fixed] Undefined default error
+
 2014.07.08 - version 1.5.0
  * [New] Added "password" field
  * [New] Added "placeholder" attribute to text/password/textarea fields

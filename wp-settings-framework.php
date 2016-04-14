@@ -4,7 +4,7 @@
  *
  * @author Gilbert Pellegrom, James Kemp
  * @link https://github.com/gilbitron/WordPress-Settings-Framework
- * @version 1.6.1
+ * @version 1.6.2
  * @license MIT
  */
 
@@ -356,7 +356,7 @@ if( !class_exists('WordPressSettingsFramework') ){
 
         	$options = get_option( $this->option_group .'_settings' );
         	$args['id'] = sprintf( '%s_%s', $section['section_id'], $args['id'] );
-        	$args['value'] = (isset($options[$args['id']])) ? $options[$args['id']] : $args['default'];
+        	$args['value'] = isset( $options[$args['id']] ) ? $options[$args['id']] : isset( $args['default'] ) ? $args['default'] : '';
         	$args['name'] = $this->generate_field_name( $args['id'] );
 
         	do_action( 'wpsf_before_field_' . $this->option_group );
