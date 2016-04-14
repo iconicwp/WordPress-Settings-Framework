@@ -1,0 +1,21 @@
+{
+  "name": "wp-settings-framework",
+  "homepage": "https://github.com/jamesckemp/WordPress-Settings-Framework",
+  "authors": [
+    "James Kemp <support@jckemp.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "jquery-timepicker": "*"
+  }
+}

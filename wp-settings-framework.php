@@ -45,6 +45,18 @@ if( !class_exists('WordPressSettingsFramework') ){
         private $settings_page = array();
 
         /**
+         * @access private
+         * @var str
+         */
+        private $options_path;
+
+        /**
+         * @access private
+         * @var str
+         */
+        private $options_url;
+
+        /**
          * @access protected
          * @var array
          */
@@ -77,6 +89,9 @@ if( !class_exists('WordPressSettingsFramework') ){
             if( $option_group )
                 $this->option_group = $option_group;
 
+            $this->options_path = plugin_dir_path( __FILE__ );
+            $this->options_url = plugin_dir_url( __FILE__ );
+
             $this->construct_settings();
 
             if( is_admin() ) {
@@ -89,7 +104,7 @@ if( !class_exists('WordPressSettingsFramework') ){
                 if( isset( $_GET['page'] ) && $_GET['page'] === $this->settings_page['slug'] ) {
 
                     if( $pagenow !== "options-general.php" ) add_action( 'admin_notices', array( $this, 'admin_notices') );
-                    add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts') );
+                    add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 
                 }
 
@@ -242,13 +257,31 @@ if( !class_exists('WordPressSettingsFramework') ){
          */
     	public function admin_enqueue_scripts() {
 
-            wp_enqueue_style('farbtastic');
-            wp_enqueue_style('thickbox');
+        	// scripts
+
+            wp_register_script('jquery-ui-timepicker', $this->options_url.'assets/vendor/jquery-timepicker/jquery.ui.timepicker.js', array('jquery', 'jquery-ui-core'), false, true);
+            wp_register_script('wpsf', $this->options_url.'assets/js/main.js', array('jquery'), false, true);
 
             wp_enqueue_script('jquery');
             wp_enqueue_script('farbtastic');
             wp_enqueue_script('media-upload');
             wp_enqueue_script('thickbox');
+            wp_enqueue_script('jquery-ui-core');
+            wp_enqueue_script('jquery-ui-datepicker');
+            wp_enqueue_script('jquery-ui-timepicker');
+            wp_enqueue_script('wpsf');
+
+            // styles
+
+            wp_register_style('jquery-ui-timepicker', $this->options_url.'assets/vendor/jquery-timepicker/jquery.ui.timepicker.css');
+            wp_register_style('wpsf', $this->options_url.'assets/css/main.css');
+            wp_register_style('jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/themes/ui-darkness/jquery-ui.css');
+
+            wp_enqueue_style('farbtastic');
+            wp_enqueue_style('thickbox');
+            wp_enqueue_style('jquery-ui-timepicker');
+            wp_enqueue_style('jquery-ui-css');
+            wp_enqueue_style('wpsf');
 
     	}
 
@@ -382,6 +415,32 @@ if( !class_exists('WordPressSettingsFramework') ){
             $args['value'] = esc_attr( stripslashes( $args['value'] ) );
 
             echo '<input type="text" name="'. $args['name'] .'" id="'. $args['id'] .'" value="'. $args['value'] .'" placeholder="'. $args['placeholder'] .'" class="regular-text '. $args['class'] .'" />';
+
+            $this->generate_description( $args['desc'] );
+
+        }
+
+        /**
+         * Generate: Date/Time field
+         *
+         * @param arr $args
+         */
+        public function generate_datetime_field( $args ) {
+
+            echo '<input name="'. $args['name'] .'" id="'. $args['id'] .'" value="'. $args['value'] .'" class="timepicker regular-text '. $args['class'] .'" />';
+
+            $this->generate_description( $args['desc'] );
+
+        }
+
+        /**
+         * Generate: Group field
+         *
+         * @param arr $args
+         */
+        public function generate_group_field( $args ) {
+
+            echo 'group';
 
             $this->generate_description( $args['desc'] );
 
@@ -897,13 +956,6 @@ if( !class_exists('WordPressSettingsFramework') ){
                 }(jQuery, document));
             </script>
             <?php
-        }
-
-        /**
-         * Output the opening tab wrapper
-         */
-        public function open_tab_wrapper( $section ) {
-            echo '<pre>'; print_r($section['tab_id']); echo '</pre>';
         }
 
         /**
