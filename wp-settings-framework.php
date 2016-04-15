@@ -456,8 +456,6 @@ if( !class_exists('WordPressSettingsFramework') ){
          */
         public function generate_group_field( $args ) {
 
-            error_log( print_r( $args, true ) );
-
             $row_count = count( $args['value'] );
 
             echo '<table class="widefat wpsf-group" cellspacing="0">';
