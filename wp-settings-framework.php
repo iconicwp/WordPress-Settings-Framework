@@ -68,7 +68,8 @@ if( !class_exists('WordPressSettingsFramework') ){
             'type'   	  => 'text',
             'placeholder' => '',
             'choices'     => array(),
-            'class'       => ''
+            'class'       => '',
+            'subfields'   => array()
         );
 
         /**
@@ -395,15 +396,26 @@ if( !class_exists('WordPressSettingsFramework') ){
         	do_action( 'wpsf_before_field_' . $this->option_group );
         	do_action( 'wpsf_before_field_' . $this->option_group . '_' . $args['id'] );
 
-        	$generate_field_method = sprintf('generate_%s_field', $args['type']);
-
-            if( method_exists($this, $generate_field_method) )
-                $this->$generate_field_method( $args );
+        	$this->do_field_method( $args );
 
     		do_action( 'wpsf_after_field_' . $this->option_group );
         	do_action( 'wpsf_after_field_' . $this->option_group . '_' . $args['id'] );
 
     	}
+
+        /**
+         * Do field method, if it exists
+         *
+         * @param str $type
+         */
+        public function do_field_method( $args ) {
+
+            $generate_field_method = sprintf('generate_%s_field', $args['type']);
+
+            if( method_exists($this, $generate_field_method) )
+                $this->$generate_field_method( $args );
+
+        }
 
         /**
          * Generate: Text field
@@ -425,9 +437,11 @@ if( !class_exists('WordPressSettingsFramework') ){
          *
          * @param arr $args
          */
-        public function generate_datetime_field( $args ) {
+        public function generate_time_field( $args ) {
 
-            echo '<input name="'. $args['name'] .'" id="'. $args['id'] .'" value="'. $args['value'] .'" class="timepicker regular-text '. $args['class'] .'" />';
+            $args['value'] = esc_attr( stripslashes( $args['value'] ) );
+
+            echo '<input name="'. $args['name'] .'" id="'. $args['id'] .'" value="'. $args['value'] .'" class="timepicker regular-text '. $args['class'] .'" data-timepicker="'.htmlentities( json_encode( $args['timepicker'] ) ).'" />';
 
             $this->generate_description( $args['desc'] );
 
@@ -436,13 +450,92 @@ if( !class_exists('WordPressSettingsFramework') ){
         /**
          * Generate: Group field
          *
+         * Generates a table of subfields, and a javascript template for create new repeatable rows
+         *
          * @param arr $args
          */
         public function generate_group_field( $args ) {
 
-            echo 'group';
+            error_log( print_r( $args, true ) );
+
+            $row_count = count( $args['value'] );
+
+            echo '<table class="widefat wpsf-group" cellspacing="0">';
+
+                echo "<tbody>";
+
+                    for ($row = 0; $row < $row_count; $row++) {
+
+                        echo $this->generate_group_row_template( $args, false, $row );
+
+                    }
+
+                echo "</tbody>";
+
+            echo "</table>";
+
+            printf('<script type="text/html" id="%s_template">%s</script>', $args['id'], $this->generate_group_row_template( $args, true ));
 
             $this->generate_description( $args['desc'] );
+
+        }
+
+        /**
+         * Generate group row template
+         *
+         * @param arr $args Field arguments
+         * @param bool $blank Blank values
+         * @param int $row Iterator
+         * @return str|bool
+         */
+        public function generate_group_row_template( $args, $blank = false, $row = 0 ) {
+
+            $row_template = false;
+
+            if( $args['subfields'] ) {
+
+                $row_class = $row%2 == 0 ? "alternate" : "";
+
+                $row_template .= sprintf('<tr class="wpsf-group__row %s">', $row_class);
+
+                    $row_template .= sprintf('<td class="wpsf-group__row-index"><span>%d</span></td>', $row);
+
+                    $row_template .= '<td class="wpsf-group__row-fields">';
+
+                        foreach( $args['subfields'] as $subfield ) {
+
+                            $subfield = wp_parse_args( $subfield, $this->setting_defaults );
+
+                            $subfield['value'] = ( $blank ) ? "" : isset( $args['value'][$row][$subfield['id']] ) ? $args['value'][$row][$subfield['id']] : "";
+                            $subfield['name'] = sprintf('%s[%d][%s]', $args['name'], $row, $subfield['id']);
+                            $subfield['id'] = sprintf('%s_%d_%s', $args['id'], $row, $subfield['id']);
+
+                            $row_template .= '<div class="wpsf-group__field-wrapper">';
+
+                                $row_template .= sprintf('<label for="%s" class="wpsf-group__field-label">%s</label>', $subfield['id'], $subfield['title']);
+
+                                ob_start();
+                                $this->do_field_method( $subfield );
+                                $row_template .= ob_get_clean();
+
+                            $row_template .= '</div>';
+
+                        }
+
+                    $row_template .= "</td>";
+
+                    $row_template .= '<td class="wpsf-group__row-actions">';
+
+                        $row_template .= sprintf('<a href="javascript: void(0);" class="wpsf-group__row-add" data-template="%s_template"><span class="dashicons dashicons-plus-alt"></span></a>', $args['id']);
+                        $row_template .= '<a href="javascript: void(0);" class="wpsf-group__row-remove"><span class="dashicons dashicons-trash"></span></a>';
+
+                    $row_template .= "</td>";
+
+                $row_template .= '</tr>';
+
+            }
+
+            return $row_template;
 
         }
 
@@ -842,7 +935,7 @@ if( !class_exists('WordPressSettingsFramework') ){
                         padding: 15px 2%;
                         border: none;
                         margin: 0 0 20px;
-                        background: #333333;
+                        background: #23282d;
                         color: #ffffff;
                         -webkit-font-smoothing: antialiased;
                         -moz-font-smoothing: antialiased;
@@ -877,26 +970,69 @@ if( !class_exists('WordPressSettingsFramework') ){
                     }
 
 
-                .multifields {
-                    width: 25em;
+                .wpsf-group__row td {
+                    border-bottom: 1px solid #e5e5e5;
                 }
 
-                    .multifields .multifield {
-                        width: 20%;
-                        float: left;
-                        margin-right: 4%;
+                .wpsf-group__row:last-child td {
+                    border-bottom: none;
+                }
+
+                .wpsf-group__row-index {
+                    width: 25px;
+                    border-right: 1px solid #e5e5e5;
+                }
+
+                    .wpsf-group__row-index span {
+                        text-align: center;
+                        display: inline-block;
+                        width: 25px;
+                        line-height: 25px;
+                        height: 25px;
+                        background: #e5e5e5;
+                        border-radius: 25px;
+                        box-shadow: inset 0px 1px #c5c5c5;
+                        font-size: 90%;
+                        font-weight: bold;
                     }
 
-                        .multifields .multifield span {
-                            font-style: italic;
-                            font-size: 90%;
+                .wpsf-group__row-actions {
+                    border-left: 1px solid #e5e5e5;
+                    position: relative;
+                    width: 20px;
+                }
+
+                    .wpsf-group__row-add {
+                        position: absolute;
+                        bottom: -10px;
+                        background: #fff;
+                        border-radius: 100%;
+                    }
+
+                .wpsf-group__row-fields {
+                    padding: 0 !important;
+                }
+
+                    .wpsf-group__field-wrapper {
+                        display: block;
+                        border-bottom: 1px solid #e5e5e5;
+                        padding: 15px 10px;
+                    }
+
+                    .wpsf-group__field-wrapper:last-child {
+                        border-bottom: none;
+                    }
+
+                        .wpsf-group__field-label {
                             display: block;
-                            margin: 4px 0 0 2px;
+                            margin: 0 0 5px;
+                            font-weight: bold;
                         }
 
-                        .multifields .multifield input {
-                            width: 100%;
-                        }
+                    .wpsf-group__row-fields .regular-text ,
+                    .wpsf-group__row-fields textarea {
+                        width: 100%;
+                    }
 
             </style>
             <?php
