@@ -11,8 +11,17 @@
 
             // on ready stuff here
             wpsf.cache();
-            wpsf.setup_timepickers();
+            wpsf.trigger_dynamic_fields();
             wpsf.setup_groups();
+
+        },
+
+        /**
+         * Trigger dynamic fields
+         */
+        trigger_dynamic_fields: function() {
+
+            wpsf.setup_timepickers();
 
         },
 
@@ -21,7 +30,7 @@
          */
         setup_timepickers: function() {
 
-            $('.timepicker').each(function(){
+            $('.timepicker').not('.hasTimepicker').each(function(){
 
                 var timepicker_args = $(this).data('timepicker');
 
@@ -48,6 +57,8 @@
                 $row.after( $template );
 
                 wpsf.reindex_group( $group );
+
+                wpsf.trigger_dynamic_fields();
 
                 return false;
 
@@ -98,7 +109,7 @@
                         $(this).attr('name', name.replace(/\[\d+\]/, '['+index+']'));
 
                     if(typeof id !== typeof undefined && id !== false)
-                        $(this).attr('id', id.replace(/\-id\d+\-/, '-id'+index+'-'));
+                        $(this).attr('id', id.replace(/\_\d+\_/, '_'+index+'_'));
 
                 });
 
