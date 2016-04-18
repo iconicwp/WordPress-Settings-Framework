@@ -389,8 +389,9 @@ if( !class_exists('WordPressSettingsFramework') ){
         	$args = wp_parse_args( $args['field'], $this->setting_defaults );
 
         	$options = get_option( $this->option_group .'_settings' );
-        	$args['id'] = sprintf( '%s_%s', $section['section_id'], $args['id'] );
-        	$args['value'] = isset( $options[$args['id']] ) ? $options[$args['id']] : isset( $args['default'] ) ? $args['default'] : '';
+
+        	$args['id'] = $this->has_tabs() ? sprintf( '%s_%s_%s', $section['tab_id'], $section['section_id'], $args['id'] ) : sprintf( '%s_%s', $section['section_id'], $args['id'] );
+        	$args['value'] = isset( $options[$args['id']] ) ? $options[$args['id']] : ( isset( $args['default'] ) ? $args['default'] : '' );
         	$args['name'] = $this->generate_field_name( $args['id'] );
 
         	do_action( 'wpsf_before_field_' . $this->option_group );
