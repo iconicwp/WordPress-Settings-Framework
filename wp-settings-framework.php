@@ -431,7 +431,7 @@ if( !class_exists('WordPressSettingsFramework') ){
         }
 
         /**
-         * Generate: Date/Time field
+         * Generate: Time field
          *
          * @param arr $args
          */
@@ -440,6 +440,21 @@ if( !class_exists('WordPressSettingsFramework') ){
             $args['value'] = esc_attr( stripslashes( $args['value'] ) );
 
             echo '<input name="'. $args['name'] .'" id="'. $args['id'] .'" value="'. $args['value'] .'" class="timepicker regular-text '. $args['class'] .'" data-timepicker="'.htmlentities( json_encode( $args['timepicker'] ) ).'" />';
+
+            $this->generate_description( $args['desc'] );
+
+        }
+
+        /**
+         * Generate: Date field
+         *
+         * @param arr $args
+         */
+        public function generate_date_field( $args ) {
+
+            $args['value'] = esc_attr( stripslashes( $args['value'] ) );
+
+            echo '<input name="'. $args['name'] .'" id="'. $args['id'] .'" value="'. $args['value'] .'" class="datepicker regular-text '. $args['class'] .'" data-datepicker="'.htmlentities( json_encode( $args['datepicker'] ) ).'" />';
 
             $this->generate_description( $args['desc'] );
 

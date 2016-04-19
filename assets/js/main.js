@@ -22,6 +22,7 @@
         trigger_dynamic_fields: function() {
 
             wpsf.setup_timepickers();
+            wpsf.setup_datepickers();
 
         },
 
@@ -35,6 +36,21 @@
                 var timepicker_args = $(this).data('timepicker');
 
                 $(this).timepicker( timepicker_args );
+
+            });
+
+        },
+
+        /**
+         * Set up timepickers
+         */
+        setup_datepickers: function() {
+
+            $('.datepicker').not('.hasTimepicker').each(function(){
+
+                var datepicker_args = $(this).data('datepicker');
+
+                $(this).datepicker( datepicker_args );
 
             });
 
