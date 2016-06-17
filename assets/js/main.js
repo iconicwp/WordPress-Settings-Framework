@@ -5,6 +5,8 @@
         cache: function() {
             wpsf.els = {};
             wpsf.vars = {};
+
+            wpsf.els.tab_links = $('.wpsf-tab-link');
         },
 
         on_ready: function() {
@@ -13,6 +15,7 @@
             wpsf.cache();
             wpsf.trigger_dynamic_fields();
             wpsf.setup_groups();
+            wpsf.setup_tabs();
 
         },
 
@@ -23,6 +26,29 @@
 
             wpsf.setup_timepickers();
             wpsf.setup_datepickers();
+
+        },
+
+        /**
+         * Setup the main tabs for the settings page
+         */
+        setup_tabs: function() {
+
+            wpsf.els.tab_links.on('click', function(){
+
+                // Set tab link active class
+                wpsf.els.tab_links.removeClass('nav-tab-active');
+                $(this).addClass('nav-tab-active');
+
+                // Show tab
+                var tab_id = $(this).attr('href');
+
+                $('.wpsf-tab').removeClass('wpsf-tab--active');
+                $(tab_id).addClass('wpsf-tab--active');
+
+                return false;
+
+            });
 
         },
 
