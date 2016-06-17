@@ -4,7 +4,7 @@
  *
  * @author Gilbert Pellegrom, James Kemp
  * @link https://github.com/gilbitron/WordPress-Settings-Framework
- * @version 1.6.2
+ * @version 1.6.3
  * @license MIT
  */
 
@@ -112,8 +112,6 @@ if( !class_exists('WordPressSettingsFramework') ){
                 if( $this->has_tabs() ) {
 
                     add_action( 'wpsf_before_settings_'.$this->option_group,         array( $this, 'tab_links' ) );
-                    add_action( 'wpsf_before_settings_'.$this->option_group,         array( $this, 'tab_styles' ) );
-                    add_action( 'wpsf_before_settings_'.$this->option_group,         array( $this, 'tab_scripts' ) );
 
                     remove_action( 'wpsf_do_settings_sections_'.$this->option_group, array( $this, 'do_tabless_settings_sections'), 10 );
                     add_action( 'wpsf_do_settings_sections_'.$this->option_group,    array( $this, 'do_tabbed_settings_sections'), 10 );
@@ -342,7 +340,9 @@ if( !class_exists('WordPressSettingsFramework') ){
 
                         		if( isset($field['id']) && $field['id'] && isset($field['title']) ){
 
-                        		    add_settings_field( $field['id'], $field['title'], array( $this, 'generate_setting'), $page_name, $section['section_id'], array('section' => $section, 'field' => $field) );
+                            		$title = !empty( $field['subtitle'] ) ? sprintf('%s <span class="wpsf-subtitle">%s</span>', $field['title'], $field['subtitle']) : $field['title'];
+
+                        		    add_settings_field( $field['id'], $title, array( $this, 'generate_setting'), $page_name, $section['section_id'], array('section' => $section, 'field' => $field) );
 
                         		}
                     		}
@@ -771,14 +771,14 @@ if( !class_exists('WordPressSettingsFramework') ){
             $field_titles = array_keys( $args['default'] );
             $values = array_values( $args['value'] );
 
-            echo '<div class="multifields">';
+            echo '<div class="wpsf-multifields">';
 
         		$i = 0; while($i < count($values)):
 
         		    $field_id = sprintf('%s_%s', $args['id'], $i);
         		    $value = esc_attr( stripslashes( $values[$i] ) );
 
-	        		echo '<div class="multifield">';
+	        		echo '<div class="wpsf-multifields__field">';
 						echo '<input type="text" name="'. $args['name'] .'[]" id="'. $field_id .'" value="'. $value .'" class="regular-text '. $args['class'] .'" placeholder="'. $args['placeholder'] .'" />';
 						echo '<br><span>'.$field_titles[$i].'</span>';
 	        		echo '</div>';
@@ -868,9 +868,11 @@ if( !class_exists('WordPressSettingsFramework') ){
          */
 
         public function do_tabless_settings_sections() {
-
-            do_settings_sections( $this->option_group );
-
+            ?>
+            <div class="wpsf-section wpsf-tabless">
+                <?php do_settings_sections( $this->option_group ); ?>
+            </div>
+            <?php
         }
 
         /**
@@ -882,7 +884,7 @@ if( !class_exists('WordPressSettingsFramework') ){
             $i = 0;
             foreach ( $this->tabs as $tab_data ) {
                 ?>
-            	<div id="tab-<?php echo $tab_data['id']; ?>" class="wpsf-tab wpsf-tab--<?php echo $tab_data['id']; ?> <?php if($i == 0) echo 'wpsf-tab--active'; ?>">
+            	<div id="tab-<?php echo $tab_data['id']; ?>" class="wpsf-section wpsf-tab wpsf-tab--<?php echo $tab_data['id']; ?> <?php if($i == 0) echo 'wpsf-tab--active'; ?>">
             		<div class="postbox">
             			<?php do_settings_sections( sprintf( '%s_%s', $this->option_group, $tab_data['id'] ) ); ?>
             		</div>
@@ -917,192 +919,6 @@ if( !class_exists('WordPressSettingsFramework') ){
             <?php
             do_action( 'wpsf_after_tab_links_'.$this->option_group );
 
-        }
-
-        /**
-         * Output Tab Styles
-         */
-        public function tab_styles() {
-            ?>
-            <style type="text/css">
-
-                .nav-tab-wrapper {
-                    min-height: 35px;
-                }
-
-                .wpsf-tab {
-                    display: none;
-                }
-
-                .wpsf-tab--active {
-                    display: block;
-                }
-
-                    .wpsf-tab .postbox {
-                        margin: 20px 0;
-                    }
-
-                    .wpsf-tab .postbox h2 {
-                        padding: 15px 2%;
-                        border: none;
-                        margin: 0 0 20px;
-                        background: #23282d;
-                        color: #ffffff;
-                        -webkit-font-smoothing: antialiased;
-                        -moz-font-smoothing: antialiased;
-                        -o-font-smoothing: antialiased;
-                        font-smoothing: antialiased;
-                        font-size: 1.25em;
-                    }
-
-                    .wpsf-tab .postbox h3:first-child {
-                        margin-top: 0;
-                    }
-
-                    .js .wpsf-tab .postbox h3 {
-                        cursor: default;
-                    }
-
-                    .wpsf-tab .postbox table.form-table,
-                    .wpsf-tab .wpsf-section-description {
-                        margin: 0 2%;
-                        width: 96%;
-                    }
-
-                    .wpsf-tab .postbox table.form-table {
-                        margin-bottom: 20px;
-                    }
-
-                    .wpsf-tab .wpsf-section-description {
-                        margin-top: 20px;
-                        margin-bottom: 20px;
-                        padding-bottom: 20px;
-                        border-bottom: 1px solid #eeeeee;
-                    }
-
-
-                .wpsf-group__row td {
-                    border-bottom: 1px solid #e5e5e5;
-                }
-
-                .wpsf-group__row:last-child td {
-                    border-bottom: none;
-                }
-
-                .wpsf-group__row-index {
-                    width: 25px;
-                    border-right: 1px solid #e5e5e5;
-                }
-
-                    .wpsf-group__row-index span {
-                        text-align: center;
-                        display: inline-block;
-                        width: 25px;
-                        line-height: 25px;
-                        height: 25px;
-                        background: #e5e5e5;
-                        border-radius: 25px;
-                        box-shadow: inset 0px 1px #c5c5c5;
-                        font-size: 90%;
-                        font-weight: bold;
-                    }
-
-                .wpsf-group__row-actions {
-                    border-left: 1px solid #e5e5e5;
-                    position: relative;
-                    width: 20px;
-                }
-
-                    .wpsf-group__row-add {
-                        position: absolute;
-                        bottom: -10px;
-                        background: #fff;
-                        border-radius: 100%;
-                    }
-
-                .wpsf-group__row-fields {
-                    padding: 0 !important;
-                }
-
-                    .wpsf-group__field-wrapper {
-                        display: block;
-                        border-bottom: 1px solid #e5e5e5;
-                        padding: 15px 10px;
-                    }
-
-                    .wpsf-group__field-wrapper:last-child {
-                        border-bottom: none;
-                    }
-
-                        .wpsf-group__field-label {
-                            display: block;
-                            margin: 0 0 5px;
-                            font-weight: bold;
-                        }
-
-                    .wpsf-group__row-fields .regular-text ,
-                    .wpsf-group__row-fields textarea {
-                        width: 100%;
-                    }
-
-            </style>
-            <?php
-        }
-
-        /**
-         * Output Tab Scripts
-         */
-        public function tab_scripts() {
-            ?>
-            <script>
-                (function($, document) {
-
-                    var wpsf = {
-
-                        cache: function() {
-                            wpsf.els = {};
-                            wpsf.vars = {};
-
-                            // common elements
-                            wpsf.els.tab_links = $('.wpsf-tab-link');
-
-                        },
-
-                        on_ready: function() {
-
-                            // on ready stuff here
-                            wpsf.cache();
-                            wpsf.setup_tabs();
-
-                        },
-
-                        setup_tabs: function() {
-
-                            wpsf.els.tab_links.on('click', function(){
-
-                        		// Set tab link active class
-                        		wpsf.els.tab_links.removeClass('nav-tab-active');
-                        		$(this).addClass('nav-tab-active');
-
-                        		// Show tab
-                        		var tab_id = $(this).attr('href');
-
-                        		$('.wpsf-tab').removeClass('wpsf-tab--active');
-                        		$(tab_id).addClass('wpsf-tab--active');
-
-                            	return false;
-
-                        	});
-
-                        }
-
-                    };
-
-                	$(document).ready( wpsf.on_ready() );
-
-                }(jQuery, document));
-            </script>
-            <?php
         }
 
         /**
