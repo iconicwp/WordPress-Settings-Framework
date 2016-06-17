@@ -1,0 +1,199 @@
+/**
+ * Settings page styles
+ *
+ * $. Tabs
+ * $. Repeater
+ * $. Fields
+ * $. - Multifields
+ * $. - Subtitle
+ * $. Tables
+ */
+
+/* $. Tabs */
+
+.nav-tab-wrapper {
+    min-height: 35px;
+}
+
+.wpsf-tab {
+    display: none;
+}
+
+.wpsf-tab--active {
+    display: block;
+}
+
+    .wpsf-tab .postbox {
+        margin: 20px 0;
+    }
+
+    .wpsf-tab .postbox h2 {
+        padding: 15px 2%;
+        border: none;
+        margin: 0 0 20px;
+        background: #23282d;
+        color: #ffffff;
+        -webkit-font-smoothing: antialiased;
+        -moz-font-smoothing: antialiased;
+        -o-font-smoothing: antialiased;
+        font-smoothing: antialiased;
+        font-size: 1.25em;
+    }
+
+    .wpsf-tab .postbox h3:first-child {
+        margin-top: 0;
+    }
+
+    .js .wpsf-tab .postbox h3 {
+        cursor: default;
+    }
+
+    .wpsf-tab .postbox table.form-table,
+    .wpsf-tab .wpsf-section-description {
+        margin: 0 2%;
+        width: 96%;
+    }
+
+    .wpsf-tab .postbox table.form-table {
+        margin-bottom: 20px;
+    }
+
+    .wpsf-tab .wpsf-section-description {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #eeeeee;
+    }
+
+/* $. Repeater */
+
+.wpsf-group__row td {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.wpsf-group__row:last-child td {
+    border-bottom: none;
+}
+
+.wpsf-group__row-index {
+    width: 25px;
+    border-right: 1px solid #e5e5e5;
+}
+
+    .wpsf-group__row-index span {
+        text-align: center;
+        display: inline-block;
+        width: 25px;
+        line-height: 25px;
+        height: 25px;
+        background: #e5e5e5;
+        border-radius: 25px;
+        box-shadow: inset 0px 1px #c5c5c5;
+        font-size: 90%;
+        font-weight: bold;
+    }
+
+.wpsf-group__row-actions {
+    border-left: 1px solid #e5e5e5;
+    position: relative;
+    width: 20px;
+}
+
+    .wpsf-group__row-add {
+        position: absolute;
+        bottom: -10px;
+        background: #fff;
+        border-radius: 100%;
+    }
+
+.wpsf-group__row-fields {
+    padding: 0 !important;
+}
+
+    .wpsf-group__field-wrapper {
+        display: block;
+        border-bottom: 1px solid #e5e5e5;
+        padding: 15px 10px;
+    }
+
+    .wpsf-group__field-wrapper:last-child {
+        border-bottom: none;
+    }
+
+        .wpsf-group__field-label {
+            display: block;
+            margin: 0 0 5px;
+            font-weight: bold;
+        }
+
+    .wpsf-group__row-fields .regular-text ,
+    .wpsf-group__row-fields textarea {
+        width: 100%;
+    }
+
+/* $. Fields */
+
+    /* $. Multifields */
+
+    .wpsf-multifields {
+        overflow: hidden;
+        width: 100%;
+    }
+
+        .wpsf-multifields__field {
+            width: 25%;
+            float: left;
+            display: inline-block;
+            padding-right: 10px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+            .wpsf-multifields__field input {
+                max-width: 100%;
+                width: 100%;
+            }
+
+            .wpsf-multifields__field span {
+                font-weight: 400;
+                display: block;
+                font-size: 12px;
+                color: #888;
+                font-style: italic;
+                margin: 10px 0 0;
+            }
+
+            @media screen and (max-width: 782px) {
+
+                .wpsf-multifields__field span {
+                    margin: -10px 0 0;
+                }
+
+            }
+
+    /* $. Subtitle */
+
+    .wpsf-subtitle {
+        font-weight: 400;
+        display: block;
+        font-size: 12px;
+        color: #888;
+        font-style: italic;
+        margin: 15px 0 0;
+    }
+
+    @media screen and (max-width: 782px) {
+
+        .wpsf-subtitle {
+            margin: 10px 0 15px;
+        }
+
+    }
+
+/* $. Tables */
+
+.wpsf-section .form-table th,
+.wpsf-section .form-table td {
+    vertical-align: top;
+}
