@@ -93,9 +93,9 @@ if( !class_exists('WordPressSettingsFramework') ){
             $this->options_path = plugin_dir_path( __FILE__ );
             $this->options_url = plugin_dir_url( __FILE__ );
 
-            $this->construct_settings();
-
             if( is_admin() ) {
+            	
+            	$this->construct_settings();
 
                 global $pagenow;
 
