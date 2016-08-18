@@ -429,6 +429,21 @@ if( !class_exists('WordPressSettingsFramework') ){
             $this->generate_description( $args['desc'] );
 
         }
+        
+        /**
+         * Generate: Number field
+         *
+         * @param arr $args
+         */
+        public function generate_number_field( $args ) {
+
+            $args['value'] = esc_attr( stripslashes( $args['value'] ) );
+
+            echo '<input type="number" name="'. $args['name'] .'" id="'. $args['id'] .'" value="'. $args['value'] .'" placeholder="'. $args['placeholder'] .'" class="regular-text '. $args['class'] .'" />';
+
+            $this->generate_description( $args['desc'] );
+
+        }
 
         /**
          * Generate: Time field
