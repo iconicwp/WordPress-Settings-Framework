@@ -63,12 +63,14 @@ class WPSFTest {
 }
 ```
 
-Your settings values can be accessed by getting the whole array:
+Your settings values can be accessed like so:
 
 ```php
 // Get settings
-$settings = wpsf_get_settings( 'prefix_settings_general' );
+$this->wpsf->get_settings();
 ```
+
+This will get either the saved setting values, or the default values that you set in your settings file.
 
 Or by getting individual settings:
 
@@ -145,12 +147,6 @@ Creates a new settings [option_group](http://codex.wordpress.org/Function_Refere
 Converts the settings file name to option group id
 
 * `$settings_file` - path to the settings file
-
-<pre>wpsf_get_settings( $option_group )</pre>
-
-Get an array of settings by the option group id
-
-* `$option_group` - option group id
 
 <pre>wpsf_get_setting( $option_group, $section_id, $field_id )</pre>
 
