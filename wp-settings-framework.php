@@ -61,11 +61,11 @@ if( !class_exists('WordPressSettingsFramework') ){
          * @var array
          */
         protected $setting_defaults = array(
-            'id'     	  => 'default_field',
-            'title'  	  => 'Default Field',
-            'desc'  	  => '',
-            'std'    	  => '',
-            'type'   	  => 'text',
+            'id'           => 'default_field',
+            'title'        => 'Default Field',
+            'desc'        => '',
+            'std'          => '',
+            'type'         => 'text',
             'placeholder' => '',
             'choices'     => array(),
             'class'       => '',
@@ -168,16 +168,16 @@ if( !class_exists('WordPressSettingsFramework') ){
          */
         public function admin_init() {
 
-    		register_setting( $this->option_group, $this->option_group .'_settings', array( $this, 'settings_validate') );
-    		$this->process_settings();
+            register_setting( $this->option_group, $this->option_group .'_settings', array( $this, 'settings_validate') );
+            $this->process_settings();
 
-    	}
+        }
 
-    	/**
-    	 * Add Settings Page
-    	 *
-    	 * @param array $args
-    	 */
+        /**
+         * Add Settings Page
+         *
+         * @param array $args
+         */
 
         public function add_settings_page( $args ) {
 
@@ -227,15 +227,15 @@ if( !class_exists('WordPressSettingsFramework') ){
                 wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
             }
             ?>
-    		<div class="wrap">
-    			<div id="icon-options-general" class="icon32"></div>
-    			<h2><?php echo $this->settings_page['title']; ?></h2>
-    			<?php
-    			// Output your settings form
-    			$this->settings();
-    			?>
-    		</div>
-    		<?php
+            <div class="wrap">
+                <div id="icon-options-general" class="icon32"></div>
+                <h2><?php echo $this->settings_page['title']; ?></h2>
+                <?php
+                // Output your settings form
+                $this->settings();
+                ?>
+            </div>
+            <?php
 
         }
 
@@ -244,16 +244,16 @@ if( !class_exists('WordPressSettingsFramework') ){
          */
         public function admin_notices() {
 
-        	settings_errors();
+            settings_errors();
 
-    	}
+        }
 
-    	/**
+        /**
          * Enqueue scripts and styles
          */
-    	public function admin_enqueue_scripts() {
+        public function admin_enqueue_scripts() {
 
-        	// scripts
+            // scripts
 
             wp_register_script('jquery-ui-timepicker', $this->options_url.'assets/vendor/jquery-timepicker/jquery.ui.timepicker.js', array('jquery', 'jquery-ui-core'), false, true);
             wp_register_script('wpsf', $this->options_url.'assets/js/main.js', array('jquery'), false, true);
@@ -279,30 +279,30 @@ if( !class_exists('WordPressSettingsFramework') ){
             wp_enqueue_style('jquery-ui-css');
             wp_enqueue_style('wpsf');
 
-    	}
+        }
 
-    	/**
+        /**
          * Adds a filter for settings validation
          *
          * @param array the un-validated settings
          * @return array the validated settings
          */
-    	public function settings_validate( $input ) {
+        public function settings_validate( $input ) {
 
-    		return apply_filters( $this->option_group .'_settings_validate', $input );
+            return apply_filters( $this->option_group .'_settings_validate', $input );
 
-    	}
+        }
 
-    	/**
+        /**
          * Displays the "section_description" if specified in $this->settings
          *
          * @param array callback args from add_settings_section()
          */
-    	public function section_intro( $args ) {
+        public function section_intro( $args ) {
 
-        	if(!empty($this->settings)){
+            if(!empty($this->settings)){
 
-        		foreach($this->settings as $section){
+                foreach($this->settings as $section){
 
                     if($section['section_id'] == $args['id']){
 
@@ -311,95 +311,95 @@ if( !class_exists('WordPressSettingsFramework') ){
 
                     }
 
-        		}
+                }
 
             }
 
-    	}
+        }
 
-    	/**
+        /**
          * Processes $this->settings and adds the sections and fields via the WordPress settings API
          */
-    	private function process_settings() {
+        private function process_settings() {
 
-        	if( !empty($this->settings) ){
+            if( !empty($this->settings) ){
 
-        	    usort($this->settings, array( $this, 'sort_array'));
+                usort($this->settings, array( $this, 'sort_array'));
 
-        		foreach( $this->settings as $section ){
+                foreach( $this->settings as $section ){
 
-            		if( isset($section['section_id']) && $section['section_id'] && isset($section['section_title']) ){
+                    if( isset($section['section_id']) && $section['section_id'] && isset($section['section_title']) ){
 
-                		$page_name = ( $this->has_tabs() ) ? sprintf( '%s_%s', $this->option_group, $section['tab_id'] ) : $this->option_group;
+                        $page_name = ( $this->has_tabs() ) ? sprintf( '%s_%s', $this->option_group, $section['tab_id'] ) : $this->option_group;
 
-                		add_settings_section( $section['section_id'], $section['section_title'], array( $this, 'section_intro'), $page_name );
+                        add_settings_section( $section['section_id'], $section['section_title'], array( $this, 'section_intro'), $page_name );
 
-                		if( isset($section['fields']) && is_array($section['fields']) && !empty($section['fields']) ){
+                        if( isset($section['fields']) && is_array($section['fields']) && !empty($section['fields']) ){
 
-                    		foreach( $section['fields'] as $field ){
+                            foreach( $section['fields'] as $field ){
 
-                        		if( isset($field['id']) && $field['id'] && isset($field['title']) ){
+                                if( isset($field['id']) && $field['id'] && isset($field['title']) ){
 
-                            		$title = !empty( $field['subtitle'] ) ? sprintf('%s <span class="wpsf-subtitle">%s</span>', $field['title'], $field['subtitle']) : $field['title'];
+                                    $title = !empty( $field['subtitle'] ) ? sprintf('%s <span class="wpsf-subtitle">%s</span>', $field['title'], $field['subtitle']) : $field['title'];
 
-                        		    add_settings_field( $field['id'], $title, array( $this, 'generate_setting'), $page_name, $section['section_id'], array('section' => $section, 'field' => $field) );
+                                    add_settings_field( $field['id'], $title, array( $this, 'generate_setting'), $page_name, $section['section_id'], array('section' => $section, 'field' => $field) );
 
-                        		}
-                    		}
+                                }
+                            }
 
-                		}
+                        }
 
-            		}
+                    }
 
-        		}
+                }
 
-    		}
+            }
 
-    	}
+        }
 
-    	/**
+        /**
          * Usort callback. Sorts $this->settings by "section_order"
          *
          * @param mixed section order a
          * @param mixed section order b
          * @return int order
          */
-    	public function sort_array( $a, $b ) {
+        public function sort_array( $a, $b ) {
 
-        	if( !isset($a['section_order']) )
-        	    return;
+            if( !isset($a['section_order']) )
+                return;
 
-        	return $a['section_order'] > $b['section_order'];
+            return $a['section_order'] > $b['section_order'];
 
-    	}
+        }
 
-    	/**
+        /**
          * Generates the HTML output of the settings fields
          *
          * @param array callback args from add_settings_field()
          */
-    	public function generate_setting( $args ) {
+        public function generate_setting( $args ) {
 
-    	    $section = $args['section'];
-        	$this->setting_defaults = apply_filters( 'wpsf_defaults_'.$this->option_group, $this->setting_defaults );
+            $section = $args['section'];
+            $this->setting_defaults = apply_filters( 'wpsf_defaults_'.$this->option_group, $this->setting_defaults );
 
-        	$args = wp_parse_args( $args['field'], $this->setting_defaults );
+            $args = wp_parse_args( $args['field'], $this->setting_defaults );
 
-        	$options = get_option( $this->option_group .'_settings' );
+            $options = get_option( $this->option_group .'_settings' );
 
-        	$args['id'] = $this->has_tabs() ? sprintf( '%s_%s_%s', $section['tab_id'], $section['section_id'], $args['id'] ) : sprintf( '%s_%s', $section['section_id'], $args['id'] );
-        	$args['value'] = isset( $options[$args['id']] ) ? $options[$args['id']] : ( isset( $args['default'] ) ? $args['default'] : '' );
-        	$args['name'] = $this->generate_field_name( $args['id'] );
+            $args['id'] = $this->has_tabs() ? sprintf( '%s_%s_%s', $section['tab_id'], $section['section_id'], $args['id'] ) : sprintf( '%s_%s', $section['section_id'], $args['id'] );
+            $args['value'] = isset( $options[$args['id']] ) ? $options[$args['id']] : ( isset( $args['default'] ) ? $args['default'] : '' );
+            $args['name'] = $this->generate_field_name( $args['id'] );
 
-        	do_action( 'wpsf_before_field_' . $this->option_group );
-        	do_action( 'wpsf_before_field_' . $this->option_group . '_' . $args['id'] );
+            do_action( 'wpsf_before_field_' . $this->option_group );
+            do_action( 'wpsf_before_field_' . $this->option_group . '_' . $args['id'] );
 
-        	$this->do_field_method( $args );
+            $this->do_field_method( $args );
 
-    		do_action( 'wpsf_after_field_' . $this->option_group );
-        	do_action( 'wpsf_after_field_' . $this->option_group . '_' . $args['id'] );
+            do_action( 'wpsf_after_field_' . $this->option_group );
+            do_action( 'wpsf_after_field_' . $this->option_group . '_' . $args['id'] );
 
-    	}
+        }
 
         /**
          * Do field method, if it exists
@@ -788,19 +788,19 @@ if( !class_exists('WordPressSettingsFramework') ){
 
             echo '<div class="wpsf-multifields">';
 
-        		$i = 0; while($i < count($values)):
+                $i = 0; while($i < count($values)):
 
-        		    $field_id = sprintf('%s_%s', $args['id'], $i);
-        		    $value = esc_attr( stripslashes( $values[$i] ) );
+                    $field_id = sprintf('%s_%s', $args['id'], $i);
+                    $value = esc_attr( stripslashes( $values[$i] ) );
 
-	        		echo '<div class="wpsf-multifields__field">';
-						echo '<input type="text" name="'. $args['name'] .'[]" id="'. $field_id .'" value="'. $value .'" class="regular-text '. $args['class'] .'" placeholder="'. $args['placeholder'] .'" />';
-						echo '<br><span>'.$field_titles[$i].'</span>';
-	        		echo '</div>';
+                    echo '<div class="wpsf-multifields__field">';
+                        echo '<input type="text" name="'. $args['name'] .'[]" id="'. $field_id .'" value="'. $value .'" class="regular-text '. $args['class'] .'" placeholder="'. $args['placeholder'] .'" />';
+                        echo '<br><span>'.$field_titles[$i].'</span>';
+                    echo '</div>';
 
-	        	$i++; endwhile;
+                $i++; endwhile;
 
-        	echo '</div>';
+            echo '</div>';
 
             $this->generate_description( $args['desc'] );
 
@@ -829,7 +829,7 @@ if( !class_exists('WordPressSettingsFramework') ){
 
         }
 
-    	/**
+        /**
          * Output the settings form
          */
         public function settings() {
@@ -842,10 +842,10 @@ if( !class_exists('WordPressSettingsFramework') ){
 
                 <?php do_action( 'wpsf_do_settings_sections_'.$this->option_group ); ?>
 
-        		<p class="submit"><input type="submit" class="button-primary" value="<?php _e( 'Save Changes' ); ?>" /></p>
-			</form>
-    		<?php
-    		do_action( 'wpsf_after_settings_'.$this->option_group );
+                <p class="submit"><input type="submit" class="button-primary" value="<?php _e( 'Save Changes' ); ?>" /></p>
+            </form>
+            <?php
+            do_action( 'wpsf_after_settings_'.$this->option_group );
 
         }
 
@@ -856,28 +856,28 @@ if( !class_exists('WordPressSettingsFramework') ){
          */
         public function get_settings() {
 
-        	$saved_settings = get_option($this->option_group.'_settings');
+            $saved_settings = get_option($this->option_group.'_settings');
 
-        	$settings = array();
+            $settings = array();
 
-        	foreach($this->settings as $section){
-        		foreach($section['fields'] as $field){
+            foreach($this->settings as $section){
+                foreach($section['fields'] as $field){
 
-            		if( !empty( $field['default'] ) && is_array( $field['default'] ) ) {
-            		    $field['default'] = array_values( $field['default'] );
-            		}
+                    if( !empty( $field['default'] ) && is_array( $field['default'] ) ) {
+                        $field['default'] = array_values( $field['default'] );
+                    }
 
-            		$setting_key = $this->has_tabs() ? sprintf('%s_%s_%s', $section['tab_id'], $section['section_id'], $field['id']) : sprintf('%s_%s', $section['section_id'], $field['id']);
+                    $setting_key = $this->has_tabs() ? sprintf('%s_%s_%s', $section['tab_id'], $section['section_id'], $field['id']) : sprintf('%s_%s', $section['section_id'], $field['id']);
 
-            		if( isset( $saved_settings[$setting_key] ) ) {
-                		$settings[ $setting_key ] = $saved_settings[$setting_key];
-            		} else {
+                    if( isset( $saved_settings[$setting_key] ) ) {
+                        $settings[ $setting_key ] = $saved_settings[$setting_key];
+                    } else {
                         $settings[ $setting_key ] = (isset($field['default'])) ? $field['default'] : false;
                     }
-        		}
-        	}
+                }
+            }
 
-        	return $settings;
+            return $settings;
 
         }
 
@@ -902,12 +902,12 @@ if( !class_exists('WordPressSettingsFramework') ){
             $i = 0;
             foreach ( $this->tabs as $tab_data ) {
                 ?>
-            	<div id="tab-<?php echo $tab_data['id']; ?>" class="wpsf-section wpsf-tab wpsf-tab--<?php echo $tab_data['id']; ?> <?php if($i == 0) echo 'wpsf-tab--active'; ?>">
-            		<div class="postbox">
-            			<?php do_settings_sections( sprintf( '%s_%s', $this->option_group, $tab_data['id'] ) ); ?>
-            		</div>
-            	</div>
-            	<?php
+                <div id="tab-<?php echo $tab_data['id']; ?>" class="wpsf-section wpsf-tab wpsf-tab--<?php echo $tab_data['id']; ?> <?php if($i == 0) echo 'wpsf-tab--active'; ?>">
+                    <div class="postbox">
+                        <?php do_settings_sections( sprintf( '%s_%s', $this->option_group, $tab_data['id'] ) ); ?>
+                    </div>
+                </div>
+                <?php
                 $i++;
             }
 
@@ -920,20 +920,20 @@ if( !class_exists('WordPressSettingsFramework') ){
 
             do_action( 'wpsf_before_tab_links_'.$this->option_group );
 
-		    screen_icon();
-		    ?>
-		    <h2 class="nav-tab-wrapper">
-    		    <?php
+            screen_icon();
+            ?>
+            <h2 class="nav-tab-wrapper">
+                <?php
                 $i = 0;
                 foreach ( $this->tabs as $tab_data ) {
-    		        $active = $i == 0 ? 'nav-tab-active' : '';
-    		        ?>
-    		        <a class="nav-tab wpsf-tab-link <?php echo $active; ?>" href="#tab-<?php echo $tab_data['id']; ?>"><?php echo $tab_data['title']; ?></a>
+                    $active = $i == 0 ? 'nav-tab-active' : '';
+                    ?>
+                    <a class="nav-tab wpsf-tab-link <?php echo $active; ?>" href="#tab-<?php echo $tab_data['id']; ?>"><?php echo $tab_data['title']; ?></a>
                     <?php
                 $i++;
                 }
-    		    ?>
-		    </h2>
+                ?>
+            </h2>
             <?php
             do_action( 'wpsf_after_tab_links_'.$this->option_group );
 
