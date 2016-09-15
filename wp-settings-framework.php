@@ -856,10 +856,7 @@ if( !class_exists('WordPressSettingsFramework') ){
          */
         public function get_settings() {
 
-        	$settings = get_option($this->option_group.'_settings');
-
-        	if($settings)
-        	    return $settings;
+        	$saved_settings = get_option($this->option_group.'_settings');
 
         	$settings = array();
 
@@ -872,7 +869,11 @@ if( !class_exists('WordPressSettingsFramework') ){
 
             		$setting_key = $this->has_tabs() ? sprintf('%s_%s_%s', $section['tab_id'], $section['section_id'], $field['id']) : sprintf('%s_%s', $section['section_id'], $field['id']);
 
-        			$settings[ $setting_key ] = (isset($field['default'])) ? $field['default'] : false;
+            		if( isset( $saved_settings[$setting_key] ) ) {
+                		$settings[ $setting_key ] = $saved_settings[$setting_key];
+            		} else {
+                        $settings[ $setting_key ] = (isset($field['default'])) ? $field['default'] : false;
+                    }
         		}
         	}
 
