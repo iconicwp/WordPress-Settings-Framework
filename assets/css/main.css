@@ -28,7 +28,7 @@
     }
 
     .wpsf-tab .postbox h2 {
-        padding: 15px 2%;
+        padding: 15px 30px;
         border: none;
         margin: 0 0 20px;
         background: #23282d;
@@ -50,8 +50,8 @@
 
     .wpsf-tab .postbox table.form-table,
     .wpsf-tab .wpsf-section-description {
-        margin: 0 2%;
-        width: 96%;
+        margin: 0 30px;
+        width: auto;
     }
 
     .wpsf-tab .postbox table.form-table {
