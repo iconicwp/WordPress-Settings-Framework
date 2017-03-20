@@ -61,9 +61,29 @@
     .wpsf-tab .wpsf-section-description {
         margin-top: 20px;
         margin-bottom: 20px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid #eeeeee;
+        padding: 35px 25px;
+        box-sizing: border-box;
+        font-size: 13px;
+        line-height: 1.5;
     }
+
+        .wpsf-tab .wpsf-section-description h3 {
+            font-size: 22px;
+            max-width: 600px;
+        }
+
+        .wpsf-tab .wpsf-section-description p {
+            font-size: 15px;
+            max-width: 600px;
+        }
+
+        .wpsf-tab .wpsf-section-description p:first-of-type {
+            font-size: 17px;
+        }
+
+        .wpsf-tab .wpsf-section-description :last-child {
+            margin-bottom: 0;
+        }
 
 /* $. Repeater */
 
