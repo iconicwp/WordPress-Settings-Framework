@@ -306,7 +306,7 @@ if( !class_exists('WordPressSettingsFramework') ){
 
                     if($section['section_id'] == $args['id']){
 
-                        if(isset($section['section_description']) && $section['section_description']) echo '<p class="wpsf-section-description">'. $section['section_description'] .'</p>';
+                        if(isset($section['section_description']) && $section['section_description']) echo '<div class="wpsf-section-description">'. $section['section_description'] .'</div>';
                         break;
 
                     }
