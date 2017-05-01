@@ -966,8 +966,8 @@ if( !function_exists('wpsf_get_setting') ){
      */
     function wpsf_get_setting( $option_group, $section_id, $field_id ){
         $options = get_option( $option_group .'_settings' );
-        if(isset($options[$option_group .'_'. $section_id .'_'. $field_id])){
-            return $options[$option_group .'_'. $section_id .'_'. $field_id];
+        if(isset($options[$section_id .'_'. $field_id])){
+            return $options[$section_id .'_'. $field_id];
         }
         return false;
     }
