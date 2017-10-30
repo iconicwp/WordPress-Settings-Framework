@@ -634,7 +634,7 @@ if( !class_exists('WordPressSettingsFramework') ){
                 $field_id = sprintf('%s_%s', $args['id'], $value);
                 $checked = $value == $args['value'] ? 'checked="checked"' : '';
 
-                echo sprintf('<label><input type="radio" name="%s" id="%s" value="%s" class="%s" %s> %s</label><br />', $args['name'], $args['id'], $field_id, $value, $args['class'], $checked, $text);
+                echo sprintf('<label><input type="radio" name="%s" id="%s" value="%s" class="%s" %s> %s</label><br />', $args['name'], $field_id, $value, $args['class'], $checked, $text);
 
             }
 
