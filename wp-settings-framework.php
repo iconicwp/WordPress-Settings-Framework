@@ -4,7 +4,7 @@
  *
  * @author  Gilbert Pellegrom, James Kemp
  * @link    https://github.com/gilbitron/WordPress-Settings-Framework
- * @version 1.6.3
+ * @version 1.6.4
  * @license MIT
  */
 
