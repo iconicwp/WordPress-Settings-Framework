@@ -395,8 +395,10 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 */
 		public function generate_time_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
+			
+			$timepicker = ! empty( $args['timepicker'] ) ? htmlentities( json_encode( $args['timepicker'] ) ) : null;
 
-			echo '<input name="' . $args['name'] . '" id="' . $args['id'] . '" value="' . $args['value'] . '" class="timepicker regular-text ' . $args['class'] . '" data-timepicker="' . htmlentities( json_encode( $args['timepicker'] ) ) . '" />';
+			echo '<input name="' . $args['name'] . '" id="' . $args['id'] . '" value="' . $args['value'] . '" class="timepicker regular-text ' . $args['class'] . '" data-timepicker="' . $timepicker . '" />';
 
 			$this->generate_description( $args['desc'] );
 		}
@@ -408,8 +410,10 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 */
 		public function generate_date_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
+			
+			$datepicker = ! empty( $args['datepicker'] ) ? htmlentities( json_encode( $args['datepicker'] ) ) : null;
 
-			echo '<input name="' . $args['name'] . '" id="' . $args['id'] . '" value="' . $args['value'] . '" class="datepicker regular-text ' . $args['class'] . '" data-datepicker="' . htmlentities( json_encode( $args['datepicker'] ) ) . '" />';
+			echo '<input name="' . $args['name'] . '" id="' . $args['id'] . '" value="' . $args['value'] . '" class="datepicker regular-text ' . $args['class'] . '" data-datepicker="' . $datepicker . '" />';
 
 			$this->generate_description( $args['desc'] );
 		}
