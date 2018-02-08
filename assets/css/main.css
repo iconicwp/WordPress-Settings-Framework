@@ -52,6 +52,7 @@
     .wpsf-tab .wpsf-section-description {
         margin: 0 30px;
         width: auto;
+        min-width: 90%;
     }
 
     .wpsf-tab .postbox table.form-table {
