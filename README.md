@@ -11,7 +11,7 @@ for details.
 Setting Up Your Plugin
 ----------------------
 
-1. Drop `wp-settings-framework.php` in the root of your plugin folder.
+1. Create a folder "wp-settings-framework" in the root of your plugin folder, containing `wp-settings-framework.php` and the "assets" folder.
 2. Create a "settings" folder in your plugin root.
 3. Create a settings file in your new "settings" folder (e.g. `settings-general.php`)
 
@@ -36,7 +36,7 @@ class WPSFTest {
 		$this->plugin_path = plugin_dir_path( __FILE__ );
 
 		// Include and create a new WordPressSettingsFramework
-		require_once( $this->plugin_path . 'wp-settings-framework.php' );
+		require_once( $this->plugin_path . 'wp-settings-framework/wp-settings-framework.php' );
 		$this->wpsf = new WordPressSettingsFramework( $this->plugin_path . 'settings/settings-general.php', 'prefix_settings_general' );
 
 		// Add admin menu
