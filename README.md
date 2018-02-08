@@ -154,21 +154,13 @@ Creates a new settings [option_group](http://codex.wordpress.org/Function_Refere
 * `$settings_file` - path to the settings file
 * `$option_group` - optional "option_group" override (by default this will be set to the basename of the settings file)
 
-<pre>wpsf_get_option_group( $settings_file )</pre>
-
-Converts the settings file name to option group id
-
-* `$settings_file` - path to the settings file
-
 <pre>wpsf_get_setting( $option_group, $section_id, $field_id )</pre>
 
 Get a setting from an option group
 
-* `$option_group` - option group id
-* `$section_id` - section id
-* `$field_id` - field id
-
-Note: You can use `wpsf_get_option_group()` to get the option group id from the settings file path.
+* `$option_group` - option group id.
+* `$section_id` - section id (change to `[{$tab_id}_{$section_id}]` when using tabs.
+* `$field_id` - field id.
 
 <pre>wpsf_delete_settings( $option_group )</pre>
 
