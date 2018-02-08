@@ -98,14 +98,14 @@ $wpsf_settings[] = array(
             'desc' => 'This is a description.',
             'placeholder' => 'This is a placeholder.',
             'type' => 'text',
-            'std' => 'This is std'
+            'default' => 'This is the default value'
         ),
         array(
             'id' => 'select',
             'title' => 'Select',
             'desc' => 'This is a description.',
             'type' => 'select',
-            'std' => 'green',
+            'default' => 'green',
             'choices' => array(
                 'red' => 'Red',
                 'green' => 'Green',
@@ -126,7 +126,7 @@ Valid `fields` values are:
 * `desc` - Field description
 * `placeholder` - Field placeholder
 * `type` - Field type (text/password/textarea/select/radio/checkbox/checkboxes/color/file)
-* `std` - Default value (or selected option)
+* `default` - Default value (or selected option)
 * `choices` - Array of options (for select/radio/checkboxes)
 
 See `settings/example-settings.php` for an example of possible values.
