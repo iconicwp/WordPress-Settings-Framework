@@ -4,7 +4,7 @@
  *
  * @author  Gilbert Pellegrom, James Kemp
  * @link    https://github.com/gilbitron/WordPress-Settings-Framework
- * @version 1.6.4
+ * @version 1.6.5
  * @license MIT
  */
 
@@ -45,13 +45,13 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 		/**
 		 * @access private
-		 * @var str
+		 * @var string
 		 */
 		private $options_path;
 
 		/**
 		 * @access private
-		 * @var str
+		 * @var string
 		 */
 		private $options_url;
 
@@ -72,10 +72,10 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		);
 
 		/**
-		 * Constructor
+		 * WordPressSettingsFramework constructor.
 		 *
-		 * @param string path to settings file
-		 * @param string optional "option_group" override
+		 * @param string $settings_file
+		 * @param bool   $option_group
 		 */
 		public function __construct( $settings_file, $option_group = false ) {
 			if ( ! is_file( $settings_file ) ) {
@@ -118,9 +118,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		}
 
 		/**
-		 * Construct Settings
-		 *
-		 * @return array
+		 * Construct Settings.
 		 */
 		public function construct_settings() {
 			$this->settings_wrapper = apply_filters( 'wpsf_register_settings_' . $this->option_group, array() );
@@ -163,7 +161,6 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 *
 		 * @param array $args
 		 */
-
 		public function add_settings_page( $args ) {
 			$defaults = array(
 				'parent_slug' => false,
@@ -230,7 +227,6 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 */
 		public function admin_enqueue_scripts() {
 			// scripts
-
 			wp_register_script( 'jquery-ui-timepicker', $this->options_url . 'assets/vendor/jquery-timepicker/jquery.ui.timepicker.js', array( 'jquery', 'jquery-ui-core' ), false, true );
 			wp_register_script( 'wpsf', $this->options_url . 'assets/js/main.js', array( 'jquery' ), false, true );
 
@@ -244,7 +240,6 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			wp_enqueue_script( 'wpsf' );
 
 			// styles
-
 			wp_register_style( 'jquery-ui-timepicker', $this->options_url . 'assets/vendor/jquery-timepicker/jquery.ui.timepicker.css' );
 			wp_register_style( 'wpsf', $this->options_url . 'assets/css/main.css' );
 			wp_register_style( 'jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/themes/ui-darkness/jquery-ui.css' );
@@ -257,11 +252,11 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		}
 
 		/**
-		 * Adds a filter for settings validation
+		 * Adds a filter for settings validation.
 		 *
-		 * @param array the un-validated settings
+		 * @param $input
 		 *
-		 * @return array the validated settings
+		 * @return array
 		 */
 		public function settings_validate( $input ) {
 			return apply_filters( $this->option_group . '_settings_validate', $input );
@@ -315,14 +310,14 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Usort callback. Sorts $this->settings by "section_order"
 		 *
-		 * @param mixed section order a
-		 * @param mixed section order b
+		 * @param $a
+		 * @param $b
 		 *
-		 * @return int order
+		 * @return bool
 		 */
 		public function sort_array( $a, $b ) {
 			if ( ! isset( $a['section_order'] ) ) {
-				return;
+				return false;
 			}
 
 			return $a['section_order'] > $b['section_order'];
@@ -357,7 +352,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Do field method, if it exists
 		 *
-		 * @param str $type
+		 * @param array $args
 		 */
 		public function do_field_method( $args ) {
 			$generate_field_method = sprintf( 'generate_%s_field', $args['type'] );
@@ -370,7 +365,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Text field
 		 *
-		 * @param arr $args
+		 * @param array $args
 		 */
 		public function generate_text_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
@@ -383,7 +378,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Number field
 		 *
-		 * @param arr $args
+		 * @param array $args
 		 */
 		public function generate_number_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
@@ -396,7 +391,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Time field
 		 *
-		 * @param arr $args
+		 * @param array $args
 		 */
 		public function generate_time_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
@@ -409,7 +404,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Date field
 		 *
-		 * @param arr $args
+		 * @param array $args
 		 */
 		public function generate_date_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
@@ -424,7 +419,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 *
 		 * Generates a table of subfields, and a javascript template for create new repeatable rows
 		 *
-		 * @param arr $args
+		 * @param array $args
 		 */
 		public function generate_group_field( $args ) {
 			$row_count = count( $args['value'] );
@@ -449,11 +444,11 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate group row template
 		 *
-		 * @param arr  $args  Field arguments
-		 * @param bool $blank Blank values
-		 * @param int  $row   Iterator
+		 * @param array $args  Field arguments
+		 * @param bool  $blank Blank values
+		 * @param int   $row   Iterator
 		 *
-		 * @return str|bool
+		 * @return string|bool
 		 */
 		public function generate_group_row_template( $args, $blank = false, $row = 0 ) {
 			$row_template = false;
@@ -503,7 +498,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Select field
 		 *
-		 * @param arr $args
+		 * @param array $args
 		 */
 		public function generate_select_field( $args ) {
 			$args['value'] = esc_html( esc_attr( $args['value'] ) );
@@ -524,7 +519,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Password field
 		 *
-		 * @param arr $args
+		 * @param array $args
 		 */
 		public function generate_password_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
@@ -537,7 +532,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Textarea field
 		 *
-		 * @param arr $args
+		 * @param array $args
 		 */
 		public function generate_textarea_field( $args ) {
 			$args['value'] = esc_html( esc_attr( $args['value'] ) );
@@ -550,7 +545,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Radio field
 		 *
-		 * @param arr $args
+		 * @param array $args
 		 */
 		public function generate_radio_field( $args ) {
 			$args['value'] = esc_html( esc_attr( $args['value'] ) );
@@ -568,7 +563,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Checkbox field
 		 *
-		 * @param arr $args
+		 * @param array $args
 		 */
 		public function generate_checkbox_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
@@ -581,7 +576,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Checkboxes field
 		 *
-		 * @param arr $args
+		 * @param array $args
 		 */
 		public function generate_checkboxes_field( $args ) {
 			echo '<input type="hidden" name="' . $args['name'] . '" value="0" />';
@@ -599,7 +594,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Color field
 		 *
-		 * @param arr $args
+		 * @param array $args
 		 */
 		public function generate_color_field( $args ) {
 			$color_picker_id = sprintf( '%s_cp', $args['id'] );
@@ -634,7 +629,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: File field
 		 *
-		 * @param arr $args
+		 * @param array $args
 		 */
 		public function generate_file_field( $args ) {
 			$args['value'] = esc_attr( $args['value'] );
@@ -669,7 +664,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Editor field
 		 *
-		 * @param arr $args
+		 * @param array $args
 		 */
 		public function generate_editor_field( $args ) {
 			wp_editor( $args['value'], $args['id'], array( 'textarea_name' => $args['name'] ) );
@@ -680,7 +675,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Custom field
 		 *
-		 * @param arr $args
+		 * @param array $args
 		 */
 		public function generate_custom_field( $args ) {
 			echo $args['default'];
@@ -689,7 +684,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Multi Inputs field
 		 *
-		 * @param arr $args
+		 * @param array $args
 		 */
 		public function generate_multiinputs_field( $args ) {
 			$field_titles = array_keys( $args['default'] );
@@ -719,6 +714,8 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * Generate: Field ID
 		 *
 		 * @param mixed $id
+		 *
+		 * @return string
 		 */
 		public function generate_field_name( $id ) {
 			return sprintf( '%s_settings[%s]', $this->option_group, $id );
@@ -757,12 +754,19 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Helper: Get Settings
 		 *
-		 * @return arr
+		 * @return array
 		 */
 		public function get_settings() {
-			$saved_settings = get_option( $this->option_group . '_settings' );
+			$settings_name = $this->option_group . '_settings';
 
-			$settings = array();
+			static $settings = array();
+
+			if ( isset( $settings[ $settings_name ] ) ) {
+				return $settings[ $settings_name ];
+			}
+
+			$saved_settings             = get_option( $this->option_group . '_settings' );
+			$settings[ $settings_name ] = array();
 
 			foreach ( $this->settings as $section ) {
 				foreach ( $section['fields'] as $field ) {
@@ -773,20 +777,19 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 					$setting_key = $this->has_tabs() ? sprintf( '%s_%s_%s', $section['tab_id'], $section['section_id'], $field['id'] ) : sprintf( '%s_%s', $section['section_id'], $field['id'] );
 
 					if ( isset( $saved_settings[ $setting_key ] ) ) {
-						$settings[ $setting_key ] = $saved_settings[ $setting_key ];
+						$settings[ $settings_name ][ $setting_key ] = $saved_settings[ $setting_key ];
 					} else {
-						$settings[ $setting_key ] = ( isset( $field['default'] ) ) ? $field['default'] : false;
+						$settings[ $settings_name ][ $setting_key ] = ( isset( $field['default'] ) ) ? $field['default'] : false;
 					}
 				}
 			}
 
-			return $settings;
+			return $settings[ $settings_name ];
 		}
 
 		/**
 		 * Tabless Settings sections
 		 */
-
 		public function do_tabless_settings_sections() {
 			?>
 			<div class="wpsf-section wpsf-tabless">
@@ -798,7 +801,6 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Tabbed Settings sections
 		 */
-
 		public function do_tabbed_settings_sections() {
 			$i = 0;
 			foreach ( $this->tabs as $tab_data ) {
@@ -854,11 +856,11 @@ if ( ! function_exists( 'wpsf_get_setting' ) ) {
 	/**
 	 * Get a setting from an option group
 	 *
-	 * @param string option group id
-	 * @param string section id
-	 * @param string field id
+	 * @param string $option_group
+	 * @param string $section_id
+	 * @param string $field_id
 	 *
-	 * @return mixed setting or false if no setting exists
+	 * @return mixed
 	 */
 	function wpsf_get_setting( $option_group, $section_id, $field_id ) {
 		$options = get_option( $option_group . '_settings' );
@@ -874,7 +876,7 @@ if ( ! function_exists( 'wpsf_delete_settings' ) ) {
 	/**
 	 * Delete all the saved settings from a settings file/option group
 	 *
-	 * @param string option group id
+	 * @param string $option_group
 	 */
 	function wpsf_delete_settings( $option_group ) {
 		delete_option( $option_group . '_settings' );
