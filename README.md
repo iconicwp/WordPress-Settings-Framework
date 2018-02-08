@@ -19,27 +19,24 @@ Now you can set up your plugin like:
 
 ```php
 class WPSFTest {
+	private $plugin_path;
 
-    private $plugin_path;
-    private $wpsf;
+	private $wpsf;
 
-    function __construct()
-    {
-        $this->plugin_path = plugin_dir_path( __FILE__ );
+	function __construct() {
+		$this->plugin_path = plugin_dir_path( __FILE__ );
 
-        // Include and create a new WordPressSettingsFramework
-        require_once( $this->plugin_path .'wp-settings-framework.php' );
-        $this->wpsf = new WordPressSettingsFramework( $this->plugin_path .'settings/settings-general.php', 'prefix_settings_general' );
-        // Add an optional settings validation filter (recommended)
-        add_filter( $this->wpsf->get_option_group() .'_settings_validate', array(&$this, 'validate_settings') );
+		// Include and create a new WordPressSettingsFramework
+		require_once( $this->plugin_path . 'wp-settings-framework.php' );
+		$this->wpsf = new WordPressSettingsFramework( $this->plugin_path . 'settings/settings-general.php', 'prefix_settings_general' );
+		// Add an optional settings validation filter (recommended)
+		add_filter( $this->wpsf->get_option_group() . '_settings_validate', array( &$this, 'validate_settings' ) );
+		// ...
+	}
 
-        // ...
-    }
-
-    // This page is added using add_menu_page()
-    function settings_page()
-	{
-	    ?>
+	// This page is added using add_menu_page()
+	function settings_page() {
+		?>
 		<div class="wrap">
 			<div id="icon-options-general" class="icon32"></div>
 			<h2>WP Settings Framework Example</h2>
@@ -51,14 +48,13 @@ class WPSFTest {
 		<?php
 	}
 
-	function validate_settings( $input )
-	{
-	    // Do your settings validation here
-	    // Same as $sanitize_callback from http://codex.wordpress.org/Function_Reference/register_setting
-    	return $input;
+	function validate_settings( $input ) {
+		// Do your settings validation here
+		// Same as $sanitize_callback from http://codex.wordpress.org/Function_Reference/register_setting
+		return $input;
 	}
-
-    // ...
+	
+	// ...
 
 }
 ```
@@ -164,33 +160,37 @@ Delete all the saved settings from a option group
 
 * `$option_group` - option group id
 
-Hooks & Filters
+Actions & Filters
 ---------------
 
 **Filters**
 
-* `wpsf_register_settings` - The filter used to register your settings. See `settings/example-settings.php` for an example.
-* `[option_group_id]_settings_validate` - Basically the `$sanitize_callback` from [register_setting](http://codex.wordpress.org/Function_Reference/register_setting). Use `$wpsf->get_option_group()` to get the option group id.
-* `wpsf_defaults` - Default args for a settings field
+* `wpsf_register_settings_[option_group]` - The filter used to register your settings. See `settings/example-settings.php` for an example.
+* `[option_group]_settings_validate` - Basically the `$sanitize_callback` from [register_setting](http://codex.wordpress.org/Function_Reference/register_setting). Use `$wpsf->get_option_group()` to get the option group id.
+* `wpsf_defaults_[option_group]` - Default args for a settings field
 
-**Hooks**
+**Actions**
 
-* `wpsf_before_field` - Before a field HTML is output
-* `wpsf_before_field_[field_id]` - Before a field HTML is output
-* `wpsf_after_field` - After a field HTML is output
-* `wpsf_after_field_[field_id]` - After a field HTML is output
-* `wpsf_before_settings` - Before settings form HTML is output
-* `wpsf_after_settings` - After settings form HTML is output
-* `wpsf_before_settings_fields` - Before settings form fields HTML is output (inside the `<form>`)
+* `wpsf_before_field_[option_group]` - Before a field HTML is output
+* `wpsf_before_field_[option_group]_[field_id]` - Before a field HTML is output
+* `wpsf_after_field_[option_group]` - After a field HTML is output
+* `wpsf_after_field_[option_group]_[field_id]` - After a field HTML is output
+* `wpsf_before_settings_[option_group]` - Before settings form HTML is output
+* `wpsf_after_settings_[option_group]` - After settings form HTML is output
+* `wpsf_before_settings_fields_[option_group]` - Before settings form fields HTML is output (inside the `<form>`)
+* `wpsf_do_settings_sections_[option_group]` - Settings form fields HTMLoutput (inside the `<form>`)
+* `wpsf_do_settings_sections_[option_group]` - Settings form fields HTMLoutput (inside the `<form>`)
+* `wpsf_before_tab_links_[option_group]` - Before tabs HTML is output
+* `wpsf_after_tab_links_[option_group]` - After tabs HTML is output
 
 Credits
 -------
 
-The WordPress Settings Framework was created by [Gilbert Pellegrom](http://gilbert.pellegrom.me) from [Dev7studios](http://dev7studios.com).
+The WordPress Settings Framework was created by [Gilbert Pellegrom](http://gilbert.pellegrom.me) from [Dev7studios](http://dev7studios.com) and maintained by [James Kemp](https://jckemp.com) from [Iconic](https://iconicwp.com)
 
-Please contribute by [reporting bugs](https://github.com/gilbitron/WordPress-Settings-Framework/issues) and submitting [pull requests](https://github.com/gilbitron/WordPress-Settings-Framework/pulls).
+Please contribute by [reporting bugs](https://github.com/jamesckemp/WordPress-Settings-Framework/issues) and submitting [pull requests](https://github.com/jamesckemp/WordPress-Settings-Framework/pulls).
 
-Want to say thanks? [Consider tipping me](https://www.gittip.com/gilbitron).
+Want to say thanks? [Consider tipping me](https://www.paypal.me/jamesckemp).
 
 License (MIT)
 -------------
