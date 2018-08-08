@@ -1,5 +1,9 @@
 *** WordPress Settings Framework Changelog ***
 
+2018.08.08 - version 1.6.6
+ * [Update] Add ul element to checkbox lists
+ * [Update] Update responsive styles
+ 
 2016.04.14 - version 1.6.2
  * [Fixed] Undefined default error
  * [New] Repeatable groups

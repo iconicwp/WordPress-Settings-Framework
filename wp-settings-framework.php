@@ -4,7 +4,7 @@
  *
  * @author  Gilbert Pellegrom, James Kemp
  * @link    https://github.com/gilbitron/WordPress-Settings-Framework
- * @version 1.6.5
+ * @version 1.6.6
  * @license MIT
  */
 
@@ -585,12 +585,16 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		public function generate_checkboxes_field( $args ) {
 			echo '<input type="hidden" name="' . $args['name'] . '" value="0" />';
 
+			echo '<ul class="wpsf-list wpsf-list--checkboxes">';
+
 			foreach ( $args['choices'] as $value => $text ) {
 				$checked  = is_array( $args['value'] ) && in_array( $value, $args['value'] ) ? 'checked="checked"' : '';
 				$field_id = sprintf( '%s_%s', $args['id'], $value );
 
-				echo sprintf( '<label><input type="checkbox" name="%s[]" id="%s" value="%s" class="%s" %s> %s</label><br />', $args['name'], $field_id, $value, $args['class'], $checked, $text );
+				echo sprintf( '<li><label><input type="checkbox" name="%s[]" id="%s" value="%s" class="%s" %s> %s</label></li>', $args['name'], $field_id, $value, $args['class'], $checked, $text );
 			}
+
+			echo '</ul>';
 
 			$this->generate_description( $args['desc'] );
 		}
