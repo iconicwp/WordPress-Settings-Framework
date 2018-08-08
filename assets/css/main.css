@@ -7,214 +7,293 @@
  * $. - Multifields
  * $. - Subtitle
  * $. Tables
+ * $. Lists
  */
 
 /* $. Tabs */
 
 .nav-tab-wrapper {
-    min-height: 35px;
+	min-height: 35px;
 }
 
 .wpsf-tab {
-    display: none;
+	display: none;
 }
 
 .wpsf-tab--active {
-    display: block;
+	display: block;
 }
 
-    .wpsf-tab .postbox {
-        margin: 20px 0;
-    }
+.wpsf-tab .postbox {
+	margin: 20px 0;
+}
 
-    .wpsf-tab .postbox h2 {
-        padding: 15px 30px;
-        border: none;
-        margin: 0 0 20px;
-        background: #23282d;
-        color: #ffffff;
-        -webkit-font-smoothing: antialiased;
-        -moz-font-smoothing: antialiased;
-        -o-font-smoothing: antialiased;
-        font-smoothing: antialiased;
-        font-size: 1.25em;
-    }
+.wpsf-tab .postbox h2 {
+	padding: 15px 30px;
+	border: none;
+	margin: 0 0 20px;
+	background: #23282d;
+	color: #fff;
+	-webkit-font-smoothing: antialiased;
+	-moz-font-smoothing: antialiased;
+	-o-font-smoothing: antialiased;
+	font-smoothing: antialiased;
+	font-size: 1.25em;
+}
 
-    .wpsf-tab .postbox h3:first-child {
-        margin-top: 0;
-    }
+.wpsf-tab .postbox h3:first-child {
+	margin-top: 0;
+}
 
-    .js .wpsf-tab .postbox h3 {
-        cursor: default;
-    }
+.js .wpsf-tab .postbox h3 {
+	cursor: default;
+}
 
-    .wpsf-tab .postbox table.form-table,
-    .wpsf-tab .wpsf-section-description {
-        margin: 0 30px;
-        width: auto;
-        min-width: 90%;
-    }
+.wpsf-tab .postbox table.form-table,
+.wpsf-tab .wpsf-section-description {
+	margin: 0 30px;
+	width: auto;
+}
 
-    .wpsf-tab .postbox table.form-table {
-        margin-bottom: 20px;
-    }
+.wpsf-tab .postbox table.form-table {
+	min-width: 80%;
+}
 
-    .wpsf-tab .wpsf-section-description {
-        margin-top: 20px;
-        margin-bottom: 25px;
-        padding: 35px 25px;
-        box-sizing: border-box;
-        font-size: 13px;
-        line-height: 1.5;
-    }
+.wpsf-tab .postbox table.form-table {
+	margin-bottom: 20px;
+}
 
-        .wpsf-tab .wpsf-section-description h3 {
-            font-size: 22px;
-            max-width: 600px;
-        }
+.wpsf-tab .wpsf-section-description {
+	margin-top: 20px;
+	margin-bottom: 25px;
+	padding: 35px 25px;
+	box-sizing: border-box;
+	font-size: 13px;
+	line-height: 1.5;
+}
 
-        .wpsf-tab .wpsf-section-description p {
-            font-size: 15px;
-            max-width: 600px;
-        }
+.wpsf-tab .wpsf-section-description h3 {
+	font-size: 22px;
+	max-width: 600px;
+}
 
-        .wpsf-tab .wpsf-section-description p:first-of-type {
-            font-size: 17px;
-        }
+.wpsf-tab .wpsf-section-description p,
+.wpsf-tab .wpsf-section-description ol,
+.wpsf-tab .wpsf-section-description ul {
+	font-size: 15px;
+	max-width: 600px;
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
 
-        .wpsf-tab .wpsf-section-description :last-child {
-            margin-bottom: 0;
-        }
+.wpsf-tab .wpsf-section-description ol,
+.wpsf-tab .wpsf-section-description ul {
+	margin: 1em 0 2em 2em;
+}
+
+.wpsf-tab .wpsf-section-description p:first-of-type {
+	font-size: 17px;
+}
+
+.wpsf-tab .wpsf-section-description :last-child {
+	margin-bottom: 0;
+}
+
+.wpsf-tab a .dashicons {
+	text-decoration: none;
+}
+
+@media screen and (max-width: 782px) {
+	.wpsf-tab .wpsf-section-description {
+		padding: 20px 0;
+	}
+}
 
 /* $. Repeater */
 
 .wpsf-group__row td {
-    border-bottom: 1px solid #e5e5e5;
+	border-bottom: 1px solid #e5e5e5;
 }
 
 .wpsf-group__row:last-child td {
-    border-bottom: none;
+	border-bottom: none;
+}
+
+.wpsf-group__row-index,
+.wpsf-group__row-actions {
+	vertical-align: middle !important;
 }
 
 .wpsf-group__row-index {
-    width: 25px;
-    border-right: 1px solid #e5e5e5;
+	width: 25px;
+	border-right: 1px solid #e5e5e5;
 }
 
-    .wpsf-group__row-index span {
-        text-align: center;
-        display: inline-block;
-        width: 25px;
-        line-height: 25px;
-        height: 25px;
-        background: #e5e5e5;
-        border-radius: 25px;
-        box-shadow: inset 0px 1px #c5c5c5;
-        font-size: 90%;
-        font-weight: bold;
-    }
+.wpsf-group__row-index span {
+	text-align: center;
+	display: inline-block;
+	width: 25px;
+	line-height: 25px;
+	height: 25px;
+	background: #e5e5e5;
+	border-radius: 25px;
+	box-shadow: inset 0px 1px #c5c5c5;
+	font-size: 90%;
+	font-weight: bold;
+}
 
 .wpsf-group__row-actions {
-    border-left: 1px solid #e5e5e5;
-    position: relative;
-    width: 20px;
+	border-left: 1px solid #e5e5e5;
+	position: relative;
+	width: 20px;
 }
 
-    .wpsf-group__row-add {
-        position: absolute;
-        bottom: -10px;
-        background: #fff;
-        border-radius: 100%;
-    }
+.wpsf-group__row-add {
+	position: absolute;
+	bottom: -10px;
+	background: #fff;
+	border-radius: 100%;
+}
 
 .wpsf-group__row-fields {
-    padding: 0 !important;
+	padding: 0 !important;
 }
 
-    .wpsf-group__field-wrapper {
-        display: block;
-        border-bottom: 1px solid #e5e5e5;
-        padding: 15px 10px;
-    }
+.wpsf-group__field-wrapper {
+	display: block;
+	border-bottom: 1px solid #e5e5e5;
+	padding: 15px 10px;
+}
 
-    .wpsf-group__field-wrapper:last-child {
-        border-bottom: none;
-    }
+.wpsf-group__field-wrapper:last-child {
+	border-bottom: none;
+}
 
-        .wpsf-group__field-label {
-            display: block;
-            margin: 0 0 5px;
-            font-weight: bold;
-        }
+.wpsf-group__field-label {
+	display: block;
+	margin: 0 0 5px;
+	font-weight: bold;
+}
 
-    .wpsf-group__row-fields .regular-text ,
-    .wpsf-group__row-fields textarea {
-        width: 100%;
-    }
+.wpsf-group__row-fields .regular-text,
+.wpsf-group__row-fields textarea {
+	width: 100%;
+}
+
+@media screen and (max-width: 782px) {
+	.wpsf-group__row-index span {
+		margin: 4px 0 1px;
+	}
+
+	.wpsf-group__row td,
+	.wpsf-group__row:last-child td {
+		border: none;
+		border-bottom: 1px solid #e5e5e5;
+	}
+
+	.wpsf-group__row td:last-child {
+		border: none;
+	}
+
+	.wpsf-group__row-add,
+	.wpsf-group__row-remove {
+		position: relative;
+		display: inline-block;
+		bottom: auto;
+		margin: 4px 10px 1px 0;
+	}
+
+	.wpsf-group__row-add span,
+	.wpsf-group__row-remove span {
+		font-size: 24px;
+		width: 24px;
+		height: 24px;
+	}
+}
 
 /* $. Fields */
 
-    /* $. Multifields */
+/* $. Multifields */
 
-    .wpsf-multifields {
-        overflow: hidden;
-        width: 100%;
-    }
+.wpsf-multifields {
+	overflow: hidden;
+	width: 100%;
+}
 
-        .wpsf-multifields__field {
-            width: 25%;
-            float: left;
-            display: inline-block;
-            padding-right: 10px;
-            -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            box-sizing: border-box;
-        }
+.wpsf-multifields__field {
+	width: 25%;
+	float: left;
+	display: inline-block;
+	padding-right: 10px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
 
-            .wpsf-multifields__field input {
-                max-width: 100%;
-                width: 100%;
-            }
+.wpsf-multifields__field input {
+	max-width: 100%;
+	width: 100%;
+}
 
-            .wpsf-multifields__field span {
-                font-weight: 400;
-                display: block;
-                font-size: 12px;
-                color: #888;
-                font-style: italic;
-                margin: 10px 0 0;
-            }
+.wpsf-multifields__field span {
+	font-weight: 400;
+	display: block;
+	font-size: 12px;
+	color: #888;
+	font-style: italic;
+	margin: 10px 0 0;
+}
 
-            @media screen and (max-width: 782px) {
+@media screen and (max-width: 782px) {
 
-                .wpsf-multifields__field span {
-                    margin: -10px 0 0;
-                }
+	.wpsf-multifields__field span {
+		margin: -10px 0 0;
+	}
 
-            }
+}
 
-    /* $. Subtitle */
+/* $. Subtitle */
 
-    .wpsf-subtitle {
-        font-weight: 400;
-        display: block;
-        font-size: 12px;
-        color: #888;
-        font-style: italic;
-        margin: 15px 0 0;
-    }
+.wpsf-subtitle {
+	font-weight: 400;
+	display: block;
+	font-size: 12px;
+	color: #888;
+	font-style: italic;
+	margin: 15px 0 0;
+}
 
-    @media screen and (max-width: 782px) {
-
-        .wpsf-subtitle {
-            margin: 10px 0 15px;
-        }
-
-    }
+@media screen and (max-width: 782px) {
+	.wpsf-subtitle {
+		margin: 10px 0 15px;
+	}
+}
 
 /* $. Tables */
 
 .wpsf-section .form-table th,
 .wpsf-section .form-table td {
-    vertical-align: top;
+	vertical-align: top;
+}
+
+.wpsf-section .form-table td {
+	padding: 20px 10px;
+}
+
+@media screen and (max-width: 782px) {
+	.wpsf-section .form-table td {
+		padding: 10px;
+	}
+
+	.wpsf-section .form-table > tbody > tr > td:last-child {
+		padding-bottom: 20px;
+	}
+}
+
+/* $. Lists */
+
+.wpsf-list {
+	margin: 0;
+	padding: 0;
+	list-style: none none outside;
 }
