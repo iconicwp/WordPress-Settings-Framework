@@ -272,7 +272,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				foreach ( $this->settings as $section ) {
 					if ( $section['section_id'] == $args['id'] ) {
 						if ( isset( $section['section_description'] ) && $section['section_description'] ) {
-							echo '<div class="wpsf-section-description">' . $section['section_description'] . '</div>';
+							echo '<div class="wpsf-section-description wpsf-section-description--' . esc_attr( $section['section_id'] ) . '">' . $section['section_description'] . '</div>';
 						}
 						break;
 					}
