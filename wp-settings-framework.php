@@ -4,7 +4,7 @@
  *
  * @author  Gilbert Pellegrom, James Kemp
  * @link    https://github.com/gilbitron/WordPress-Settings-Framework
- * @version 1.6.6
+ * @version 1.6.7
  * @license MIT
  */
 
@@ -752,8 +752,11 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 				<?php do_action( 'wpsf_do_settings_sections_' . $this->option_group ); ?>
 
-				<p class="submit"><input type="submit" class="button-primary" value="<?php _e( 'Save Changes' ); ?>" />
-				</p>
+				<?php if ( apply_filters( 'wpsf_show_save_changes_button_' . $this->option_group, true ) ) { ?>
+					<p class="submit">
+						<input type="submit" class="button-primary" value="<?php _e( 'Save Changes' ); ?>" />
+					</p>
+				<?php } ?>
 			</form>
 			<?php
 			do_action( 'wpsf_after_settings_' . $this->option_group );
@@ -829,6 +832,10 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * Output the tab links
 		 */
 		public function tab_links() {
+			if ( ! apply_filters( 'wpsf_show_tab_links_' . $this->option_group, true ) ) {
+				return;
+			}
+
 			do_action( 'wpsf_before_tab_links_' . $this->option_group );
 			?>
 			<h2 class="nav-tab-wrapper">
