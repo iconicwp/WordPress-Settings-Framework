@@ -4,7 +4,7 @@
  *
  * @author  Gilbert Pellegrom, James Kemp
  * @link    https://github.com/gilbitron/WordPress-Settings-Framework
- * @version 1.6.7
+ * @version 1.6.8
  * @license MIT
  */
 
@@ -189,7 +189,9 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 					$args['menu_title'],
 					$args['capability'],
 					$this->settings_page['slug'],
-					array( $this, 'settings_page_content' )
+					array( $this, 'settings_page_content' ),
+					apply_filters( 'wpsf_menu_icon_url_' . $this->option_group, '' ),
+					apply_filters( 'wpsf_menu_position_' . $this->option_group, null )
 				);
 			}
 		}
