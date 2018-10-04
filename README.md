@@ -49,7 +49,7 @@ class WPSFTest {
 	/**
 	 * Add settings page.
 	 */
-	function settings_page() {
+	function add_settings_page() {
 		$this->wpsf->add_settings_page( array(
 			'parent_slug' => 'woocommerce',
 			'page_title'  => __( 'Page Title', 'text-domain' ),
