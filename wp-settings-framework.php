@@ -75,7 +75,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * WordPressSettingsFramework constructor.
 		 *
 		 * @param string $settings_file
-		 * @param bool   $option_group
+		 * @param bool $option_group
 		 */
 		public function __construct( $settings_file, $option_group = false ) {
 			if ( ! is_file( $settings_file ) ) {
@@ -99,7 +99,10 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				global $pagenow;
 
 				add_action( 'admin_init', array( $this, 'admin_init' ) );
-				add_action( 'wpsf_do_settings_sections_' . $this->option_group, array( $this, 'do_tabless_settings_sections' ), 10 );
+				add_action( 'wpsf_do_settings_sections_' . $this->option_group, array(
+					$this,
+					'do_tabless_settings_sections'
+				), 10 );
 
 				if ( isset( $_GET['page'] ) && $_GET['page'] === $this->settings_page['slug'] ) {
 					if ( $pagenow !== "options-general.php" ) {
@@ -111,8 +114,14 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				if ( $this->has_tabs() ) {
 					add_action( 'wpsf_before_settings_' . $this->option_group, array( $this, 'tab_links' ) );
 
-					remove_action( 'wpsf_do_settings_sections_' . $this->option_group, array( $this, 'do_tabless_settings_sections' ), 10 );
-					add_action( 'wpsf_do_settings_sections_' . $this->option_group, array( $this, 'do_tabbed_settings_sections' ), 10 );
+					remove_action( 'wpsf_do_settings_sections_' . $this->option_group, array(
+						$this,
+						'do_tabless_settings_sections'
+					), 10 );
+					add_action( 'wpsf_do_settings_sections_' . $this->option_group, array(
+						$this,
+						'do_tabbed_settings_sections'
+					), 10 );
 				}
 			}
 		}
@@ -122,6 +131,8 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 */
 		public function construct_settings() {
 			$this->settings_wrapper = apply_filters( 'wpsf_register_settings_' . $this->option_group, array() );
+
+//			var_dump( $this->settings_wrapper); die();
 
 			if ( ! is_array( $this->settings_wrapper ) ) {
 				return new WP_Error( 'broke', __( 'WPSF settings must be an array' ) );
@@ -152,7 +163,10 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * Registers the internal WordPress settings
 		 */
 		public function admin_init() {
-			register_setting( $this->option_group, $this->option_group . '_settings', array( $this, 'settings_validate' ) );
+			register_setting( $this->option_group, $this->option_group . '_settings', array(
+				$this,
+				'settings_validate'
+			) );
 			$this->process_settings();
 		}
 
@@ -205,14 +219,14 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 			}
 			?>
-			<div class="wrap">
-				<div id="icon-options-general" class="icon32"></div>
-				<h2><?php echo $this->settings_page['title']; ?></h2>
+            <div class="wrap">
+                <div id="icon-options-general" class="icon32"></div>
+                <h2><?php echo $this->settings_page['title']; ?></h2>
 				<?php
 				// Output your settings form
 				$this->settings();
 				?>
-			</div>
+            </div>
 			<?php
 
 		}
@@ -229,7 +243,10 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 */
 		public function admin_enqueue_scripts() {
 			// scripts
-			wp_register_script( 'jquery-ui-timepicker', $this->options_url . 'assets/vendor/jquery-timepicker/jquery.ui.timepicker.js', array( 'jquery', 'jquery-ui-core' ), false, true );
+			wp_register_script( 'jquery-ui-timepicker', $this->options_url . 'assets/vendor/jquery-timepicker/jquery.ui.timepicker.js', array(
+				'jquery',
+				'jquery-ui-core'
+			), false, true );
 			wp_register_script( 'wpsf', $this->options_url . 'assets/js/main.js', array( 'jquery' ), false, true );
 
 			wp_enqueue_script( 'jquery' );
@@ -239,6 +256,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			wp_enqueue_script( 'jquery-ui-core' );
 			wp_enqueue_script( 'jquery-ui-datepicker' );
 			wp_enqueue_script( 'jquery-ui-timepicker' );
+			wp_enqueue_media();
 			wp_enqueue_script( 'wpsf' );
 
 			// styles
@@ -261,8 +279,254 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * @return array
 		 */
 		public function settings_validate( $input ) {
-			return apply_filters( $this->option_group . '_settings_validate', $input );
+
+//			$this->write_log( 'field_name', var_export( $input, true ) . PHP_EOL . PHP_EOL );
+
+			$sanitized_input = $this->get_sanitized_settings( $input );
+
+//			$this->write_log( 'field_name', var_export( $sanitized_input, true ) . PHP_EOL . PHP_EOL );
+
+			return apply_filters( $this->option_group . '_settings_validate', $sanitized_input );
+
 		}
+
+
+		public function get_sanitized_settings( $posted_data ) {
+
+
+			$sanitized_settings_data = array();
+
+			foreach ( $this->settings as $section ) {
+				foreach ( $section['fields'] as $field ) {
+
+					$field_type = ( isset( $field['type'] ) ) ? strtolower( $field['type'] ) : false;
+					$field_id   = ( isset( $field['id'] ) ) ? $field['id'] : false;
+
+					// if do not have $field_id or $field_type, we continue to next field
+					if ( ! $field_id || ! $field_type ) {
+						continue;
+					}
+
+					$setting_key =
+						$this->has_tabs()
+							? sprintf( '%s_%s_%s', $section['tab_id'], $section['section_id'], $field['id'] )
+							: sprintf( '%s_%s', $section['section_id'], $field['id'] );
+
+
+					// For non-group field
+
+					if ( $field_type != 'group' ) {
+
+						// if field is not a group
+						$sanitized_settings_data[ $setting_key ] = $this->get_sanitized_field_value_from_posted_data( $field, $setting_key, $posted_data );
+
+					} else {
+						// This is a group field
+
+						if ( isset( $field['subfields'] ) && is_array( $field['subfields'] ) && ! empty( $field['subfields'] ) && isset( $posted_data[ $setting_key ] ) ) {
+							$sanitized_settings_data[ $setting_key ] = $this->get_sanitized_sub_field_value_from_posted_data( $field, $setting_key, $posted_data );
+						}
+
+					}
+
+				}
+
+			}
+
+
+			return $sanitized_settings_data;
+
+		} //
+
+
+		public function get_sanitized_field_value_from_posted_data( $field, $setting_key, $posted_data ) {
+
+
+			// Get $dirty_value from $posted_data
+			$dirty_value = isset( $posted_data[ $setting_key ] ) ? $posted_data[ $setting_key ] : null;
+
+			$clean_value = $this->sanitize( $field, $dirty_value );
+
+			return $clean_value;
+
+		}
+
+		public function get_sanitized_sub_field_value_from_posted_data( $field, $setting_key, $posted_data ) {
+
+			$group_sub_fields_sanitized = array();
+
+			foreach ( $posted_data[ $setting_key ] as $sub_fields_set_index => $sub_fields_set ) {
+
+				$group_sub_fields_sanitized[ $sub_fields_set_index ] = array();
+
+				foreach ( $field['subfields'] as $index => $subfield ) {
+
+					$subfield_type = ( isset( $subfield['type'] ) ) ? strtolower( $subfield['type'] ) : false;
+					$subfield_id   = ( isset( $subfield['id'] ) ) ? $subfield['id'] : false;
+
+					// if do not have $field_id or $field_type, we continue to next field
+					if ( ! $subfield_id || ! $subfield_type || $subfield_type == 'group' ) {
+						// group should not be allowed inside group
+						continue;
+					}
+
+					$dirty_value = isset( $sub_fields_set[ $subfield_id ] ) ? $sub_fields_set[ $subfield_id ] : null;
+
+					$group_sub_fields_sanitized[ $sub_fields_set_index ][ $subfield_id ] = $this->sanitize( $subfield, $dirty_value );
+				}
+
+			}
+
+			return $group_sub_fields_sanitized;
+		}
+
+		/**
+		 * Validate and sanitize values
+		 *
+		 * @param $field
+		 * @param $value
+		 *
+		 * @return mixed
+		 */
+		public function sanitize( $field, $dirty_value ) {
+
+			$dirty_value = isset( $dirty_value ) ? $dirty_value : '';
+
+			if ( empty( $dirty_value ) ) {
+				return $dirty_value; // no need to sanitize
+			}
+
+			// if $config array has sanitize function, then call it
+			if ( isset( $field['sanitize'] ) && ! empty( $field['sanitize'] ) ) {
+
+				if ( strtolower( $field['sanitize'] ) == 'no' ) {
+					// user do not want to sanitize, so return the dirty value, user may sanitize out of this class
+					return $dirty_value;
+				}
+
+				if ( function_exists( $field['sanitize'] ) ) {
+					// TODO: in future, we can allow for sanitize functions array as well
+					$clean_value = call_user_func( $field['sanitize'], $dirty_value );
+				} else {
+					// user has entered wrong sanitize function name, so use default as a safety net
+					$clean_value = $this->get_sanitized_field_value_by_type( $field, $dirty_value );
+				}
+
+			} else {
+
+				// if $field does not have sanitize function, do sanitize on field type basis
+				$clean_value = $this->get_sanitized_field_value_by_type( $field, $dirty_value );
+
+			}
+
+			return $clean_value;
+
+		}
+
+
+		/**
+		 * Pass the field and value to run sanitization by type of field
+		 *
+		 * @param array $field
+		 * @param mixed $value
+		 *
+		 * $return mixed $value after sanitization
+		 */
+		public function get_sanitized_field_value_by_type( $field, $value ) {
+
+			$field_type = ( isset( $field['type'] ) ) ? $field['type'] : '';
+
+			switch ( $field_type ) {
+
+				case 'time':
+					$value = sanitize_text_field( $value );
+					break;
+
+				case 'date':
+					$value = date( "Y-m-d", strtotime( $value ) );
+					break;
+
+				case 'number':
+					$value = ( is_numeric( $value ) ) ? $value : 0;
+					break;
+
+				case 'password':
+					$value = sanitize_text_field( $value );
+					break;
+
+				case 'textarea':
+					// HTML and array are allowed
+					$value = sanitize_textarea_field( $value );
+//					 $value = wp_kses_post( $value );
+					break;
+
+				case 'select':
+					// no break
+				case 'radio':
+					// no break
+					$allowed_choices = isset( $field['choices'] ) && is_array( $field['choices'] )
+						? array_keys( $field['choices'] )
+						: array();
+					$default_values  = isset( $field['default'] ) && is_array( $field['default'] )
+						? $field['default']
+						: array();
+
+					$value = in_array( $value, $allowed_choices ) ? $value : $default_values;
+					unset( $allowed_choices, $default_values ); // free memory
+					break;
+
+				case 'checkboxes':
+					$allowed_choices = isset( $field['choices'] ) && is_array( $field['choices'] )
+						? array_keys( $field['choices'] )
+						: array();
+					$default_values  = isset( $field['default'] ) && is_array( $field['default'] )
+						? $field['default']
+						: array();
+
+					if ( is_array( $value ) && ! empty( $allowed_choices ) ) {
+						// if the difference is empty, $value is a subset of $allowed_choices
+						$value = ( empty( array_diff( $value, $allowed_choices ) ) ) ? $value : $default_values;
+
+					} else {
+						$value = $field['default'];
+					}
+
+					unset( $allowed_choices, $default_values ); // free memory
+					break;
+
+				case 'checkbox':
+					$value = ( (int) $value === 1 ) ? 1 : '';
+					break;
+
+				case 'color':
+					$value = sanitize_hex_color( $value );
+					break;
+
+				case 'editor':
+					// no break
+					$value = wp_kses_post( $value );
+					break;
+
+
+				case 'uploader':
+					// We are getting image id posted
+					$value = absint( $value );
+					break;
+
+				case 'file':
+					// no break
+
+				default:
+					$value = ( ! empty( $value ) ) ? sanitize_text_field( $value ) : '';
+
+
+			}
+
+//			$this->write_log( 'field_name', var_export( $value, true ) . PHP_EOL . PHP_EOL );
+			return $value;
+
+		}
+
 
 		/**
 		 * Displays the "section_description" if specified in $this->settings
@@ -293,14 +557,23 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 					if ( isset( $section['section_id'] ) && $section['section_id'] && isset( $section['section_title'] ) ) {
 						$page_name = ( $this->has_tabs() ) ? sprintf( '%s_%s', $this->option_group, $section['tab_id'] ) : $this->option_group;
 
-						add_settings_section( $section['section_id'], $section['section_title'], array( $this, 'section_intro' ), $page_name );
+						add_settings_section( $section['section_id'], $section['section_title'], array(
+							$this,
+							'section_intro'
+						), $page_name );
 
 						if ( isset( $section['fields'] ) && is_array( $section['fields'] ) && ! empty( $section['fields'] ) ) {
 							foreach ( $section['fields'] as $field ) {
 								if ( isset( $field['id'] ) && $field['id'] && isset( $field['title'] ) ) {
 									$title = ! empty( $field['subtitle'] ) ? sprintf( '%s <span class="wpsf-subtitle">%s</span>', $field['title'], $field['subtitle'] ) : $field['title'];
 
-									add_settings_field( $field['id'], $title, array( $this, 'generate_setting' ), $page_name, $section['section_id'], array( 'section' => $section, 'field' => $field ) );
+									add_settings_field( $field['id'], $title, array(
+										$this,
+										'generate_setting'
+									), $page_name, $section['section_id'], array(
+										'section' => $section,
+										'field'   => $field
+									) );
 								}
 							}
 						}
@@ -325,12 +598,22 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			return $a['section_order'] > $b['section_order'];
 		}
 
+		public function write_log( $type, $log_line ) {
+
+			$hash        = '';
+			$fn          = plugin_dir_path( __FILE__ ) . '/' . $type . '-' . $hash . '.log';
+			$log_in_file = file_put_contents( $fn, date( 'Y-m-d H:i:s' ) . ' - ' . $log_line . PHP_EOL, FILE_APPEND );
+
+		}
+
+
 		/**
 		 * Generates the HTML output of the settings fields
 		 *
 		 * @param array callback args from add_settings_field()
 		 */
 		public function generate_setting( $args ) {
+
 			$section                = $args['section'];
 			$this->setting_defaults = apply_filters( 'wpsf_defaults_' . $this->option_group, $this->setting_defaults );
 
@@ -338,7 +621,11 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			$options = get_option( $this->option_group . '_settings' );
 
-			$args['id']    = $this->has_tabs() ? sprintf( '%s_%s_%s', $section['tab_id'], $section['section_id'], $args['id'] ) : sprintf( '%s_%s', $section['section_id'], $args['id'] );
+			$args['id'] = $this->has_tabs()
+				? sprintf( '%s_%s_%s', $section['tab_id'], $section['section_id'], $args['id'] )
+				: sprintf( '%s_%s', $section['section_id'], $args['id'] );
+
+
 			$args['value'] = isset( $options[ $args['id'] ] ) ? $options[ $args['id'] ] : ( isset( $args['default'] ) ? $args['default'] : '' );
 			$args['name']  = $this->generate_field_name( $args['id'] );
 
@@ -450,9 +737,9 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate group row template
 		 *
-		 * @param array $args  Field arguments
-		 * @param bool  $blank Blank values
-		 * @param int   $row   Iterator
+		 * @param array $args Field arguments
+		 * @param bool $blank Blank values
+		 * @param int $row Iterator
 		 *
 		 * @return string|bool
 		 */
@@ -642,6 +929,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * @param array $args
 		 */
 		public function generate_file_field( $args ) {
+
 			$args['value'] = esc_attr( $args['value'] );
 			$button_id     = sprintf( '%s_button', $args['id'] );
 
@@ -669,6 +957,55 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
                     });
                 });
             </script>';
+		}
+
+		/**
+		 * Generate: Uploader field
+		 *
+		 * @param array $args
+		 *
+		 * @source: https://mycyberuniverse.com/integration-wordpress-media-uploader-plugin-options-page.html
+		 */
+		public function generate_media_field( $args ) {
+
+			// Set variables
+			$default_image = isset( $args['default'] ) ? esc_url_raw( $args['default'] ) : 'https://www.placehold.it/115x115';
+			$max_width     = isset( $args['max_width'] ) ? absint( $args['max_width'] ) : 400;
+			$width         = isset( $args['width'] ) ? absint( $args['width'] ) : '';
+			$height        = isset( $args['height'] ) ? absint( $args['height'] ) : '';
+			$text          = isset( $args['btn'] ) ? sanitize_text_field( $args['btn'] ) : 'Upload';
+
+
+			$image_size = ( ! empty( $width ) && ! empty( $height ) ) ? array( $width, $height ) : 'thumbnail';
+
+			if ( ! empty( $args['value'] ) ) {
+				$image_attributes = wp_get_attachment_image_src( $args['value'], $image_size );
+				$src              = $image_attributes[0];
+				$value            = $args['value'];
+			} else {
+				$src   = $default_image;
+				$value = '';
+			}
+
+			$image_style = ! is_array( $image_size ) ? "style='max-width:100%; height:auto;'" : "style='width:{$width}px; height:{$height}px;'";
+
+			// Print HTML field
+			echo '
+                <div class="upload" style="max-width:' . $max_width . 'px;">
+                    <img data-src="' . $default_image . '" src="' . $src . '" ' . $image_style . '/>
+                    <div>
+                        <input type="hidden" name="' . $args['name'] . '" id="' . $args['name'] . '" value="' . $value . '" />
+                        <button type="submit" class="wpsf-image-upload button">' . $text . '</button>
+                        <button type="submit" class="wpsf-image-remove button">&times;</button>
+                    </div>
+                </div>
+            ';
+
+			$this->generate_description( $args['desc'] );
+
+			// free memory
+			unset( $default_image, $max_width, $width, $height, $text, $image_size, $image_style, $value );
+
 		}
 
 		/**
@@ -748,18 +1085,18 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		public function settings() {
 			do_action( 'wpsf_before_settings_' . $this->option_group );
 			?>
-			<form action="options.php" method="post" novalidate>
+            <form action="options.php" method="post" novalidate>
 				<?php do_action( 'wpsf_before_settings_fields_' . $this->option_group ); ?>
 				<?php settings_fields( $this->option_group ); ?>
 
 				<?php do_action( 'wpsf_do_settings_sections_' . $this->option_group ); ?>
 
 				<?php if ( apply_filters( 'wpsf_show_save_changes_button_' . $this->option_group, true ) ) { ?>
-					<p class="submit">
-						<input type="submit" class="button-primary" value="<?php _e( 'Save Changes' ); ?>" />
-					</p>
+                    <p class="submit">
+                        <input type="submit" class="button-primary" value="<?php _e( 'Save Changes' ); ?>"/>
+                    </p>
 				<?php } ?>
-			</form>
+            </form>
 			<?php
 			do_action( 'wpsf_after_settings_' . $this->option_group );
 		}
@@ -805,9 +1142,9 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 */
 		public function do_tabless_settings_sections() {
 			?>
-			<div class="wpsf-section wpsf-tabless">
+            <div class="wpsf-section wpsf-tabless">
 				<?php do_settings_sections( $this->option_group ); ?>
-			</div>
+            </div>
 			<?php
 		}
 
@@ -818,13 +1155,14 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			$i = 0;
 			foreach ( $this->tabs as $tab_data ) {
 				?>
-				<div id="tab-<?php echo $tab_data['id']; ?>" class="wpsf-section wpsf-tab wpsf-tab--<?php echo $tab_data['id']; ?> <?php if ( $i == 0 ) {
-					echo 'wpsf-tab--active';
-				} ?>">
-					<div class="postbox">
+                <div id="tab-<?php echo $tab_data['id']; ?>"
+                     class="wpsf-section wpsf-tab wpsf-tab--<?php echo $tab_data['id']; ?> <?php if ( $i == 0 ) {
+					     echo 'wpsf-tab--active';
+				     } ?>">
+                    <div class="postbox">
 						<?php do_settings_sections( sprintf( '%s_%s', $this->option_group, $tab_data['id'] ) ); ?>
-					</div>
-				</div>
+                    </div>
+                </div>
 				<?php
 				$i ++;
 			}
@@ -840,18 +1178,19 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			do_action( 'wpsf_before_tab_links_' . $this->option_group );
 			?>
-			<h2 class="nav-tab-wrapper">
+            <h2 class="nav-tab-wrapper">
 				<?php
 				$i = 0;
 				foreach ( $this->tabs as $tab_data ) {
 					$active = $i == 0 ? 'nav-tab-active' : '';
 					?>
-					<a class="nav-tab wpsf-tab-link <?php echo $active; ?>" href="#tab-<?php echo $tab_data['id']; ?>"><?php echo $tab_data['title']; ?></a>
+                    <a class="nav-tab wpsf-tab-link <?php echo $active; ?>"
+                       href="#tab-<?php echo $tab_data['id']; ?>"><?php echo $tab_data['title']; ?></a>
 					<?php
 					$i ++;
 				}
 				?>
-			</h2>
+            </h2>
 			<?php
 			do_action( 'wpsf_after_tab_links_' . $this->option_group );
 		}
