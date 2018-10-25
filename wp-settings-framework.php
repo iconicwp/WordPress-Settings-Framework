@@ -147,9 +147,6 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			}
 
-
-//			var_dump( $this->option_group); die();
-
 			$this->options_path = plugin_dir_path( __FILE__ );
 			$this->options_url  = plugin_dir_url( __FILE__ );
 
@@ -187,7 +184,12 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			}
 		}
 
-
+		/**
+		 * Will loop through the config/settings array to get all field types configured
+         * so that we can conditionally enqueue only required scripts and styles
+         *
+         * Sets property: configured_field_types
+		 */
 		public function set_configured_field_types() {
 
 			$field_type_array = array();
@@ -206,6 +208,9 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 		}
 
+		/**
+		 * @return array $this->configured_field_type
+		 */
 		public function get_configured_field_types() {
 
 			return $this->configured_field_types;
@@ -394,17 +399,21 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 */
 		public function settings_validate( $input ) {
 
-			$this->write_log( 'field_name', var_export( $input, true ) . PHP_EOL . PHP_EOL );
+//			$this->write_log( 'field_name', var_export( $input, true ) . PHP_EOL . PHP_EOL );
 
 			$sanitized_input = $this->get_sanitized_settings( $input );
 
-			$this->write_log( 'field_name', var_export( $sanitized_input, true ) . PHP_EOL . PHP_EOL );
+//			$this->write_log( 'field_name', var_export( $sanitized_input, true ) . PHP_EOL . PHP_EOL );
 
 			return apply_filters( $this->option_group . '_settings_validate', $sanitized_input );
 
 		}
 
-
+		/**
+		 * @param $posted_data
+		 *
+		 * @return array sanitized posted data
+		 */
 		public function get_sanitized_settings( $posted_data ) {
 
 
@@ -452,7 +461,13 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 		} //
 
-
+		/**
+		 * @param $field from       settings/config array
+		 * @param $setting_key      name of setting
+		 * @param $posted_data      posted data on options save
+		 *
+		 * @return mixed
+		 */
 		public function get_sanitized_field_value_from_posted_data( $field, $setting_key, $posted_data ) {
 
 
@@ -465,6 +480,13 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 		}
 
+		/**
+		 * @param $field            'group' type field that have 'subfields'
+		 * @param $setting_key      name of setting
+		 * @param $posted_data      posted data on options save
+		 *
+		 * @return array
+		 */
 		public function get_sanitized_sub_field_value_from_posted_data( $field, $setting_key, $posted_data ) {
 
 			$group_sub_fields_sanitized = array();
@@ -636,7 +658,6 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			}
 
-//			$this->write_log( 'field_name', var_export( $value, true ) . PHP_EOL . PHP_EOL );
 			return $value;
 
 		}
@@ -712,6 +733,10 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			return $a['section_order'] > $b['section_order'];
 		}
 
+		/**
+		 * @param $type         name of log file
+		 * @param $log_line     variable/line/dump to be printed to log
+		 */
 		public function write_log( $type, $log_line ) {
 
 			$hash        = '';
@@ -1010,9 +1035,6 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		public function generate_color_field( $args ) {
 			$color_picker_id = sprintf( '%s_cp', $args['id'] );
 			$args['value']   = esc_attr( stripslashes( $args['value'] ) );
-
-
-			var_dump(  $args['value']);
 
 			echo '<div style="position:relative;">';
 
