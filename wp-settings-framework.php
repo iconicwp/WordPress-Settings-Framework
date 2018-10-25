@@ -4,7 +4,7 @@
  *
  * @author  Gilbert Pellegrom, James Kemp
  * @link    https://github.com/gilbitron/WordPress-Settings-Framework
- * @version 1.6.8
+ * @version 1.6.9
  * @license MIT
  */
 
@@ -172,7 +172,8 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			$args = wp_parse_args( $args, $defaults );
 
-			$this->settings_page['title'] = $args['page_title'];
+			$this->settings_page['title']      = $args['page_title'];
+			$this->settings_page['capability'] = $args['capability'];
 
 			if ( $args['parent_slug'] ) {
 				add_submenu_page(
@@ -201,7 +202,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 */
 
 		public function settings_page_content() {
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( ! current_user_can( $this->settings_page['capability'] ) ) {
 				wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 			}
 			?>
