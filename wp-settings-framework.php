@@ -84,23 +84,76 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * @param string $settings_file
 		 * @param bool $option_group
 		 */
-		public function __construct( $settings_file, $option_group = false ) {
+		public function __construct( $settings_file, $option_group = false, $settings_array = null ) {
+
+//			if ( ! is_file( $settings_file )) {
+//				return;
+//			}
+//
+
 			if ( ! is_file( $settings_file ) ) {
-				return;
+
+				// $settings_file should be null/false
+				if ( $settings_file != null ) {
+					add_settings_error( 'WPSF', 'wpsf', '$settings_file != null', 'error' );
+
+					return;
+				}
+
+				// $settings_array should be provided
+				if ( $settings_array == null ) {
+					add_settings_error( 'WPSF', 'wpsf', '! is_file( $settings_file ) AND $settings_array == null', 'error' );
+
+					return;
+				}
+
+				// $settings_array should be array
+				if ( ! is_array( $settings_array ) ) {
+					add_settings_error( 'WPSF', 'wpsf', '! is_array( $settings_array )', 'error' );
+
+					return;
+				}
+
+				// $settings_array should not be empty
+				if ( empty( $settings_array ) ) {
+					add_settings_error( 'WPSF', 'wpsf', 'empty( $settings_array )', 'error' );
+
+					return;
+				}
+
 			}
 
-			require_once( $settings_file );
-
-			$this->option_group = preg_replace( "/[^a-z0-9]+/i", "", basename( $settings_file, '.php' ) );
+			if ( is_file( $settings_file ) ) {
+				require_once( $settings_file );
+				$this->option_group = preg_replace( "/[^a-z0-9]+/i", "", basename( $settings_file, '.php' ) );
+			}
 
 			if ( $option_group ) {
+				// if option_group is set, use it, otherwise, get from config
 				$this->option_group = $option_group;
+
+			} else {
+				$this->option_group = isset( $settings_array['option_group'] )
+					? sanitize_key( $settings_array['option_group'] )
+					: null;
+
+
+				if ( $this->option_group == null ) {
+					// option group is not defined in the settings array, so bail out
+					add_settings_error( 'WPSF', 'wpsf', 'undefined $option_group OR undefined $settings_array["option_group"]', 'error' );
+
+					return;
+				}
+
 			}
+
+
+//			var_dump( $this->option_group); die();
 
 			$this->options_path = plugin_dir_path( __FILE__ );
 			$this->options_url  = plugin_dir_url( __FILE__ );
 
-			$this->construct_settings();
+			$this->construct_settings( $settings_array );
 			$this->set_configured_field_types();
 
 			if ( is_admin() ) {
@@ -162,14 +215,15 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Construct Settings.
 		 */
-		public function construct_settings() {
+		public function construct_settings( $settings_array = null ) {
 			$this->settings_wrapper = apply_filters( 'wpsf_register_settings_' . $this->option_group, array() );
-
-//			var_dump( $this->settings_wrapper); die();
-
 			if ( ! is_array( $this->settings_wrapper ) ) {
 				return new WP_Error( 'broke', __( 'WPSF settings must be an array' ) );
 			}
+			// include the settings array after apply_filters
+            if($settings_array != null){
+	            $this->settings_wrapper =  array_merge_recursive ($settings_array, $this->settings_wrapper  );
+            }
 
 			// If "sections" is set, this settings group probably has tabs
 			if ( isset( $this->settings_wrapper['sections'] ) ) {
@@ -179,7 +233,6 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			} else {
 				$this->settings = $this->settings_wrapper;
 			}
-
 			$this->settings_page['slug'] = sprintf( '%s-settings', str_replace( '_', '-', $this->option_group ) );
 		}
 
@@ -340,11 +393,11 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 */
 		public function settings_validate( $input ) {
 
-//			$this->write_log( 'field_name', var_export( $input, true ) . PHP_EOL . PHP_EOL );
+			$this->write_log( 'field_name', var_export( $input, true ) . PHP_EOL . PHP_EOL );
 
 			$sanitized_input = $this->get_sanitized_settings( $input );
 
-//			$this->write_log( 'field_name', var_export( $sanitized_input, true ) . PHP_EOL . PHP_EOL );
+			$this->write_log( 'field_name', var_export( $sanitized_input, true ) . PHP_EOL . PHP_EOL );
 
 			return apply_filters( $this->option_group . '_settings_validate', $sanitized_input );
 
@@ -956,6 +1009,9 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		public function generate_color_field( $args ) {
 			$color_picker_id = sprintf( '%s_cp', $args['id'] );
 			$args['value']   = esc_attr( stripslashes( $args['value'] ) );
+
+
+			var_dump(  $args['value']);
 
 			echo '<div style="position:relative;">';
 
