@@ -62,6 +62,22 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 		private $configured_field_types;
 
+
+		/**
+		 * @access protected
+		 * @var boolean
+		 *  true if settings provided as array and not as file
+		 */
+		protected $is_settings_array;
+
+		/**
+		 * @access protected
+		 * @var boolean
+		 *  true if settings provided as file. backward compatibility
+		 */
+		protected $is_settings_file;
+
+
 		/**
 		 * @access protected
 		 * @var array
@@ -84,73 +100,80 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * @param string $settings_file
 		 * @param bool $option_group
 		 */
-		public function __construct( $settings_file, $option_group = false, $settings_array = null ) {
+		public function __construct( $settings_file_or_array, $option_group = false ) {
 
 //			if ( ! is_file( $settings_file )) {
 //				return;
 //			}
 //
+			if ( is_string( $settings_file_or_array ) && is_file( $settings_file_or_array )  ) {
+				// this is a file, so require it
+				require_once( $settings_file_or_array );
 
-			if ( ! is_file( $settings_file ) ) {
+				$this->is_settings_file  = true;
+				$this->is_settings_array = false;
 
-				// $settings_file should be null/false
-				if ( $settings_file != null ) {
-					add_settings_error( 'WPSF', 'wpsf', '$settings_file != null', 'error' );
-
-					return;
-				}
-
-				// $settings_array should be provided
-				if ( $settings_array == null ) {
-					add_settings_error( 'WPSF', 'wpsf', '! is_file( $settings_file ) AND $settings_array == null', 'error' );
-
-					return;
-				}
+			} else {
 
 				// $settings_array should be array
-				if ( ! is_array( $settings_array ) ) {
-					add_settings_error( 'WPSF', 'wpsf', '! is_array( $settings_array )', 'error' );
+				if ( ! is_array( $settings_file_or_array ) ) {
+					add_settings_error( 'WPSF', 'wpsf', '! is_array( $settings_file_or_array )', 'error' );
 
 					return;
 				}
 
 				// $settings_array should not be empty
-				if ( empty( $settings_array ) ) {
-					add_settings_error( 'WPSF', 'wpsf', 'empty( $settings_array )', 'error' );
+				if ( empty( $settings_file_or_array ) ) {
+					add_settings_error( 'WPSF', 'wpsf', 'empty( $settings_file_or_array )', 'error' );
 
 					return;
 				}
 
+				// We are sure by now that the first parameter is an array and is not empty,
+				// so, lets set properties.
+
+				$this->is_settings_file  = false;
+				$this->is_settings_array = true;
+
 			}
 
-			if ( is_file( $settings_file ) ) {
-				require_once( $settings_file );
-				$this->option_group = preg_replace( "/[^a-z0-9]+/i", "", basename( $settings_file, '.php' ) );
-			}
 
 			if ( $option_group ) {
 				// if option_group is set, use it, otherwise, get from config
 				$this->option_group = $option_group;
 
 			} else {
-				$this->option_group = isset( $settings_array['option_group'] )
-					? sanitize_key( $settings_array['option_group'] )
-					: null;
 
-
-				if ( $this->option_group == null ) {
-					// option group is not defined in the settings array, so bail out
-					add_settings_error( 'WPSF', 'wpsf', 'undefined $option_group OR undefined $settings_array["option_group"]', 'error' );
-
-					return;
+				if ( $this->is_settings_file ) {
+					$this->option_group = preg_replace( "/[^a-z0-9]+/i", "", basename( $settings_file_or_array, '.php' ) );
 				}
 
+				if ( $this->is_settings_array ) {
+
+					$this->option_group = isset( $settings_file_or_array['option_group'] )
+						? sanitize_key( $settings_file_or_array['option_group'] )
+						: null;
+
+
+					if ( $this->option_group == null ) {
+						// option group is not defined in the settings array, so bail out
+						add_settings_error( 'WPSF', 'wpsf', 'undefined $option_group OR undefined $settings_array["option_group"]', 'error' );
+
+						return;
+					}
+				}
+
+
+
 			}
+
+
 
 			$this->options_path = plugin_dir_path( __FILE__ );
 			$this->options_url  = plugin_dir_url( __FILE__ );
 
-			$this->construct_settings( $settings_array );
+			$this->construct_settings( $settings_file_or_array );
+
 			$this->set_configured_field_types();
 
 			if ( is_admin() ) {
@@ -186,9 +209,9 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 		/**
 		 * Will loop through the config/settings array to get all field types configured
-         * so that we can conditionally enqueue only required scripts and styles
-         *
-         * Sets property: configured_field_types
+		 * so that we can conditionally enqueue only required scripts and styles
+		 *
+		 * Sets property: configured_field_types
 		 */
 		public function set_configured_field_types() {
 
@@ -221,14 +244,16 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * Construct Settings.
 		 */
 		public function construct_settings( $settings_array = null ) {
+
 			$this->settings_wrapper = apply_filters( 'wpsf_register_settings_' . $this->option_group, array() );
+
 			if ( ! is_array( $this->settings_wrapper ) ) {
 				return new WP_Error( 'broke', __( 'WPSF settings must be an array' ) );
 			}
 			// include the settings array after apply_filters
-            if($settings_array != null){
-	            $this->settings_wrapper =  array_merge_recursive ($settings_array, $this->settings_wrapper  );
-            }
+			if ( $this->is_settings_array && $settings_array != null ) {
+				$this->settings_wrapper = array_merge_recursive( $settings_array, $this->settings_wrapper );
+			}
 
 			// If "sections" is set, this settings group probably has tabs
 			if ( isset( $this->settings_wrapper['sections'] ) ) {
@@ -481,7 +506,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		}
 
 		/**
-		 * @param $field            'group' type field that have 'subfields'
+		 * @param $field 'group' type field that have 'subfields'
 		 * @param $setting_key      name of setting
 		 * @param $posted_data      posted data on options save
 		 *
@@ -797,9 +822,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 */
 		public function generate_text_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
-
 			echo '<input type="text" name="' . $args['name'] . '" id="' . $args['id'] . '" value="' . $args['value'] . '" placeholder="' . $args['placeholder'] . '" class="regular-text ' . $args['class'] . '" />';
-
 			$this->generate_description( $args['desc'] );
 		}
 
