@@ -4,7 +4,7 @@
  *
  * @author  Gilbert Pellegrom, James Kemp
  * @link    https://github.com/gilbitron/WordPress-Settings-Framework
- * @version 1.6.9
+ * @version 1.6.10
  * @license MIT
  */
 
@@ -783,6 +783,10 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			$settings[ $settings_name ] = array();
 
 			foreach ( $this->settings as $section ) {
+				if ( empty( $section['fields'] ) ) {
+					continue;
+				}
+				
 				foreach ( $section['fields'] as $field ) {
 					if ( ! empty( $field['default'] ) && is_array( $field['default'] ) ) {
 						$field['default'] = array_values( $field['default'] );
