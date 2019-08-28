@@ -659,7 +659,11 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
                         window.original_send_to_editor = window.send_to_editor;
 
                         window.send_to_editor = function(html) {
-                            var imgurl = $("img",html).attr("src");
+                            if($(html).is("img")) {
+                              var imgurl = $(html).attr("src");
+                            } else {
+                              var imgurl = $("img",html).attr("src");
+                            }
                             $("#' . $args['id'] . '").val(imgurl);
                             tb_remove();
                             window.send_to_editor = window.original_send_to_editor;
