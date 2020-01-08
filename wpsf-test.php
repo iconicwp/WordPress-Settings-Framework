@@ -26,7 +26,7 @@ class WPSFTest {
 
 		// Include and create a new WordPressSettingsFramework
 		require_once( $this->plugin_path . 'wp-settings-framework.php' );
-		$this->wpsf = new WordPressSettingsFramework( $this->plugin_path . 'settings/settings-general.php', 'prefix_settings_general' );
+		$this->wpsf = new WordPressSettingsFramework( $this->plugin_path . 'settings/example-settings.php', 'my_example_settings' );
 
 		// Add admin menu
 		add_action( 'admin_menu', array( $this, 'add_settings_page' ), 20 );
@@ -38,7 +38,7 @@ class WPSFTest {
 	/**
 	 * Add settings page.
 	 */
-	public function settings_page() {
+	public function add_settings_page() {
 		$this->wpsf->add_settings_page( array(
 			'parent_slug' => 'woocommerce',
 			'page_title'  => __( 'Page Title', 'text-domain' ),

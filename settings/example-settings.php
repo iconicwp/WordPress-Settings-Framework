@@ -69,6 +69,14 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				'type'       => 'group',
 				'subfields' => array(
 					// accepts most types of fields
+					array(
+						'id'          => 'sub-text',
+						'title'       => 'Sub Text',
+						'desc'        => 'This is a description.',
+						'placeholder' => 'This is a placeholder.',
+						'type'        => 'text',
+						'default'     => 'Sub text',
+					),
 				)
 			),
 			array(
