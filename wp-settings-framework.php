@@ -429,7 +429,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * @param array $args
 		 */
 		public function generate_group_field( $args ) {
-			$row_count = count( $args['subfields'] );
+			$row_count = count( $args['value'] );
 
 			echo '<table class="widefat wpsf-group" cellspacing="0">';
 
