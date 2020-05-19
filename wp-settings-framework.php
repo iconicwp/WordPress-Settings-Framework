@@ -694,7 +694,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * @param array $args
 		 */
 		public function generate_custom_field( $args ) {
-			echo $args['default'];
+			echo isset( $args['output'] ) ? $args['output'] : $args['default'];
 		}
 
 		/**
