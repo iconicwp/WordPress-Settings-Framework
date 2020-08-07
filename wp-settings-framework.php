@@ -174,7 +174,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			$this->settings_page['title']      = $args['page_title'];
 			$this->settings_page['capability'] = $args['capability'];
-      $this->settings_page['slug']       = $args['page_slug'];
+			$this->settings_page['slug']       = $args['page_slug'];
 
 			if ( $args['parent_slug'] ) {
 				add_submenu_page(
