@@ -74,20 +74,26 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * WordPressSettingsFramework constructor.
 		 *
-		 * @param string $settings_file
-		 * @param bool   $option_group
+		 * @param null|string $settings_file Path to a settings file, or null if you pass the option_group manually and construct your settings with a filter.
+		 * @param bool|string $option_group Option group name, usually a short slug.
 		 */
-		public function __construct( $settings_file, $option_group = false ) {
-			if ( ! is_file( $settings_file ) ) {
-				return;
+		public function __construct( $settings_file = null, $option_group = false ) {
+			$this->option_group = $option_group;
+
+			if ( $settings_file ) {
+				if ( ! is_file( $settings_file ) ) {
+					return;
+				}
+
+				require_once( $settings_file );
+
+				if ( ! $this->option_group ) {
+					$this->option_group = preg_replace( "/[^a-z0-9]+/i", "", basename( $settings_file, '.php' ) );
+				}
 			}
 
-			require_once( $settings_file );
-
-			$this->option_group = preg_replace( "/[^a-z0-9]+/i", "", basename( $settings_file, '.php' ) );
-
-			if ( $option_group ) {
-				$this->option_group = $option_group;
+			if ( empty( $this->option_group ) ) {
+				return;
 			}
 
 			$this->options_path = plugin_dir_path( __FILE__ );
