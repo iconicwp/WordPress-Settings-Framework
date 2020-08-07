@@ -15,7 +15,7 @@
             wpsf.cache();
             wpsf.trigger_dynamic_fields();
             wpsf.setup_groups();
-            wpsf.setup_tabs();
+            wpsf.tabs.watch();
 
         },
 
@@ -32,24 +32,72 @@
         /**
          * Setup the main tabs for the settings page
          */
-        setup_tabs: function() {
+        tabs: {
+            /**
+             * Watch for tab clicks.
+             */
+            watch: function() {
+                var tab_id = wpsf.tabs.get_tab_id();
 
-            wpsf.els.tab_links.on('click', function(){
+                if ( tab_id ) {
+                    wpsf.tabs.set_active_tab( tab_id );
+                }
 
+                wpsf.els.tab_links.on( 'click', function() {
+                    // Show tab
+                    var tab_id = $( this ).attr( 'href' );
+
+                    wpsf.tabs.set_active_tab( tab_id );
+                } );
+            },
+
+            /**
+             * Is storage available.
+             */
+            has_storage: 'undefined' !== typeof( Storage ),
+
+            /**
+             * Store tab ID.
+             *
+             * @param tab_id
+             */
+            set_tab_id: function( tab_id ) {
+                if ( ! wpsf.tabs.has_storage ) {
+                    return;
+                }
+
+                localStorage.setItem( 'wpsf_tab_id', tab_id );
+            },
+
+            /**
+             * Get tab ID.
+             *
+             * @returns {boolean}
+             */
+            get_tab_id: function() {
+                if ( ! wpsf.tabs.has_storage ) {
+                    return false;
+                }
+
+                return localStorage.getItem( 'wpsf_tab_id' );
+            },
+
+            /**
+             * Set active tab.
+             *
+             * @param tab_id
+             */
+            set_active_tab: function( tab_id ) {
                 // Set tab link active class
-                wpsf.els.tab_links.removeClass('nav-tab-active');
-                $(this).addClass('nav-tab-active');
+                wpsf.els.tab_links.removeClass( 'nav-tab-active' );
+                $( 'a[href="' + tab_id + '"]' ).addClass( 'nav-tab-active' );
 
                 // Show tab
-                var tab_id = $(this).attr('href');
+                $( '.wpsf-tab' ).removeClass( 'wpsf-tab--active' );
+                $( tab_id ).addClass( 'wpsf-tab--active' );
 
-                $('.wpsf-tab').removeClass('wpsf-tab--active');
-                $(tab_id).addClass('wpsf-tab--active');
-
-                return false;
-
-            });
-
+                wpsf.tabs.set_tab_id( tab_id );
+            }
         },
 
         /**
