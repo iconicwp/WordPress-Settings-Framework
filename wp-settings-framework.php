@@ -87,7 +87,9 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 				require_once( $settings_file );
 
-				$this->option_group = preg_replace( "/[^a-z0-9]+/i", "", basename( $settings_file, '.php' ) );
+				if ( ! $this->option_group ) {
+					$this->option_group = preg_replace( "/[^a-z0-9]+/i", "", basename( $settings_file, '.php' ) );
+				}
 			}
 
 			if ( empty( $this->option_group ) ) {
