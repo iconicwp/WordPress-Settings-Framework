@@ -4,7 +4,7 @@
  *
  * @author  Gilbert Pellegrom, James Kemp
  * @link    https://github.com/gilbitron/WordPress-Settings-Framework
- * @version 1.6.8
+ * @version 1.6.10
  * @license MIT
  */
 
@@ -172,8 +172,9 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			$args = wp_parse_args( $args, $defaults );
 
-			$this->settings_page['title'] = $args['page_title'];
-			$this->settings_page['slug']  = $args['page_slug'];
+			$this->settings_page['title']      = $args['page_title'];
+			$this->settings_page['capability'] = $args['capability'];
+      $this->settings_page['slug']       = $args['page_slug'];
 
 			if ( $args['parent_slug'] ) {
 				add_submenu_page(
@@ -202,7 +203,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 */
 
 		public function settings_page_content() {
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( ! current_user_can( $this->settings_page['capability'] ) ) {
 				wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 			}
 			?>
@@ -401,7 +402,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			$timepicker = ! empty( $args['timepicker'] ) ? htmlentities( json_encode( $args['timepicker'] ) ) : null;
 
-			echo '<input name="' . $args['name'] . '" id="' . $args['id'] . '" value="' . $args['value'] . '" class="timepicker regular-text ' . $args['class'] . '" data-timepicker="' . $timepicker . '" />';
+			echo '<input type="text" name="' . $args['name'] . '" id="' . $args['id'] . '" value="' . $args['value'] . '" class="timepicker regular-text ' . $args['class'] . '" data-timepicker="' . $timepicker . '" />';
 
 			$this->generate_description( $args['desc'] );
 		}
@@ -429,7 +430,8 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * @param array $args
 		 */
 		public function generate_group_field( $args ) {
-			$row_count = count( $args['value'] );
+			$value = (array) $args['value'];
+			$row_count = ! empty( $value ) ? count( $value ) : 1;
 
 			echo '<table class="widefat wpsf-group" cellspacing="0">';
 
@@ -472,7 +474,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				foreach ( $args['subfields'] as $subfield ) {
 					$subfield = wp_parse_args( $subfield, $this->setting_defaults );
 
-					$subfield['value'] = ( $blank ) ? "" : isset( $args['value'][ $row ][ $subfield['id'] ] ) ? $args['value'][ $row ][ $subfield['id'] ] : "";
+					$subfield['value'] = ( $blank ) ? "" : ( isset( $args['value'][ $row ][ $subfield['id'] ] ) ? $args['value'][ $row ][ $subfield['id'] ] : "" );
 					$subfield['name']  = sprintf( '%s[%d][%s]', $args['name'], $row, $subfield['id'] );
 					$subfield['id']    = sprintf( '%s_%d_%s', $args['id'], $row, $subfield['id'] );
 
@@ -659,7 +661,11 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
                         window.original_send_to_editor = window.send_to_editor;
 
                         window.send_to_editor = function(html) {
-                            var imgurl = $("img",html).attr("src");
+                            if($(html).is("img")) {
+                              var imgurl = $(html).attr("src");
+                            } else {
+                              var imgurl = $("img",html).attr("src");
+                            }
                             $("#' . $args['id'] . '").val(imgurl);
                             tb_remove();
                             window.send_to_editor = window.original_send_to_editor;
@@ -689,7 +695,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * @param array $args
 		 */
 		public function generate_custom_field( $args ) {
-			echo $args['default'];
+			echo isset( $args['output'] ) ? $args['output'] : $args['default'];
 		}
 
 		/**
@@ -783,6 +789,10 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			$settings[ $settings_name ] = array();
 
 			foreach ( $this->settings as $section ) {
+				if ( empty( $section['fields'] ) ) {
+					continue;
+				}
+				
 				foreach ( $section['fields'] as $field ) {
 					if ( ! empty( $field['default'] ) && is_array( $field['default'] ) ) {
 						$field['default'] = array_values( $field['default'] );
