@@ -44,7 +44,7 @@
                 }
 
                 wpsf.els.tab_links.on( 'click', function() {
-                   // Show tab
+                    // Show tab
                     var tab_id = $( this ).attr( 'href' );
 
                     wpsf.tabs.set_active_tab( tab_id );
