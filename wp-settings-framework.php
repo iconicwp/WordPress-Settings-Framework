@@ -74,7 +74,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * WordPressSettingsFramework constructor.
 		 *
-		 * @param null|string $settings_file Path to a settings file, or null if you want to pass the option_group manually.
+		 * @param null|string $settings_file Path to a settings file, or null if you pass the option_group manually and construct your settings with a filter.
 		 * @param bool|string $option_group Option group name, usually a short slug.
 		 */
 		public function __construct( $settings_file = null, $option_group = false ) {
