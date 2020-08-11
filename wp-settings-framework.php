@@ -631,10 +631,10 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
                     var colorPicker = $("#' . $color_picker_id . '");
                     colorPicker.farbtastic("#' . $args['id'] . '");
                     colorPicker.hide();
-                    $("#' . $args['id'] . '").live("focus", function(){
+                    $("#' . $args['id'] . '").on("focus", function(){
                         colorPicker.show();
                     });
-                    $("#' . $args['id'] . '").live("blur", function(){
+                    $("#' . $args['id'] . '").on("blur", function(){
                         colorPicker.hide();
                         if($(this).val() == "") $(this).val("#");
                     });
