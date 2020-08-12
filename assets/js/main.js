@@ -43,11 +43,13 @@
                     wpsf.tabs.set_active_tab( tab_id );
                 }
 
-                wpsf.els.tab_links.on( 'click', function() {
+                wpsf.els.tab_links.on( 'click', function( e ) {
                     // Show tab
                     var tab_id = $( this ).attr( 'href' );
 
                     wpsf.tabs.set_active_tab( tab_id );
+
+                    e.preventDefault();
                 } );
             },
 
