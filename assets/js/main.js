@@ -68,7 +68,7 @@
                     return;
                 }
 
-                localStorage.setItem( 'wpsf_tab_id', tab_id );
+                localStorage.setItem( wpsf.tabs.get_option_page() + '_wpsf_tab_id', tab_id );
             },
 
             /**
@@ -81,7 +81,7 @@
                     return false;
                 }
 
-                return localStorage.getItem( 'wpsf_tab_id' );
+                return localStorage.getItem( wpsf.tabs.get_option_page() + '_wpsf_tab_id' );
             },
 
             /**
@@ -99,6 +99,15 @@
                 $( tab_id ).addClass( 'wpsf-tab--active' );
 
                 wpsf.tabs.set_tab_id( tab_id );
+            },
+
+            /**
+             * Get unique option page name.
+             *
+             * @returns {jQuery|string|undefined}
+             */
+            get_option_page: function() {
+                return $( 'input[name="option_page"]').val();
             }
         },
 
