@@ -111,6 +111,10 @@
 
 /* $. Repeater */
 
+.wpsf-group__row:first-child .wpsf-group__row-remove {
+	display: none;
+}
+
 .wpsf-group__row td {
 	border-bottom: 1px solid #e5e5e5;
 }
