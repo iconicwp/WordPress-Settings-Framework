@@ -90,13 +90,19 @@
              * @param tab_id
              */
             set_active_tab: function( tab_id ) {
+                var $tab = $( tab_id );
+                
+                if ( $tab.length <= 0 ) {
+                    return;
+                }
+
                 // Set tab link active class
                 wpsf.els.tab_links.removeClass( 'nav-tab-active' );
                 $( 'a[href="' + tab_id + '"]' ).addClass( 'nav-tab-active' );
 
                 // Show tab
                 $( '.wpsf-tab' ).removeClass( 'wpsf-tab--active' );
-                $( tab_id ).addClass( 'wpsf-tab--active' );
+                $tab.addClass( 'wpsf-tab--active' );
 
                 wpsf.tabs.set_tab_id( tab_id );
             },
