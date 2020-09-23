@@ -75,7 +75,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * WordPressSettingsFramework constructor.
 		 *
 		 * @param null|string $settings_file Path to a settings file, or null if you pass the option_group manually and construct your settings with a filter.
-		 * @param bool|string $option_group Option group name, usually a short slug.
+		 * @param bool|string $option_group  Option group name, usually a short slug.
 		 */
 		public function __construct( $settings_file = null, $option_group = false ) {
 			$this->option_group = $option_group;
@@ -221,7 +221,6 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				?>
 			</div>
 			<?php
-
 		}
 
 		/**
@@ -383,7 +382,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			$this->generate_description( $args['desc'] );
 		}
-		
+
 		/**
 		 * Generate: Hidden field.
 		 *
@@ -446,7 +445,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * @param array $args
 		 */
 		public function generate_group_field( $args ) {
-			$value = (array) $args['value'];
+			$value     = (array) $args['value'];
 			$row_count = ! empty( $value ) ? count( $value ) : 1;
 
 			echo '<table class="widefat wpsf-group" cellspacing="0">';
@@ -809,7 +808,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				if ( empty( $section['fields'] ) ) {
 					continue;
 				}
-				
+
 				foreach ( $section['fields'] as $field ) {
 					if ( ! empty( $field['default'] ) && is_array( $field['default'] ) ) {
 						$field['default'] = array_values( $field['default'] );
