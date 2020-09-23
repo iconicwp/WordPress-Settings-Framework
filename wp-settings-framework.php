@@ -383,6 +383,17 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			$this->generate_description( $args['desc'] );
 		}
+		
+		/**
+		 * Generate: Hidden field.
+		 *
+		 * @param array $args
+		 */
+		public function generate_hidden_field( $args ) {
+			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
+
+			echo '<input type="hidden" name="' . $args['name'] . '" id="' . $args['id'] . '" value="' . $args['value'] . '"  class="hidden-field ' . $args['class'] . '" />';
+		}
 
 		/**
 		 * Generate: Number field
@@ -483,8 +494,9 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 					$subfield['name']  = sprintf( '%s[%d][%s]', $args['name'], $row, $subfield['id'] );
 					$subfield['id']    = sprintf( '%s_%d_%s', $args['id'], $row, $subfield['id'] );
 
-					$row_template .= '<div class="wpsf-group__field-wrapper">';
+					$class = sprintf( 'wpsf-group__field-wrapper--%s', $subfield['type'] );
 
+					$row_template .= sprintf( '<div class="wpsf-group__field-wrapper %s">', $class );
 					$row_template .= sprintf( '<label for="%s" class="wpsf-group__field-label">%s</label>', $subfield['id'], $subfield['title'] );
 
 					ob_start();

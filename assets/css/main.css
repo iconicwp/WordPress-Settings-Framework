@@ -173,6 +173,10 @@
 	border-bottom: none;
 }
 
+.wpsf-group__field-wrapper.wpsf-group__field-wrapper--hidden {
+	display: none;
+}
+
 .wpsf-group__field-label {
 	display: block;
 	margin: 0 0 5px;

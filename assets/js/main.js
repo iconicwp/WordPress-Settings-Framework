@@ -194,7 +194,6 @@
          * @param arr $group
          */
         reindex_group: function( $group ) {
-
             if( $group.find(".wpsf-group__row").length == 1 ) {
                 $group.find(".wpsf-group__row-remove").hide();
             } else {
@@ -205,19 +204,23 @@
 
                 $(this).removeClass('alternate');
 
-                if(index%2 == 0)
+                if(index%2 == 0) {
                     $(this).addClass('alternate');
+		}
 
                 $(this).find("input").each(function() {
-                    var name = jQuery(this).attr('name'),
-                        id = jQuery(this).attr('id');
+                    var this_input = this,
+                        name = jQuery( this ).attr( 'name' );
 
-                    if(typeof name !== typeof undefined && name !== false)
-                        $(this).attr('name', name.replace(/\[\d+\]/, '['+index+']'));
-
-                    if(typeof id !== typeof undefined && id !== false)
-                        $(this).attr('id', id.replace(/\_\d+\_/, '_'+index+'_'));
-
+                    if(typeof name !== typeof undefined && name !== false) {
+                        $( this_input ).attr( 'name', name.replace( /\[\d+\]/, '[' + index + ']' ) );
+		    }
+                    
+                    $.each( this_input.attributes, function() {
+                        if ( this.name && this_input && this.name !== '"' ) {
+                            $( this_input ).attr( this.name, this.value.replace(/\_\d+\_/, '_'+index+'_') );
+                        }
+                    });
                 });
 
                 $(this).find('.wpsf-group__row-index span').html( index );
