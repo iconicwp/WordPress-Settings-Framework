@@ -487,8 +487,8 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				$row_template .= sprintf( '<td class="wpsf-group__row-index"><span>%d</span></td>', $row );
 
 				$row_template .= '<td class="wpsf-group__row-fields">';
-				
-				$row_template .= '<input type="hidden" class="wpsf-group__row-id" name="' . sprintf( '%s[%d][row_id]', esc_attr( $args['name'] ), esc_attr( $row ) ) . '" value="'. esc_attr( $row_id_value ) .'" />';
+
+				$row_template .= '<input type="hidden" class="wpsf-group__row-id" name="' . sprintf( '%s[%d][row_id]', esc_attr( $args['name'] ), esc_attr( $row ) ) . '" value="' . esc_attr( $row_id_value ) . '" />';
 
 				foreach ( $args['subfields'] as $subfield ) {
 					$subfield = wp_parse_args( $subfield, $this->setting_defaults );
