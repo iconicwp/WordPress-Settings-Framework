@@ -189,7 +189,7 @@
 			} );
 
 		},
-		
+
 		/**
 		 * Generate random ID.
 		 *
@@ -197,9 +197,9 @@
 		 */
 		generate_random_id: function() {
 			return (
-			       Number( String( Math.random() ).slice( 2 ) ) +
-			       Date.now() +
-			       Math.round( performance.now() )
+				Number( String( Math.random() ).slice( 2 ) ) +
+				Date.now() +
+				Math.round( performance.now() )
 			).toString( 36 );
 		},
 
