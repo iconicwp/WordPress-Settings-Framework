@@ -136,21 +136,18 @@
 		 * Set up timepickers
 		 */
 		setup_datepickers: function() {
-
-			$( '.datepicker' ).not( '.hasTimepicker' ).each( function() {
-
+			$( document ).on( 'focus',  '.datepicker:not(.hasTimepicker)', function() {
 				var datepicker_args = $( this ).data( 'datepicker' );
 
 				$( this ).datepicker( datepicker_args );
-
 			} );
-
 		},
 
 		/**
 		 * Setup repeatable groups
 		 */
 		setup_groups: function() {
+			wpsf.reindex_groups();
 
 			// add row
 
@@ -204,6 +201,21 @@
 		},
 
 		/**
+		 * Reindex all groups.
+		 */
+		reindex_groups: function() {
+			var $groups = jQuery( '.wpsf-group' );
+
+			if ( $groups.length <= 0 ) {
+				return;
+			}
+
+			$groups.each( function( index, group ) {
+				wpsf.reindex_group( jQuery( group ) );
+			} );
+		},
+
+		/**
 		 * Reindex a group of repeatable rows
 		 *
 		 * @param arr $group
@@ -241,7 +253,6 @@
 				$( this ).find( '.wpsf-group__row-index span' ).html( index );
 
 			} );
-
 		}
 
 	};
