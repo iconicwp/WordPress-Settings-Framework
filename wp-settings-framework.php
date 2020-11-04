@@ -613,7 +613,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			echo '<ul class="wpsf-list wpsf-list--checkboxes">';
 
 			foreach ( $args['choices'] as $value => $text ) {
-				$checked  = is_array( $args['value'] ) && in_array( $value, $args['value'] ) ? 'checked="checked"' : '';
+				$checked  = is_array( $args['value'] ) && in_array( strval( $value ), $args['value'], true ) ? 'checked="checked"' : '';
 				$field_id = sprintf( '%s_%s', $args['id'], $value );
 
 				echo sprintf( '<li><label><input type="checkbox" name="%s[]" id="%s" value="%s" class="%s" %s> %s</label></li>', $args['name'], $field_id, $value, $args['class'], $checked, $text );
