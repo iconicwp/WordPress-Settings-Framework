@@ -221,7 +221,9 @@
 		 * @param arr $group
 		 */
 		reindex_group: function( $group ) {
-			if ( $group.find( ".wpsf-group__row" ).length == 1 ) {
+			var reindex_attributes = [ 'class', 'id', 'name' ];
+			
+			if ( $group.find( ".wpsf-group__row" ).length ) {
 				$group.find( ".wpsf-group__row-remove" ).hide();
 			} else {
 				$group.find( ".wpsf-group__row-remove" ).show();
@@ -244,7 +246,7 @@
 					}
 
 					$.each( this_input.attributes, function() {
-						if ( this.name && this_input && this.name !== '"' ) {
+						if ( this.name && this_input && $.inArray( this.name, reindex_attributes ) > -1 ) {
 							$( this_input ).attr( this.name, this.value.replace( /\_\d+\_/, '_' + index + '_' ) );
 						}
 					} );
