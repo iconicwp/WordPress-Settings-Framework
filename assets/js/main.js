@@ -223,7 +223,7 @@
 		reindex_group: function( $group ) {
 			var reindex_attributes = [ 'class', 'id', 'name' ];
 			
-			if ( $group.find( ".wpsf-group__row" ).length ) {
+			if ( 1 === $group.find( ".wpsf-group__row" ).length ) {
 				$group.find( ".wpsf-group__row-remove" ).hide();
 			} else {
 				$group.find( ".wpsf-group__row-remove" ).show();
