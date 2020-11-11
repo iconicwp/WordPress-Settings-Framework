@@ -221,7 +221,7 @@
 		 * @param arr $group
 		 */
 		reindex_group: function( $group ) {
-			var reindex_attributes = [ 'class', 'id', 'name' ];
+			var reindex_attributes = [ 'class', 'id', 'name', 'data-datepicker' ];
 			
 			if ( 1 === $group.find( ".wpsf-group__row" ).length ) {
 				$group.find( ".wpsf-group__row-remove" ).hide();
