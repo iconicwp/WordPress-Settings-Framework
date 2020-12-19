@@ -292,6 +292,11 @@
 	.wpsf-section .form-table td {
 		padding: 10px;
 	}
+	
+	.wpsf-section .form-table > tbody > tr > td {
+		padding-left: 0;
+		padding-right: 0;
+	}
 
 	.wpsf-section .form-table > tbody > tr > td:last-child {
 		padding-bottom: 20px;
