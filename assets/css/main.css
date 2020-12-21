@@ -226,6 +226,15 @@
 	vertical-align: text-bottom;
 }
 
+@media screen and (max-width: 782px) {
+	.wpsf-section input[type="checkbox"],
+	.wpsf-section input[type="radio"] {
+		vertical-align: middle;
+		display: inline-block;
+		margin-top: 0;
+	}
+}
+
 /* $. Multifields */
 
 .wpsf-multifields {
@@ -314,6 +323,12 @@
 	margin: 0;
 	padding: 0;
 	list-style: none none outside;
+}
+
+@media screen and (max-width: 782px) {
+	.wpsf-list--checkboxes li {
+		min-height: 25px;
+	}
 }
 
 .wpsf-list li:last-child {
