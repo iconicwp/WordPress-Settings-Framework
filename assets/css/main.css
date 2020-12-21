@@ -221,6 +221,10 @@
 
 /* $. Fields */
 
+.wpsf-section input.hasDatepicker {
+	background: #fff;
+}
+
 .wpsf-section input[type="checkbox"],
 .wpsf-section input[type="radio"] {
 	vertical-align: text-bottom;
