@@ -221,6 +221,11 @@
 
 /* $. Fields */
 
+.wpsf-section input[type="checkbox"],
+.wpsf-section input[type="radio"] {
+	vertical-align: text-bottom;
+}
+
 /* $. Multifields */
 
 .wpsf-multifields {
@@ -309,4 +314,8 @@
 	margin: 0;
 	padding: 0;
 	list-style: none none outside;
+}
+
+.wpsf-list li:last-child {
+	margin-bottom: 0;
 }
