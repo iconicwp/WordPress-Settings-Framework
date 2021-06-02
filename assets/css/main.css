@@ -212,9 +212,9 @@ p.submit {
 }
 
 .wpsf-tab .postbox h2 {
-	padding: 15px 30px;
+	padding: 15px 20px;
 	border: none;
-	margin: 0 0 20px;
+	margin: 0 0 10px;
 	background: #23282d;
 	color: #fff;
 	-webkit-font-smoothing: antialiased;
@@ -238,7 +238,7 @@ p.submit {
 
 .wpsf-tab .postbox table.form-table,
 .wpsf-tab .wpsf-section-description {
-	margin: 0 30px;
+	margin: 0 20px;
 	width: auto;
 }
 
@@ -247,7 +247,7 @@ p.submit {
 }
 
 .wpsf-tab .postbox table.form-table {
-	margin-bottom: 20px;
+	margin-bottom: 10px;
 }
 
 .wpsf-tab .wpsf-section-description {
