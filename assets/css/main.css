@@ -41,7 +41,7 @@
 
 .wpsf-nav {
 	margin: 0 -20px;
-	padding: 0 8px;
+	padding: 0 12px;
 	list-style: none none outside;
 	background: #fff;
 	border-bottom: 1px solid #e2e4e7;
@@ -142,7 +142,7 @@
 
 .wpsf-nav__item--last {
 	margin: 0 0 0 auto;
-	padding: 0 20px;
+	padding: 0 8px;
 }
 
 @media screen and (max-width: 782px) {
