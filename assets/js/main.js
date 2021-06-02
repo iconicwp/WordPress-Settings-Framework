@@ -1,264 +1,248 @@
-(function( $, document ) {
-
-	var wpsf = {
-
-		cache: function() {
-			wpsf.els = {};
-			wpsf.vars = {};
-
-			wpsf.els.tab_links = $( '.wpsf-tab-link' );
-		},
-
-		on_ready: function() {
-
-			// on ready stuff here
-			wpsf.cache();
-			wpsf.trigger_dynamic_fields();
-			wpsf.setup_groups();
-			wpsf.tabs.watch();
-
-		},
-
-		/**
-		 * Trigger dynamic fields
-		 */
-		trigger_dynamic_fields: function() {
-
-			wpsf.setup_timepickers();
-			wpsf.setup_datepickers();
-
-		},
-
-		/**
-		 * Setup the main tabs for the settings page
-		 */
-		tabs: {
-			/**
-			 * Watch for tab clicks.
-			 */
-			watch: function() {
-				var tab_id = wpsf.tabs.get_tab_id();
-
-				if ( tab_id ) {
-					wpsf.tabs.set_active_tab( tab_id );
-				}
-
-				wpsf.els.tab_links.on( 'click', function( e ) {
-					// Show tab
-					var tab_id = $( this ).attr( 'href' );
-
-					wpsf.tabs.set_active_tab( tab_id );
-
-					e.preventDefault();
-				} );
-			},
-
-			/**
-			 * Is storage available.
-			 */
-			has_storage: 'undefined' !== typeof (Storage),
-
-			/**
-			 * Store tab ID.
-			 *
-			 * @param tab_id
-			 */
-			set_tab_id: function( tab_id ) {
-				if ( !wpsf.tabs.has_storage ) {
-					return;
-				}
-
-				localStorage.setItem( wpsf.tabs.get_option_page() + '_wpsf_tab_id', tab_id );
-			},
+(function($, document) {
+
+    var wpsf = {
+
+        cache: function() {
+            wpsf.els = {};
+            wpsf.vars = {};
+
+            wpsf.els.tab_links = $('.wpsf-nav__item-link');
+            wpsf.els.submit_button = $( '.wpsf-button-submit' );
+        },
+
+        on_ready: function() {
+
+            // on ready stuff here
+            wpsf.cache();
+            wpsf.trigger_dynamic_fields();
+            wpsf.setup_groups();
+            wpsf.tabs.watch();
+            wpsf.watch_submit();
+
+        },
+
+        /**
+         * Trigger dynamic fields
+         */
+        trigger_dynamic_fields: function() {
+
+            wpsf.setup_timepickers();
+            wpsf.setup_datepickers();
+
+        },
+
+        /**
+         * Setup the main tabs for the settings page
+         */
+        tabs: {
+            /**
+             * Watch for tab clicks.
+             */
+            watch: function() {
+                var tab_id = wpsf.tabs.get_tab_id();
+
+                if ( tab_id ) {
+                    wpsf.tabs.set_active_tab( tab_id );
+                }
+
+                wpsf.els.tab_links.on( 'click', function( e ) {
+                    // Show tab
+                    var tab_id = $( this ).attr( 'href' );
+
+                    wpsf.tabs.set_active_tab( tab_id );
 
-			/**
-			 * Get tab ID.
-			 *
-			 * @returns {boolean}
-			 */
-			get_tab_id: function() {
-				if ( !wpsf.tabs.has_storage ) {
-					return false;
-				}
+                    e.preventDefault();
+                } );
+            },
 
-				return localStorage.getItem( wpsf.tabs.get_option_page() + '_wpsf_tab_id' );
-			},
+            /**
+             * Is storage available.
+             */
+            has_storage: 'undefined' !== typeof( Storage ),
 
-			/**
-			 * Set active tab.
-			 *
-			 * @param tab_id
-			 */
-			set_active_tab: function( tab_id ) {
-				var $tab = $( tab_id );
+            /**
+             * Store tab ID.
+             *
+             * @param tab_id
+             */
+            set_tab_id: function( tab_id ) {
+                if ( ! wpsf.tabs.has_storage ) {
+                    return;
+                }
 
-				if ( $tab.length <= 0 ) {
-					return;
-				}
+                localStorage.setItem( wpsf.tabs.get_option_page() + '_wpsf_tab_id', tab_id );
+            },
 
-				// Set tab link active class
-				wpsf.els.tab_links.removeClass( 'nav-tab-active' );
-				$( 'a[href="' + tab_id + '"]' ).addClass( 'nav-tab-active' );
+            /**
+             * Get tab ID.
+             *
+             * @returns {boolean}
+             */
+            get_tab_id: function() {
+                if ( ! wpsf.tabs.has_storage ) {
+                    return false;
+                }
 
-				// Show tab
-				$( '.wpsf-tab' ).removeClass( 'wpsf-tab--active' );
-				$tab.addClass( 'wpsf-tab--active' );
+                return localStorage.getItem( wpsf.tabs.get_option_page() + '_wpsf_tab_id' );
+            },
 
-				wpsf.tabs.set_tab_id( tab_id );
-			},
+            /**
+             * Set active tab.
+             *
+             * @param tab_id
+             */
+            set_active_tab: function( tab_id ) {
+                var $tab = $( tab_id );
 
-			/**
-			 * Get unique option page name.
-			 *
-			 * @returns {jQuery|string|undefined}
-			 */
-			get_option_page: function() {
-				return $( 'input[name="option_page"]' ).val();
-			}
-		},
+                if ( $tab.length <= 0 ) {
+                    return;
+                }
 
-		/**
-		 * Set up timepickers
-		 */
-		setup_timepickers: function() {
+                // Set tab link active class
+                wpsf.els.tab_links.parent().removeClass( 'wpsf-nav__item--active' );
+                $( 'a[href="' + tab_id + '"]' ).parent().addClass( 'wpsf-nav__item--active' );
 
-			$( '.timepicker' ).not( '.hasTimepicker' ).each( function() {
+                // Show tab
+                $( '.wpsf-tab' ).removeClass( 'wpsf-tab--active' );
+                $( tab_id ).addClass( 'wpsf-tab--active' );
 
-				var timepicker_args = $( this ).data( 'timepicker' );
+                wpsf.tabs.set_tab_id( tab_id );
+            },
 
-				$( this ).timepicker( timepicker_args );
+            /**
+             * Get unique option page name.
+             *
+             * @returns {jQuery|string|undefined}
+             */
+            get_option_page: function() {
+                return $( 'input[name="option_page"]').val();
+            }
+        },
 
-			} );
+        /**
+         * Set up timepickers
+         */
+        setup_timepickers: function() {
 
-		},
+            $('.timepicker').not('.hasTimepicker').each(function(){
 
-		/**
-		 * Set up timepickers
-		 */
-		setup_datepickers: function() {
-			$( document ).on( 'focus',  '.datepicker:not(.hasTimepicker)', function() {
-				var datepicker_args = $( this ).data( 'datepicker' );
+                var timepicker_args = $(this).data('timepicker');
 
-				$( this ).datepicker( datepicker_args );
-			} );
-		},
+                $(this).timepicker( timepicker_args );
 
-		/**
-		 * Setup repeatable groups
-		 */
-		setup_groups: function() {
-			wpsf.reindex_groups();
+            });
 
-			// add row
+        },
 
-			$( document ).on( 'click', '.wpsf-group__row-add', function() {
+        /**
+         * Set up timepickers
+         */
+        setup_datepickers: function() {
 
-				var $group = $( this ).closest( '.wpsf-group' ),
-					$row = $( this ).closest( '.wpsf-group__row' ),
-					template_name = $( this ).data( 'template' ),
-					$template = $( $( '#' + template_name ).html() );
+            $('.datepicker').not('.hasTimepicker').each(function(){
 
-				$template.find( '.wpsf-group__row-id' ).val( wpsf.generate_random_id() );
+                var datepicker_args = $(this).data('datepicker');
 
-				$row.after( $template );
+                $(this).datepicker( datepicker_args );
 
-				wpsf.reindex_group( $group );
+            });
 
-				wpsf.trigger_dynamic_fields();
+        },
 
-				return false;
+        /**
+         * Setup repeatable groups
+         */
+        setup_groups: function() {
 
-			} );
+            // add row
 
-			// remove row
+            $(document).on('click', '.wpsf-group__row-add', function(){
 
-			$( document ).on( 'click', '.wpsf-group__row-remove', function() {
+                var $group = $(this).closest('.wpsf-group'),
+                    $row = $(this).closest('.wpsf-group__row'),
+                    template_name = $(this).data('template'),
+                    $template = $('#'+template_name).html();
 
-				var $group = jQuery( this ).closest( '.wpsf-group' ),
-					$row = jQuery( this ).closest( '.wpsf-group__row' );
+                $row.after( $template );
 
-				$row.remove();
+                wpsf.reindex_group( $group );
 
-				wpsf.reindex_group( $group );
+                wpsf.trigger_dynamic_fields();
 
-				return false;
+                return false;
 
-			} );
+            });
 
-		},
+            // remove row
 
-		/**
-		 * Generate random ID.
-		 *
-		 * @returns {string}
-		 */
-		generate_random_id: function() {
-			return (
-				Number( String( Math.random() ).slice( 2 ) ) +
-				Date.now() +
-				Math.round( performance.now() )
-			).toString( 36 );
-		},
+            $(document).on('click', '.wpsf-group__row-remove', function(){
 
-		/**
-		 * Reindex all groups.
-		 */
-		reindex_groups: function() {
-			var $groups = jQuery( '.wpsf-group' );
+                var $group = jQuery(this).closest('.wpsf-group'),
+                    $row = jQuery(this).closest('.wpsf-group__row');
 
-			if ( $groups.length <= 0 ) {
-				return;
-			}
+                $row.remove();
 
-			$groups.each( function( index, group ) {
-				wpsf.reindex_group( jQuery( group ) );
-			} );
-		},
+                wpsf.reindex_group( $group );
 
-		/**
-		 * Reindex a group of repeatable rows
-		 *
-		 * @param arr $group
-		 */
-		reindex_group: function( $group ) {
-			var reindex_attributes = [ 'class', 'id', 'name', 'data-datepicker' ];
-			
-			if ( 1 === $group.find( ".wpsf-group__row" ).length ) {
-				$group.find( ".wpsf-group__row-remove" ).hide();
-			} else {
-				$group.find( ".wpsf-group__row-remove" ).show();
-			}
+                return false;
 
-			$group.find( ".wpsf-group__row" ).each( function( index ) {
+            });
 
-				$( this ).removeClass( 'alternate' );
+        },
 
-				if ( index % 2 == 0 ) {
-					$( this ).addClass( 'alternate' );
-				}
+        /**
+         * Reindex a group of repeatable rows
+         *
+         * @param arr $group
+         */
+        reindex_group: function( $group ) {
 
-				$( this ).find( "input" ).each( function() {
-					var this_input = this,
-						name = jQuery( this ).attr( 'name' );
+            if( $group.find(".wpsf-group__row").length == 1 ) {
+                $group.find(".wpsf-group__row-remove").hide();
+            } else {
+                $group.find(".wpsf-group__row-remove").show();
+            }
 
-					if ( typeof name !== typeof undefined && name !== false ) {
-						$( this_input ).attr( 'name', name.replace( /\[\d+\]/, '[' + index + ']' ) );
-					}
+            $group.find(".wpsf-group__row").each(function(index) {
 
-					$.each( this_input.attributes, function() {
-						if ( this.name && this_input && $.inArray( this.name, reindex_attributes ) > -1 ) {
-							$( this_input ).attr( this.name, this.value.replace( /\_\d+\_/, '_' + index + '_' ) );
-						}
-					} );
-				} );
+                $(this).removeClass('alternate');
 
-				$( this ).find( '.wpsf-group__row-index span' ).html( index );
+                if(index%2 == 0)
+                    $(this).addClass('alternate');
 
-			} );
-		}
+                $(this).find("input").each(function() {
+                    var name = jQuery(this).attr('name'),
+                        id = jQuery(this).attr('id');
 
-	};
+                    if(typeof name !== typeof undefined && name !== false)
+                        $(this).attr('name', name.replace(/\[\d+\]/, '['+index+']'));
 
-	$( document ).ready( wpsf.on_ready() );
+                    if(typeof id !== typeof undefined && id !== false)
+                        $(this).attr('id', id.replace(/\_\d+\_/, '_'+index+'_'));
 
-}( jQuery, document ));
+                });
+
+                $(this).find('.wpsf-group__row-index span').html( index );
+
+            });
+
+        },
+
+        /**
+         * Watch submit click.
+         */
+        watch_submit: function() {
+            wpsf.els.submit_button.on( 'click', function() {
+                var $button = $( this ),
+                    $wrapper = $button.closest( '.wpsf-settings' ),
+                    $form = $wrapper.find( 'form' ).first();
+
+                $form.submit();
+            } );
+        }
+
+    };
+
+	$(document).ready( wpsf.on_ready() );
+
+}(jQuery, document));
