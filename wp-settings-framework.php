@@ -75,7 +75,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * WordPressSettingsFramework constructor.
 		 *
 		 * @param null|string $settings_file Path to a settings file, or null if you pass the option_group manually and construct your settings with a filter.
-		 * @param bool|string $option_group  Option group name, usually a short slug.
+		 * @param bool|string $option_group Option group name, usually a short slug.
 		 */
 		public function __construct( $settings_file = null, $option_group = false ) {
 			$this->option_group = $option_group;
@@ -212,15 +212,17 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 			}
 			?>
-			<div class="wrap">
-				<div id="icon-options-general" class="icon32"></div>
-				<h2><?php echo $this->settings_page['title']; ?></h2>
-				<?php
-				// Output your settings form
-				$this->settings();
-				?>
+			<div class="wpsf-settings wpsf-settings--<?php echo esc_attr( $this->option_group ); ?>">
+				<div class="wpsf-settings__header">
+					<h2><?php echo apply_filters( 'wpsf_title_' . $this->option_group, $this->settings_page['title'] ); ?></h2>
+					<?php do_action( 'wpsf_after_title_' . $this->option_group ); ?>
+				</div>
+				<div class="wpsf-settings__content">
+					<?php $this->settings(); ?>
+				</div>
 			</div>
 			<?php
+
 		}
 
 		/**
@@ -384,17 +386,6 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		}
 
 		/**
-		 * Generate: Hidden field.
-		 *
-		 * @param array $args
-		 */
-		public function generate_hidden_field( $args ) {
-			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
-
-			echo '<input type="hidden" name="' . $args['name'] . '" id="' . $args['id'] . '" value="' . $args['value'] . '"  class="hidden-field ' . $args['class'] . '" />';
-		}
-
-		/**
 		 * Generate: Number field
 		 *
 		 * @param array $args
@@ -432,7 +423,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			$datepicker = ! empty( $args['datepicker'] ) ? htmlentities( json_encode( $args['datepicker'] ) ) : null;
 
-			echo '<input type="text" name="' . $args['name'] . '" id="' . $args['id'] . '" value="' . $args['value'] . '" class="datepicker regular-text ' . $args['class'] . '" data-datepicker="' . $datepicker . '" />';
+			echo '<input name="' . $args['name'] . '" id="' . $args['id'] . '" value="' . $args['value'] . '" class="datepicker regular-text ' . $args['class'] . '" data-datepicker="' . $datepicker . '" />';
 
 			$this->generate_description( $args['desc'] );
 		}
@@ -445,7 +436,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * @param array $args
 		 */
 		public function generate_group_field( $args ) {
-			$value     = (array) $args['value'];
+			$value = (array) $args['value'];
 			$row_count = ! empty( $value ) ? count( $value ) : 1;
 
 			echo '<table class="widefat wpsf-group" cellspacing="0">';
@@ -476,8 +467,6 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 */
 		public function generate_group_row_template( $args, $blank = false, $row = 0 ) {
 			$row_template = false;
-			$row_id       = ! empty( $args['value'][ $row ]['row_id'] ) ? $args['value'][ $row ]['row_id'] : $row;
-			$row_id_value = $blank ? '' : $row_id;
 
 			if ( $args['subfields'] ) {
 				$row_class = $row % 2 == 0 ? "alternate" : "";
@@ -488,8 +477,6 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 				$row_template .= '<td class="wpsf-group__row-fields">';
 
-				$row_template .= '<input type="hidden" class="wpsf-group__row-id" name="' . sprintf( '%s[%d][row_id]', esc_attr( $args['name'] ), esc_attr( $row ) ) . '" value="' . esc_attr( $row_id_value ) . '" />';
-
 				foreach ( $args['subfields'] as $subfield ) {
 					$subfield = wp_parse_args( $subfield, $this->setting_defaults );
 
@@ -497,9 +484,8 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 					$subfield['name']  = sprintf( '%s[%d][%s]', $args['name'], $row, $subfield['id'] );
 					$subfield['id']    = sprintf( '%s_%d_%s', $args['id'], $row, $subfield['id'] );
 
-					$class = sprintf( 'wpsf-group__field-wrapper--%s', $subfield['type'] );
+					$row_template .= '<div class="wpsf-group__field-wrapper">';
 
-					$row_template .= sprintf( '<div class="wpsf-group__field-wrapper %s">', $class );
 					$row_template .= sprintf( '<label for="%s" class="wpsf-group__field-label">%s</label>', $subfield['id'], $subfield['title'] );
 
 					ob_start();
@@ -613,7 +599,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			echo '<ul class="wpsf-list wpsf-list--checkboxes">';
 
 			foreach ( $args['choices'] as $value => $text ) {
-				$checked  = is_array( $args['value'] ) && in_array( strval( $value ), array_map( 'strval', $args['value'] ), true ) ? 'checked="checked"' : '';
+				$checked  = is_array( $args['value'] ) && in_array( $value, $args['value'] ) ? 'checked="checked"' : '';
 				$field_id = sprintf( '%s_%s', $args['id'], $value );
 
 				echo sprintf( '<li><label><input type="checkbox" name="%s[]" id="%s" value="%s" class="%s" %s> %s</label></li>', $args['name'], $field_id, $value, $args['class'], $checked, $text );
@@ -812,7 +798,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				if ( empty( $section['fields'] ) ) {
 					continue;
 				}
-
+				
 				foreach ( $section['fields'] as $field ) {
 					if ( ! empty( $field['default'] ) && is_array( $field['default'] ) ) {
 						$field['default'] = array_values( $field['default'] );
@@ -846,8 +832,8 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * Tabbed Settings sections
 		 */
 		public function do_tabbed_settings_sections() {
-			$i = 0;
-			foreach ( $this->tabs as $tab_data ) {
+			$i = 0; ?>
+			<?php foreach ( $this->tabs as $tab_data ) {
 				?>
 				<div id="tab-<?php echo $tab_data['id']; ?>" class="wpsf-section wpsf-tab wpsf-tab--<?php echo $tab_data['id']; ?> <?php if ( $i == 0 ) {
 					echo 'wpsf-tab--active';
@@ -871,20 +857,55 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			do_action( 'wpsf_before_tab_links_' . $this->option_group );
 			?>
-			<h2 class="nav-tab-wrapper">
+			<ul class="wpsf-nav">
 				<?php
 				$i = 0;
 				foreach ( $this->tabs as $tab_data ) {
-					$active = $i == 0 ? 'nav-tab-active' : '';
+					if ( ! $this->tab_has_settings( $tab_data['id'] ) ) {
+						continue;
+					}
+
+					$active = $i == 0 ? 'wpsf-nav__item--active' : '';
 					?>
-					<a class="nav-tab wpsf-tab-link <?php echo $active; ?>" href="#tab-<?php echo $tab_data['id']; ?>"><?php echo $tab_data['title']; ?></a>
+					<li class="wpsf-nav__item <?php echo $active; ?>">
+						<a class="wpsf-nav__item-link" href="#tab-<?php echo $tab_data['id']; ?>"><?php echo $tab_data['title']; ?></a>
+					</li>
 					<?php
 					$i ++;
 				}
 				?>
-			</h2>
+				<li class="wpsf-nav__item wpsf-nav__item--last">
+					<input type="submit" class="button-primary wpsf-button-submit" value="<?php esc_attr_e( 'Save Changes' ); ?>">
+				</li>
+			</ul>
+
+			<?php // Add this here so notices are moved. ?>
+			<div class="wrap wpsf-notices"><h2>&nbsp;</h2></div>
 			<?php
 			do_action( 'wpsf_after_tab_links_' . $this->option_group );
+		}
+
+		/**
+		 * Does this tab have settings?
+		 *
+		 * @param string $tab_id
+		 *
+		 * @return bool
+		 */
+		public function tab_has_settings( $tab_id ) {
+			if ( empty( $this->settings ) ) {
+				return false;
+			}
+
+			foreach( $this->settings as $settings_section ) {
+				if ( $tab_id !== $settings_section['tab_id'] ) {
+					continue;
+				}
+
+				return true;
+			}
+
+			return false;
 		}
 
 		/**
