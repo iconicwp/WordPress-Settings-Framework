@@ -6,7 +6,8 @@
 			wpsf.els = {};
 			wpsf.vars = {};
 
-			wpsf.els.tab_links = $( '.wpsf-tab-link' );
+			wpsf.els.tab_links = $('.wpsf-nav__item-link');
+			wpsf.els.submit_button = $( '.wpsf-button-submit' );
 		},
 
 		on_ready: function() {
@@ -16,6 +17,7 @@
 			wpsf.trigger_dynamic_fields();
 			wpsf.setup_groups();
 			wpsf.tabs.watch();
+			wpsf.watch_submit();
 
 		},
 
@@ -97,8 +99,8 @@
 				}
 
 				// Set tab link active class
-				wpsf.els.tab_links.removeClass( 'nav-tab-active' );
-				$( 'a[href="' + tab_id + '"]' ).addClass( 'nav-tab-active' );
+				wpsf.els.tab_links.parent().removeClass( 'wpsf-nav__item--active' );
+				$( 'a[href="' + tab_id + '"]' ).parent().addClass( 'wpsf-nav__item--active' );
 
 				// Show tab
 				$( '.wpsf-tab' ).removeClass( 'wpsf-tab--active' );
@@ -254,6 +256,19 @@
 
 				$( this ).find( '.wpsf-group__row-index span' ).html( index );
 
+			} );
+		},
+
+		/**
+		 * Watch submit click.
+		 */
+		watch_submit: function() {
+			wpsf.els.submit_button.on( 'click', function() {
+				var $button = $( this ),
+					$wrapper = $button.closest( '.wpsf-settings' ),
+					$form = $wrapper.find( 'form' ).first();
+
+				$form.submit();
 			} );
 		}
 
