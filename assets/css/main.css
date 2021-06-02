@@ -104,6 +104,7 @@
 .wpsf-nav__item--active:after {
 	height: 4px;
 	background: #2271b6;
+	border-radius: 4px 4px 0 0;
 }
 
 .wpsf-nav__item-link {
