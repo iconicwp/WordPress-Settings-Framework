@@ -64,6 +64,7 @@
 		position: relative;
 		top: 0;
 		flex-direction: column;
+		padding: 0;
 	}
 }
 
@@ -105,6 +106,12 @@
 	height: 4px;
 	background: #2271b6;
 	border-radius: 4px 4px 0 0;
+}
+
+@media screen and (max-width: 600px) {
+	.wpsf-nav__item--active:after {
+		border-radius: 0;
+	}
 }
 
 .wpsf-nav__item-link {
