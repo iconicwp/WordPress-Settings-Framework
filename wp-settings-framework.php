@@ -212,13 +212,14 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 			}
 			?>
-			<div class="wrap">
-				<div id="icon-options-general" class="icon32"></div>
-				<h2><?php echo $this->settings_page['title']; ?></h2>
-				<?php
-				// Output your settings form
-				$this->settings();
-				?>
+			<div class="wpsf-settings wpsf-settings--<?php echo esc_attr( $this->option_group ); ?>">
+				<div class="wpsf-settings__header">
+					<h2><?php echo apply_filters( 'wpsf_title_' . $this->option_group, $this->settings_page['title'] ); ?></h2>
+					<?php do_action( 'wpsf_after_title_' . $this->option_group ); ?>
+				</div>
+				<div class="wpsf-settings__content">
+					<?php $this->settings(); ?>
+				</div>
 			</div>
 			<?php
 		}
@@ -871,20 +872,55 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			do_action( 'wpsf_before_tab_links_' . $this->option_group );
 			?>
-			<h2 class="nav-tab-wrapper">
+			<ul class="wpsf-nav">
 				<?php
 				$i = 0;
 				foreach ( $this->tabs as $tab_data ) {
-					$active = $i == 0 ? 'nav-tab-active' : '';
+					if ( ! $this->tab_has_settings( $tab_data['id'] ) ) {
+						continue;
+					}
+
+					$active = $i == 0 ? 'wpsf-nav__item--active' : '';
 					?>
-					<a class="nav-tab wpsf-tab-link <?php echo $active; ?>" href="#tab-<?php echo $tab_data['id']; ?>"><?php echo $tab_data['title']; ?></a>
+					<li class="wpsf-nav__item <?php echo $active; ?>">
+						<a class="wpsf-nav__item-link" href="#tab-<?php echo $tab_data['id']; ?>"><?php echo $tab_data['title']; ?></a>
+					</li>
 					<?php
 					$i ++;
 				}
 				?>
-			</h2>
+				<li class="wpsf-nav__item wpsf-nav__item--last">
+					<input type="submit" class="button-primary wpsf-button-submit" value="<?php esc_attr_e( 'Save Changes' ); ?>">
+				</li>
+			</ul>
+
+			<?php // Add this here so notices are moved. ?>
+			<div class="wrap wpsf-notices"><h2>&nbsp;</h2></div>
 			<?php
 			do_action( 'wpsf_after_tab_links_' . $this->option_group );
+		}
+
+		/**
+		 * Does this tab have settings?
+		 *
+		 * @param string $tab_id
+		 *
+		 * @return bool
+		 */
+		public function tab_has_settings( $tab_id ) {
+			if ( empty( $this->settings ) ) {
+				return false;
+			}
+
+			foreach( $this->settings as $settings_section ) {
+				if ( $tab_id !== $settings_section['tab_id'] ) {
+					continue;
+				}
+
+				return true;
+			}
+
+			return false;
 		}
 
 		/**
