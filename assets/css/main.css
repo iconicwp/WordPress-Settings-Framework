@@ -41,7 +41,7 @@
 
 .wpsf-nav {
 	margin: 0 -20px;
-	padding: 0;
+	padding: 0 8px;
 	list-style: none none outside;
 	background: #fff;
 	border-bottom: 1px solid #e2e4e7;
@@ -69,8 +69,8 @@
 
 .wpsf-nav__item {
 	display: inline-block;
-	margin: 0;
-	padding: 0 20px 4px;
+	margin: 0 8px;
+	padding: 0 4px 4px;
 	position: relative;
 }
 
@@ -78,6 +78,7 @@
 	.wpsf-nav__item {
 		padding-right: 0;
 		padding-left: 0;
+		margin: 0;
 		width: 100%;
 		text-align: center;
 		border-top: 1px solid #e2e4e7;
