@@ -326,10 +326,10 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 */
 		public function sort_array( $a, $b ) {
 			if ( ! isset( $a['section_order'] ) ) {
-				return false;
+				return 0;
 			}
 
-			return $a['section_order'] > $b['section_order'];
+			return $a['section_order'] > $b['section_order'] ? 1 : -1;
 		}
 
 		/**
