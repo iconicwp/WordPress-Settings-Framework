@@ -128,7 +128,7 @@
 
 				var timepicker_args = $( this ).data( 'timepicker' );
 
-				// $( this ).timepicker( timepicker_args );
+				$( this ).timepicker( timepicker_args );
 
 			} );
 
