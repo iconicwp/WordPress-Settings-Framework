@@ -476,12 +476,29 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * @return string|bool
 		 */
 		public function generate_group_row_template( $args, $blank = false, $row = 0 ) {
-			$row_template = false;
-			$row_id       = ! empty( $args['value'][ $row ]['row_id'] ) ? $args['value'][ $row ]['row_id'] : $row;
-			$row_id_value = $blank ? '' : $row_id;
+			$row_template     = false;
+			$row_id           = ! empty( $args['value'][ $row ]['row_id'] ) ? $args['value'][ $row ]['row_id'] : $row;
+			$row_id_value     = $blank ? '' : $row_id;
+			$collapsable      = ! empty( $args['collapse'] ) ? true : false;
+			$collapse_default = ! empty( $args['collapse']['default'] ) ? $args['collapse']['default'] : 'open';
+			$collapse_heading = ! empty( $args['collapse']['heading'] ) ? $args['collapse']['heading'] : '';
 
 			if ( $args['subfields'] ) {
-				$row_class = $row % 2 == 0 ? "alternate" : "";
+				$row_class = $row % 2 === 0 ? 'alternate' : '';
+
+				if ( $collapsable ) {
+					$row_template .= sprintf(
+						'<tr class="wpsf-group-field-header wpsf-group-field-header--%s" data-collapse="%s" data-title="%s">
+							<td colspan="3" class="">
+								<span class="wpsf-group-field-header__icon dashicons dashicons-arrow-right"></span>
+								<span class="wpsf-group-field-header__title">title</span>
+							</td>
+						</tr>',
+						esc_attr( $collapse_default ),
+						esc_attr( $collapsable ),
+						esc_attr( $collapse_heading ),
+					);
+				}
 
 				$row_template .= sprintf( '<tr class="wpsf-group__row %s">', $row_class );
 

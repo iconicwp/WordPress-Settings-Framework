@@ -525,3 +525,18 @@ p.submit {
 .wpsf-list li:last-child {
 	margin-bottom: 0;
 }
+
+/* Styling for group collapse */
+tr.wpsf-group-field-header {
+    cursor: pointer;
+    background: #000;
+	user-select: none;
+}
+
+.wpsf-group-field-header span {
+    color: #fff;
+}
+
+tr.wpsf-group-field-header.wpsf-group-field-header--close td {
+    border-bottom: 1px solid #F0F0F1;
+}

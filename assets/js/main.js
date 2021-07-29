@@ -128,7 +128,7 @@
 
 				var timepicker_args = $( this ).data( 'timepicker' );
 
-				$( this ).timepicker( timepicker_args );
+				// $( this ).timepicker( timepicker_args );
 
 			} );
 
@@ -187,6 +187,58 @@
 
 			} );
 
+
+			// Handle collapse.
+			$( document ).on( 'click',  '.wpsf-group-field-header', function() {
+				if ( $(this).hasClass( 'wpsf-group-field-header--close' ) ) {
+					$(this).removeClass( 'wpsf-group-field-header--close' );
+					$(this).next().show();
+					$(this).find( '.wpsf-group-field-header__icon' ).removeClass( 'dashicons-arrow-right' ).addClass( 'dashicons-arrow-down' );
+				} else {
+					$(this).addClass( 'wpsf-group-field-header--close' );
+					$(this).next().hide();
+					$(this).find( '.wpsf-group-field-header__icon' ).removeClass( 'dashicons-arrow-down' ).addClass( 'dashicons-arrow-right' );
+				 }
+			} );
+
+			$( '.wpsf-group' ).on( 'change', 'input, select, textarea', wpsf.update_group_header_placeholder );
+
+			// Collapse on page load.
+			$( '.wpsf-group-field-header--close' ).each( function () {
+				$( this ).find( '.wpsf-group-field-header__icon' ).removeClass( 'dashicons-arrow-down' ).addClass( 'dashicons-arrow-right' );
+				$( this ).next().hide();
+			} )
+
+			wpsf.update_group_header_placeholder();
+		},
+
+		/**
+		 * Update placeholder value for the group header title.
+		 *
+		 * Ex: replace [fname] with the actual value of fname subfield.
+		 */
+		 update_group_header_placeholder: function () {
+			$( '.wpsf-group__row' ).each( function () {
+				if ( ! $( this ).prev().is( '.wpsf-group-field-header' ) ) {
+					return;
+				}
+
+				var $row = $( this ),
+					$header = $( this ).prev(),
+					$header_span = $header.find( '.wpsf-group-field-header__title' ),
+					header_text = $header.data( 'title' );
+
+				$row.find( 'input, select, textarea' ).each( function () {
+					var name = $( this ).attr( 'name' );
+					// Example: Use regex to retrieve "sub-text" from "my_example_settings_settings[general_group][0][sub-text]".
+					var matches = name.match( /.*\[(.*)\]/ );
+					if ( matches[ 1 ] ) {
+						header_text = header_text.replace( '[' + matches[ 1 ] + ']', $( this ).val() );
+						$header_span.text( header_text );
+					}
+				} );
+
+			} );
 		},
 
 		/**
@@ -215,6 +267,8 @@
 			$groups.each( function( index, group ) {
 				wpsf.reindex_group( jQuery( group ) );
 			} );
+			
+			wpsf.update_group_header_placeholder();
 		},
 
 		/**

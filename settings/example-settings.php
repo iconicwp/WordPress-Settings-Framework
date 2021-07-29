@@ -63,15 +63,27 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				'datepicker' => array(), // Array of datepicker options (http://api.jqueryui.com/datepicker/)
 			),
 			array(
-				'id'         => 'group',
-				'title'      => 'Group',
-				'desc'       => 'This is a description.',
-				'type'       => 'group',
+				'id'        => 'group',
+				'title'     => 'Group',
+				'desc'      => 'This is a description.',
+				'type'      => 'group',
+				/* 'collapse'  => array(  // Default value: false.
+					'default' => 'close', // Possible values: 'open', 'close'.
+					'heading' => '[sub-text] - [sub-text2]', // Can use id of any subfields in square-brackets. Can add multiple subfields too ex: [sub-field]
+				), */
 				'subfields' => array(
-					// accepts most types of fields
+					// accepts most types of fields.
 					array(
 						'id'          => 'sub-text',
 						'title'       => 'Sub Text',
+						'desc'        => 'This is a description.',
+						'placeholder' => 'This is a placeholder.',
+						'type'        => 'text',
+						'default'     => 'Sub text',
+					),
+					array(
+						'id'          => 'sub-text2',
+						'title'       => 'Sub Text2',
 						'desc'        => 'This is a description.',
 						'placeholder' => 'This is a placeholder.',
 						'type'        => 'text',
