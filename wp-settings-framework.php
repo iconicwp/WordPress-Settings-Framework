@@ -720,7 +720,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				$args['output']( $args );
 				return;
 			}
-			
+
 			echo isset( $args['output'] ) ? $args['output'] : $args['default'];
 		}
 
