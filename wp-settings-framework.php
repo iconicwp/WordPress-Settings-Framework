@@ -536,6 +536,16 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			echo '<select name="' . $args['name'] . '" id="' . $args['id'] . '" class="' . $args['class'] . '">';
 
 			foreach ( $args['choices'] as $value => $text ) {
+				if ( is_array( $text ) ) {
+					echo sprintf( '<optgroup label="%s">', $value );
+					foreach ( $text as $group_value => $group_text ) {
+						$selected = $group_value == $args['value'] ? 'selected="selected"' : '';
+						echo sprintf( '<option value="%s" %s>%s</option>', $group_value, $selected, $group_text );
+					}
+					echo '</optgroup>';
+					continue;
+				}
+
 				$selected = $value == $args['value'] ? 'selected="selected"' : '';
 
 				echo sprintf( '<option value="%s" %s>%s</option>', $value, $selected, $text );
