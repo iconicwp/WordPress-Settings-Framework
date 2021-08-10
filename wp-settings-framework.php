@@ -4,7 +4,7 @@
  *
  * @author  Gilbert Pellegrom, James Kemp
  * @link    https://github.com/gilbitron/WordPress-Settings-Framework
- * @version 1.6.10
+ * @version 1.6.11
  * @license MIT
  */
 
@@ -322,14 +322,14 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * @param $a
 		 * @param $b
 		 *
-		 * @return bool
+		 * @return int
 		 */
 		public function sort_array( $a, $b ) {
 			if ( ! isset( $a['section_order'] ) ) {
-				return false;
+				return 0;
 			}
 
-			return $a['section_order'] > $b['section_order'];
+			return $a['section_order'] > $b['section_order'] ? 1 : 0;
 		}
 
 		/**

@@ -1,5 +1,8 @@
 *** WordPress Settings Framework Changelog ***
 
+version 1.6.11
+* [fix] PHP8 warning for usort callback
+
 2018.10.25 - version 1.6.6
  * [Fixed] Ensure setting page capability is used for content block
  

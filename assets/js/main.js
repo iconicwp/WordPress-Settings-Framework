@@ -128,6 +128,11 @@
 
 				var timepicker_args = $( this ).data( 'timepicker' );
 
+				// It throws an error if empty string is passed.
+				if ( '' === timepicker_args ) {
+					timepicker_args = {};
+				}
+
 				$( this ).timepicker( timepicker_args );
 
 			} );
@@ -143,6 +148,15 @@
 
 				$( this ).datepicker( datepicker_args );
 			} );
+
+			// Empty altField if datepicker field is emptied.
+			$( document ).on( 'change', '.datepicker', function(){
+				var datepicker = $( this ).data( 'datepicker' );
+
+				if ( ! $( this ).val() && datepicker.settings && datepicker.settings.altField ) {
+					$( datepicker.settings.altField ).val( '' );
+				}
+			});
 		},
 
 		/**
