@@ -148,6 +148,15 @@
 
 				$( this ).datepicker( datepicker_args );
 			} );
+
+			// Empty altField if datepicker field is emptied.
+			$( document ).on( 'change', '.datepicker', function(){
+				var datepicker = $( this ).data( 'datepicker' );
+
+				if ( ! $( this ).val() && datepicker.settings && datepicker.settings.altField ) {
+					$( datepicker.settings.altField ).val( '' );
+				}
+			});
 		},
 
 		/**
