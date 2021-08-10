@@ -128,6 +128,11 @@
 
 				var timepicker_args = $( this ).data( 'timepicker' );
 
+				// It throws an error if empty string is passed.
+				if ( '' === timepicker_args ) {
+					timepicker_args = {};
+				}
+
 				$( this ).timepicker( timepicker_args );
 
 			} );
