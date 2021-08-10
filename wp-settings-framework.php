@@ -490,7 +490,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 					$row_template .= sprintf(
 						'<tr class="wpsf-group-field-header wpsf-group-field-header--%s" data-collapse="%s" data-title="%s">
 							<td colspan="3" class="">
-								<span class="wpsf-group-field-header__icon dashicons dashicons-arrow-right"></span>
+								<span class="wpsf-group-field-header__icon dashicons dashicons-arrow-down"></span>
 								<span class="wpsf-group-field-header__title">title</span>
 							</td>
 						</tr>',

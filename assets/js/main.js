@@ -191,9 +191,14 @@
 			$( document ).on( 'click', '.wpsf-group__row-remove', function() {
 
 				var $group = jQuery( this ).closest( '.wpsf-group' ),
-					$row = jQuery( this ).closest( '.wpsf-group__row' );
+					$row = jQuery( this ).closest( '.wpsf-group__row' ),
+					$header = $row.prev();
 
 				$row.remove();
+
+				if ( $header.is( '.wpsf-group-field-header' ) ) {
+					$header.remove();
+				}
 
 				wpsf.reindex_group( $group );
 

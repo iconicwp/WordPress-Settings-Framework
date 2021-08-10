@@ -67,10 +67,10 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				'title'     => 'Group',
 				'desc'      => 'This is a description.',
 				'type'      => 'group',
-				/* 'collapse'  => array(  // Default value: false.
+				'collapse'  => array(  // Default value: false.
 					'default' => 'close', // Possible values: 'open', 'close'.
 					'heading' => '[sub-text] - [sub-text2]', // Can use id of any subfields in square-brackets. Can add multiple subfields too ex: [sub-field]
-				), */
+				),
 				'subfields' => array(
 					// accepts most types of fields.
 					array(
