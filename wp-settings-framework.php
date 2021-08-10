@@ -604,6 +604,19 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		}
 
 		/**
+		 * Generate: Toggle field
+		 *
+		 * @param array $args
+		 */
+		public function generate_toggle_field( $args ) {
+			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
+			$checked       = $args['value'] ? 'checked="checked"' : '';
+
+			echo '<input type="hidden" name="' . $args['name'] . '" value="0" />';
+			echo '<label class="switch"><input type="checkbox" name="' . $args['name'] . '" id="' . $args['id'] . '" value="1" class="' . $args['class'] . '" ' . $checked . '> ' . $args['desc'] . '<span class="slider"></span></label>';
+		}
+
+		/**
 		 * Generate: Checkboxes field
 		 *
 		 * @param array $args
