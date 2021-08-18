@@ -213,13 +213,22 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			}
 			?>
 			<div class="wpsf-settings wpsf-settings--<?php echo esc_attr( $this->option_group ); ?>">
-				<div class="wpsf-settings__header">
-					<h2><?php echo apply_filters( 'wpsf_title_' . $this->option_group, $this->settings_page['title'] ); ?></h2>
-					<?php do_action( 'wpsf_after_title_' . $this->option_group ); ?>
-				</div>
+				<?php $this->settings_header(); ?>
 				<div class="wpsf-settings__content">
 					<?php $this->settings(); ?>
 				</div>
+			</div>
+			<?php
+		}
+		
+		/**
+		 * Settings Header.
+		 */
+		public function settings_header() {
+			?>
+			<div class="wpsf-settings__header">
+				<h2><?php echo apply_filters( 'wpsf_title_' . $this->option_group, $this->settings_page['title'] ); ?></h2>
+				<?php do_action( 'wpsf_after_title_' . $this->option_group ); ?>
 			</div>
 			<?php
 		}
