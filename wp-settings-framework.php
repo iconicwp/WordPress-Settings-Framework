@@ -738,6 +738,11 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * @param array $args
 		 */
 		public function generate_custom_field( $args ) {
+			if ( is_callable( $args['output'] ) ) {
+				$args['output']( $args );
+				return;
+			}
+
 			echo isset( $args['output'] ) ? $args['output'] : $args['default'];
 		}
 
