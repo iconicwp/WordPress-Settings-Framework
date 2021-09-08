@@ -555,7 +555,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 					continue;
 				}
 
-				$selected = $value === $args['value'] ? 'selected="selected"' : '';
+				$selected = strval( $value ) === $args['value'] ? 'selected="selected"' : '';
 
 				echo sprintf( '<option value="%s" %s>%s</option>', esc_attr( $value ), esc_html( $selected ), esc_html( $text ) );
 			}
