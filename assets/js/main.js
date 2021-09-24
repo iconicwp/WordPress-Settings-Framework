@@ -18,7 +18,7 @@
 			wpsf.setup_groups();
 			wpsf.tabs.watch();
 			wpsf.watch_submit();
-
+			wpsf.control_groups();
 		},
 
 		/**
