@@ -358,6 +358,43 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			$args['value'] = isset( $options[ $args['id'] ] ) ? $options[ $args['id'] ] : ( isset( $args['default'] ) ? $args['default'] : '' );
 			$args['name']  = $this->generate_field_name( $args['id'] );
 
+			// Create classes from show/hide values.
+			if ( $args['showControlGroup'] && empty( $args['showIfValue'] ) && empty( $args['hideIfValue'] ) ) {
+				$args['class'] .= ' control-group';
+				$args['class'] .= ' control-group--' . esc_attr( $args['showControlGroup'] );
+				$args['class'] .= ' control-group__controller';
+			}
+
+			if ( $args['tabControlGroup'] ) {
+				$args['class'] .= ' tab-control-group';
+				$args['class'] .= ' tab-control-group--' . esc_attr( $args['tabControlGroup'] );
+				$args['class'] .= ' tab-control-group__controller';
+			}
+
+			if ( ! empty( $args['showIfValue'] ) && esc_attr( $args['showControlGroup'] ) ) {
+				$class = ' control-group__show-if';
+
+				$args['class'] .= ' control-group';
+				$args['class'] .= ' control-group--' . esc_attr( $args['showControlGroup'] );
+				$args['class'] .= $class;
+
+				foreach ( $args['showIfValue'] as $value ) {
+					$args['class'] .= $class . '--' . $value;
+				}
+			}
+
+			if ( ! empty( $args['hideIfValue'] ) && esc_attr( $args['showControlGroup'] ) ) {
+				$class = ' control-group__hide-if';
+
+				$args['class'] .= ' control-group';
+				$args['class'] .= ' control-group--' . esc_attr( $args['showControlGroup'] );
+				$args['class'] .= $class;
+
+				foreach ( $args['hideIfValue'] as $value ) {
+					$args['class'] .= $class . '--' . $value;
+				}
+			}
+
 			do_action( 'wpsf_before_field_' . $this->option_group );
 			do_action( 'wpsf_before_field_' . $this->option_group . '_' . $args['id'] );
 
@@ -917,10 +954,45 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 						continue;
 					}
 
+					if ( ! isset( $tab_data['class'] ) ) {
+						$tab_data['class'] = '';
+					}
+
+					// Create classes from show/hide values.
+					if ( $tab_data['tabControlGroup'] && empty( $tab_data['showIfValue'] ) && empty( $tab_data['hideIfValue'] ) ) {
+						$tab_data['class'] .= ' tab-control-group';
+						$tab_data['class'] .= ' tab-control-group--' . esc_attr( $tab_data['tabControlGroup'] );
+						$tab_data['class'] .= ' tab-control-group__controller';
+					}
+
+					if ( ! empty( $tab_data['showIfValue'] ) && esc_attr( $tab_data['tabControlGroup'] ) ) {
+						$class = ' tab-control-group__show-if';
+
+						$tab_data['class'] .= ' tab-control-group';
+						$tab_data['class'] .= ' tab-control-group--' . esc_attr( $tab_data['tabControlGroup'] );
+						$tab_data['class'] .= $class;
+
+						foreach ( $tab_data['showIfValue'] as $value ) {
+							$tab_data['class'] .= $class . '--' . $value;
+						}
+					}
+
+					if ( ! empty( $tab_data['hideIfValue'] ) && esc_attr( $tab_data['tabControlGroup'] ) ) {
+						$class = ' tab-control-group__hide-if';
+
+						$tab_data['class'] .= ' tab-control-group';
+						$tab_data['class'] .= ' tab-control-group--' . esc_attr( $tab_data['tabControlGroup'] );
+						$tab_data['class'] .= $class;
+
+						foreach ( $tab_data['hideIfValue'] as $value ) {
+							$tab_data['class'] .= $class . '--' . $value;
+						}
+					}
+
 					$active = $i == 0 ? 'wpsf-nav__item--active' : '';
 					?>
 					<li class="wpsf-nav__item <?php echo $active; ?>">
-						<a class="wpsf-nav__item-link" href="#tab-<?php echo $tab_data['id']; ?>"><?php echo $tab_data['title']; ?></a>
+						<a class="wpsf-nav__item-link <?php echo esc_attr( $tab_data['class'] ); ?>" href="#tab-<?php echo $tab_data['id']; ?>"><?php echo $tab_data['title']; ?></a>
 					</li>
 					<?php
 					$i ++;

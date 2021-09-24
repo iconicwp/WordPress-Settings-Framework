@@ -284,8 +284,94 @@
 
 				$form.submit();
 			} );
-		}
+		},
 
+		/**
+		 * Dynamic control groups.
+		 */
+		control_groups: function() {
+			// Hide all controls that only show if a certain value is set.
+			$( '.control-group__show-if' ).closest( 'tr' ).hide();
+			$( '.tab-control-group__show-if' ).closest( 'li' ).hide();
+
+			// Show all controls that only hide if a certain value is set.
+			$( '.control-group__hide-if' ).closest( 'tr' ).show();
+			$( '.tab-control-group__hide-if' ).closest( 'li' ).show();
+
+			// Loop and show if the value is set.
+			$( '*[class*="control-group__show-if--"]' ).each( function() {
+				wpsf.show_hide( this, true );
+			});
+
+			$( '*[class*="tab-control-group__show-if--"]' ).each( function() {
+				wpsf.show_hide( this, true, true );
+			});
+
+			// Loop and hide if the value is set.
+			$( '*[class*="control-group__hide-if--"]' ).each( function() {
+				wpsf.show_hide( this, false );
+			});
+
+			$( '*[class*="tab-control-group__hide-if--"]' ).each( function() {
+				wpsf.show_hide( this, false, true );
+			});
+
+			$( document.body ).on( 'change', '.control-group__controller, .tab-control-group__controller', wpsf.control_groups );
+		},
+
+		/**
+		 * Show or hide control.
+		 */
+		show_hide: function( control, isShow, isTab ) {
+			var prefix = isTab ? 'tab-' : '';
+			var parent = isTab ? 'li' : 'tr';
+			var showHide = isShow ? 'show' : 'hide';
+
+			var classes = control.className.split( /\s+/ );
+			var controller = classes.filter( function( item ) {
+				return item.includes( prefix + 'control-group--' );
+			})[0];
+
+			var values = classes.filter( function( item ) {
+				return item.includes( prefix + 'control-group__' + showHide + '-if--' );
+			}).map( function( item) {
+				return item.replace( prefix + 'control-group__' + showHide + '-if--', '' );
+			});
+
+			var controllerValue = wpsf.get_controller_value( $( '.' + prefix + 'control-group__controller.' + controller ), controller, isTab );
+			console.log( '.' + prefix + 'control-group__controller.' + controller );
+			console.log( controllerValue );
+			console.log( values );
+			if ( values.includes( controllerValue ) ) {
+				console.log( 'action' );
+				if ( isShow ) {
+					console.log( 'action show' );
+					$( control ).closest( parent ).show();
+				} else {
+					$( control ).closest( parent ).hide();
+					console.log( 'action hide' );
+				}
+			}
+		},
+
+		/** 
+		 * Return the control value.
+		 */
+		get_controller_value: function( controllerControl, controllerId, isTab ) {
+			var prefix = isTab ? 'tab-' : '';
+
+			if ( 'checkbox' === controllerControl.attr( 'type' ) || 'radio' === controllerControl.attr( 'type' ) ) {
+				controllerControl = $( '.' + prefix + 'control-group__controller.' + controllerId + ':checked' );
+			}
+
+			var controllerValue = controllerControl.val();
+
+			if ( typeof controllerValue === 'undefined' ) {
+				controllerValue = '';
+			}
+
+			return controllerValue.toString();
+		}
 	};
 
 	$( document ).ready( wpsf.on_ready() );
