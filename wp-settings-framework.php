@@ -314,27 +314,29 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 						if ( isset( $section['fields'] ) && is_array( $section['fields'] ) && ! empty( $section['fields'] ) ) {
 							foreach ( $section['fields'] as $field ) {
 								if ( isset( $field['id'] ) && $field['id'] && isset( $field['title'] ) ) {
-									$link_url      = ! empty( $field['link'] ) ? esc_html( $field['link'] ) : '';
-									$link_text     = ! empty( $field['link_text'] ) ? esc_html( $field['link_text'] ) : __( 'Learn More' );
-									$link_external = ! empty( $field['link_external'] ) ? (bool) $field['link_external'] : true;
-									$link_target   = $link_external ? ' target="_blank"' : '';
-									$link_type     = ! empty( $field['link_type'] ) ? esc_attr( $field['link_type'] ) : 'tooltip';
-
-									if ( 'tooltip' === $link_type ) {
-										$link_text = sprintf( '<i class="dashicons dashicons-info wpsf-link-icon" title="%s"><span class="screen-reader-text">%s</span></i>', $link_text, $link_text );
-									}
-
-									$link        = $link_url ? sprintf( '<a class="wpsf-link" href="%s"%s>%s</a>', $link_url, $link_target, $link_text ) : '';
 									$tooltip     = '';
-									$inline_link = '';
 
-									if ( $link && 'tooltip' === $link_type ) {
-										$tooltip = $link;
-									} elseif ( $link ) {
-										$inline_link = sprintf( '<br/><br/>%s', $link );
+									if ( isset( $field['link'] ) && is_array( $field['link'] ) ) {
+										$link_url      = isset( $field['link']['url'] ) ? esc_html( $field['link']['url'] ) : '';
+										$link_text     = isset( $field['link']['text'] ) ? esc_html( $field['link']['text'] ) : __( 'Learn More' );
+										$link_external = isset( $field['link']['external'] ) ? (bool) $field['link']['external'] : true;
+										$link_type     = isset( $field['link']['type'] ) ? esc_attr( $field['link']['type'] ) : 'tooltip';
+										$link_target   = $link_external ? ' target="_blank"' : '';
+
+										if ( 'tooltip' === $link_type ) {
+											$link_text = sprintf( '<i class="dashicons dashicons-info wpsf-link-icon" title="%s"><span class="screen-reader-text">%s</span></i>', $link_text, $link_text );
+										}
+
+										$link = $link_url ? sprintf( '<a class="wpsf-link" href="%s"%s>%s</a>', $link_url, $link_target, $link_text ) : '';
+										
+										if ( $link && 'tooltip' === $link_type ) {
+											$tooltip = $link;
+										} elseif ( $link ) {
+											$field['subtitle'] .= empty( $field['subtitle'] ) ? $link : sprintf( '<br/><br/>%s', $link );
+										}
 									}
 
-									$title = ! empty( $field['subtitle'] ) ? sprintf( '%s %s<span class="wpsf-subtitle">%s%s</span>', $field['title'], $tooltip, $field['subtitle'], $inline_link ) : $field['title'];
+									$title = ! empty( $field['subtitle'] ) ? sprintf( '%s %s<span class="wpsf-subtitle">%s</span>', $field['title'], $tooltip, $field['subtitle'] ) : sprintf( '%s %s', $field['title'], $tooltip );
 
 									add_settings_field(
 										$field['id'],
