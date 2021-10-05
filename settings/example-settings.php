@@ -178,6 +178,34 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				'type'    => 'text',
 				'default' => 'This is default',
 			),
+			array(
+				'id'       => 'heading-tooltip-link',
+				'title'    => 'Heading with tooltip',
+				'subtitle' => 'Lorem ipsum dolor sit amet congue aliqua scelerisque dictumst ornare nullam suspendisse.',
+				'desc'     => 'This is a description.',
+				'type'     => 'text',
+				'default'  => 'This is default',
+				'link'     => array(
+					'url'      => esc_url( 'https://google.com' ),
+					'type'     => 'tooltip', // Can be 'tooltip' or 'link'. Default is 'tooltip'.
+					'text'     => 'Learn More', // Default is 'Learn More'.
+					'external' => true, // Default is `true`.
+				),
+			),
+			array(
+				'id'       => 'heading-subtitle-link',
+				'title'    => 'Heading with link',
+				'subtitle' => 'Lorem ipsum dolor sit amet congue aliqua scelerisque dictumst ornare nullam suspendisse.',
+				'desc'     => 'This is a description.',
+				'type'     => 'text',
+				'default'  => 'This is default',
+				'link'     => array(
+					'url'      => esc_url( 'https://google.com' ),
+					'type'     => 'link', // Can be 'tooltip' or 'link'. Default is 'tooltip'.
+					'text'     => 'Learn More', // Default is 'Learn More'.
+					'external' => true, // Default is `true`.
+				),
+			),
 		),
 	);
 
