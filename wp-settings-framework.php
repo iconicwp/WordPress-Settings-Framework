@@ -328,10 +328,10 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Usort callback. Sorts $this->settings by "section_order"
 		 *
-		 * @param $a
-		 * @param $b
+		 * @param array $a Sortable Array.
+		 * @param array $b Sortable Array.
 		 *
-		 * @return int
+		 * @return array
 		 */
 		public function sort_array( $a, $b ) {
 			if ( ! isset( $a['section_order'] ) ) {
@@ -344,7 +344,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generates the HTML output of the settings fields
 		 *
-		 * @param array callback args from add_settings_field()
+		 * @param array $args callback args from add_settings_field()
 		 */
 		public function generate_setting( $args ) {
 			$section                = $args['section'];
@@ -359,38 +359,38 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			$args['name']  = $this->generate_field_name( $args['id'] );
 
 			// Create classes from show/hide values.
-			if ( $args['showControlGroup'] && empty( $args['showIfValue'] ) && empty( $args['hideIfValue'] ) ) {
+			if ( $args['show_controller'] ) {
 				$args['class'] .= ' control-group';
-				$args['class'] .= ' control-group--' . esc_attr( $args['showControlGroup'] );
+				$args['class'] .= ' control-group--' . esc_attr( $args['show_controller'] );
 				$args['class'] .= ' control-group__controller';
 			}
 
-			if ( $args['tabControlGroup'] ) {
+			if ( $args['tab_control_group'] ) {
 				$args['class'] .= ' tab-control-group';
-				$args['class'] .= ' tab-control-group--' . esc_attr( $args['tabControlGroup'] );
+				$args['class'] .= ' tab-control-group--' . esc_attr( $args['tab_control_group'] );
 				$args['class'] .= ' tab-control-group__controller';
 			}
 
-			if ( ! empty( $args['showIfValue'] ) && esc_attr( $args['showControlGroup'] ) ) {
+			if ( ! empty( $args['show_if_value'] ) && esc_attr( $args['show_control_group'] ) ) {
 				$class = ' control-group__show-if';
 
 				$args['class'] .= ' control-group';
-				$args['class'] .= ' control-group--' . esc_attr( $args['showControlGroup'] );
+				$args['class'] .= ' control-group--' . esc_attr( $args['show_control_group'] );
 				$args['class'] .= $class;
 
-				foreach ( $args['showIfValue'] as $value ) {
+				foreach ( $args['show_if_value'] as $value ) {
 					$args['class'] .= $class . '--' . $value;
 				}
 			}
 
-			if ( ! empty( $args['hideIfValue'] ) && esc_attr( $args['showControlGroup'] ) ) {
+			if ( ! empty( $args['hide_if_value'] ) && esc_attr( $args['show_control_group'] ) ) {
 				$class = ' control-group__hide-if';
 
 				$args['class'] .= ' control-group';
-				$args['class'] .= ' control-group--' . esc_attr( $args['showControlGroup'] );
+				$args['class'] .= ' control-group--' . esc_attr( $args['show_control_group'] );
 				$args['class'] .= $class;
 
-				foreach ( $args['hideIfValue'] as $value ) {
+				foreach ( $args['hide_if_value'] as $value ) {
 					$args['class'] .= $class . '--' . $value;
 				}
 			}
@@ -959,32 +959,32 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 					}
 
 					// Create classes from show/hide values.
-					if ( $tab_data['tabControlGroup'] && empty( $tab_data['showIfValue'] ) && empty( $tab_data['hideIfValue'] ) ) {
+					if ( $tab_data['tab_controller'] ) {
 						$tab_data['class'] .= ' tab-control-group';
-						$tab_data['class'] .= ' tab-control-group--' . esc_attr( $tab_data['tabControlGroup'] );
+						$tab_data['class'] .= ' tab-control-group--' . esc_attr( $tab_data['tab_controller'] );
 						$tab_data['class'] .= ' tab-control-group__controller';
 					}
 
-					if ( ! empty( $tab_data['showIfValue'] ) && esc_attr( $tab_data['tabControlGroup'] ) ) {
+					if ( ! empty( $tab_data['show_if_value'] ) && esc_attr( $tab_data['tab_control_group'] ) ) {
 						$class = ' tab-control-group__show-if';
 
 						$tab_data['class'] .= ' tab-control-group';
-						$tab_data['class'] .= ' tab-control-group--' . esc_attr( $tab_data['tabControlGroup'] );
+						$tab_data['class'] .= ' tab-control-group--' . esc_attr( $tab_data['tab_control_group'] );
 						$tab_data['class'] .= $class;
 
-						foreach ( $tab_data['showIfValue'] as $value ) {
+						foreach ( $tab_data['show_if_value'] as $value ) {
 							$tab_data['class'] .= $class . '--' . $value;
 						}
 					}
 
-					if ( ! empty( $tab_data['hideIfValue'] ) && esc_attr( $tab_data['tabControlGroup'] ) ) {
+					if ( ! empty( $tab_data['hide_if_value'] ) && esc_attr( $tab_data['tab_control_group'] ) ) {
 						$class = ' tab-control-group__hide-if';
 
 						$tab_data['class'] .= ' tab-control-group';
-						$tab_data['class'] .= ' tab-control-group--' . esc_attr( $tab_data['tabControlGroup'] );
+						$tab_data['class'] .= ' tab-control-group--' . esc_attr( $tab_data['tab_control_group'] );
 						$tab_data['class'] .= $class;
 
-						foreach ( $tab_data['hideIfValue'] as $value ) {
+						foreach ( $tab_data['hide_if_value'] as $value ) {
 							$tab_data['class'] .= $class . '--' . $value;
 						}
 					}

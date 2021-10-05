@@ -23,7 +23,9 @@
 add_filter( 'wpsf_register_settings_my_example_settings', 'wpsf_tabless_settings' );
 
 /**
- * Tabless example
+ * Tabless example.
+ * 
+ * @param array $wpsf_settings Settings.
  */
 function wpsf_tabless_settings( $wpsf_settings ) {
 	// General Settings section
@@ -165,7 +167,7 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 		),
 	);
 
-	// More Settings section
+	// More Settings section.
 	$wpsf_settings[] = array(
 		'section_id'    => 'more',
 		'section_title' => 'More Settings',
@@ -180,58 +182,58 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 			),
 		),
 		array(
-			'id'               => 'control-group',
-			'title'            => 'Control Group',
-			'subtitle'         => 'Selection option 1 or 2 to show and hide controls.',
-			'type'             => 'select',
-			'choices'          => array(
+			'id'              => 'control-group',
+			'title'           => 'Control Group',
+			'subtitle'        => 'Selection option 1 or 2 to show and hide controls.',
+			'type'            => 'select',
+			'choices'         => array(
 				'option-1' => 'Option 1',
 				'option-2' => 'Option 2',
 				'option-3' => 'Option 3',
 			),
-			'default'          => 'text',
-			'showControlGroup' => 'control-group', // Needs to be set to the same control. Does not have to match the Id of this control.
+			'default'         => 'text',
+			'show_controller' => 'control-group', // Needs to be set to the same as the control group. Does not have to match the Id of this control.
 		),
 		array(
-			'id'               => 'show-if-option-1',
-			'title'            => 'Show if Option 1',
-			'subtitle'         => 'Will show if Option 1 is set.',
-			'type'             => 'select',
-			'type'             => 'text',
-			'default'          => 'This is default',
-			'showControlGroup' => 'control-group', // Needs to be set to the control group.
-			'showIfValue'      => array( 'option-1' ), // show if will hide the control unless the value matches.
+			'id'                 => 'show-if-option-1',
+			'title'              => 'Show if Option 1',
+			'subtitle'           => 'Will show if Option 1 is set.',
+			'type'               => 'select',
+			'type'               => 'text',
+			'default'            => 'This is default',
+			'show_control_group' => 'control-group', // Needs to be set to the control group.
+			'show_if_value'      => array( 'option-1' ), // show if will hide the control unless the value matches.
 
 		),
 		array(
-			'id'               => 'show-if-option-2',
-			'title'            => 'Show if Option 2',
-			'subtitle'         => 'Will show if Option 2 is set.',
-			'type'             => 'select',
-			'type'             => 'text',
-			'default'          => 'This is default',
-			'showControlGroup' => 'control-group', // Needs to be set to the control group.
-			'showIfValue'      => array( 'option-2' ), // show if will hide the control unless the value matches.
+			'id'                 => 'show-if-option-2',
+			'title'              => 'Show if Option 2',
+			'subtitle'           => 'Will show if Option 2 is set.',
+			'type'               => 'select',
+			'type'               => 'text',
+			'default'            => 'This is default',
+			'show_control_group' => 'control-group', // Needs to be set to the control group.
+			'show_if_value'      => array( 'option-2' ), // show if will hide the control unless the value matches.
 		),
 		array(
-			'id'               => 'show-if-option-2-or-3',
-			'title'            => 'Show if Option 2 or 3',
-			'subtitle'         => 'Will show if Option 2 or 3 is set.',
-			'type'             => 'select',
-			'type'             => 'text',
-			'default'          => 'This is default',
-			'showControlGroup' => 'control-group', // Needs to be set to the control group.
-			'showIfValue'      => array( 'option-2', 'option-3' ), // show if will hide the control unless the value matches.
+			'id'                 => 'show-if-option-2-or-3',
+			'title'              => 'Show if Option 2 or 3',
+			'subtitle'           => 'Will show if Option 2 or 3 is set.',
+			'type'               => 'select',
+			'type'               => 'text',
+			'default'            => 'This is default',
+			'show_control_group' => 'control-group', // Needs to be set to the control group.
+			'show_if_value'      => array( 'option-2', 'option-3' ), // show if will hide the control unless the value matches.
 		),
 		array(
-			'id'               => 'hide-if-option-1',
-			'title'            => 'Hide if Option 1',
-			'subtitle'         => 'Will hide if Option 1 is set.',
-			'type'             => 'select',
-			'type'             => 'text',
-			'default'          => 'This is default',
-			'showControlGroup' => 'control-group', // Needs to be set to the control group.
-			'hideIfValue'      => array( 'option-1' ), // hide if will show the control unless the value matches.
+			'id'                 => 'hide-if-option-1',
+			'title'              => 'Hide if Option 1',
+			'subtitle'           => 'Will hide if Option 1 is set.',
+			'type'               => 'select',
+			'type'               => 'text',
+			'default'            => 'This is default',
+			'show_control_group' => 'control-group', // Needs to be set to the control group.
+			'hide_if_value'      => array( 'option-1' ), // hide if will show the control unless the value matches.
 		),
 	);
 
@@ -239,11 +241,12 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 }
 
 /**
- * Tabbed example
+ * Tabbed example.
+ *
+ * @param array $wpsf_settings settings.
  */
-
 function wpsf_tabbed_settings( $wpsf_settings ) {
-	// Tabs
+	// Tabs.
 	$wpsf_settings['tabs'] = array(
 		array(
 			'id'    => 'tab_1',
@@ -254,15 +257,15 @@ function wpsf_tabbed_settings( $wpsf_settings ) {
 			'title' => __( 'Tab 2' ),
 		),
 		array(
-			'id'              => 'tab_3',
-			'title'           => __( 'Tab 3' ),
-			'tabControlGroup' => 'tab-control',
-			'showIfValue'     => array( true ), // show if will hide the tab unless the value matches.
-			// 'hideIfValue'  => array( true ), // hide if will show the tab unless the value matches.
+			'id'                => 'tab_3',
+			'title'             => __( 'Tab 3' ),
+			'tab_control_group' => 'tab-control',
+			'show_if_value'     => array( true ), // show if will hide the tab unless the value matches.
+			// 'hide_if_value'  => array( true ), // hide if will show the tab unless the value matches.
 		),
 	);
 
-	// Settings
+	// Settings.
 	$wpsf_settings['sections'] = array(
 		array(
 			'tab_id'        => 'tab_1',
@@ -309,11 +312,11 @@ function wpsf_tabbed_settings( $wpsf_settings ) {
 				),
 			),
 			array(
-				'id'              => 'tab-control',
-				'title'           => __( 'Will show Tab 3 if toggled', 'flux-checkout' ),
-				'type'            => 'toggle',
-				'default'         => false,
-				'tabControlGroup' => 'tab-control', // Needs to be set to the same tab control. Does not have to match the Id of this control. 
+				'id'             => 'tab-control',
+				'title'          => __( 'Will show Tab 3 if toggled', 'flux-checkout' ),
+				'type'           => 'toggle',
+				'default'        => false,
+				'tab_controller' => 'tab-control', // Needs to be set to the same tab control group. Does not have to match the Id of this control.
 			),
 		),
 		array(
