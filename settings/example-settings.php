@@ -188,7 +188,7 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				'link'     => array(
 					'url'      => esc_url( 'https://google.com' ),
 					'type'     => 'tooltip', // Can be 'tooltip' or 'link'. Default is 'tooltip'.
-					'text'     => esc_html__( 'Learn More', 'orderable' ), // Default is 'Learn More'.
+					'text'     => 'Learn More', // Default is 'Learn More'.
 					'external' => true, // Default is `true`.
 				),
 			),
@@ -202,7 +202,7 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				'link'     => array(
 					'url'      => esc_url( 'https://google.com' ),
 					'type'     => 'link', // Can be 'tooltip' or 'link'. Default is 'tooltip'.
-					'text'     => esc_html__( 'Learn More', 'orderable' ), // Default is 'Learn More'.
+					'text'     => 'Learn More', // Default is 'Learn More'.
 					'external' => true, // Default is `true`.
 				),
 			),
