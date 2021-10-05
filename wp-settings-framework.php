@@ -365,9 +365,9 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				$args['class'] .= ' control-group__controller';
 			}
 
-			if ( $args['tab_control_group'] ) {
+			if ( $args['tab_controller'] ) {
 				$args['class'] .= ' tab-control-group';
-				$args['class'] .= ' tab-control-group--' . esc_attr( $args['tab_control_group'] );
+				$args['class'] .= ' tab-control-group--' . esc_attr( $args['tab_controller'] );
 				$args['class'] .= ' tab-control-group__controller';
 			}
 
@@ -959,10 +959,10 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 					}
 
 					// Create classes from show/hide values.
-					if ( $tab_data['tab_controller'] ) {
+					if ( $tab_data['tab_control_group'] ) {
 						$tab_data['class'] .= ' tab-control-group';
-						$tab_data['class'] .= ' tab-control-group--' . esc_attr( $tab_data['tab_controller'] );
-						$tab_data['class'] .= ' tab-control-group__controller';
+						$tab_data['class'] .= ' tab-control-group--' . esc_attr( $tab_data['tab_control_group'] );
+						// $tab_data['class'] .= ' tab-control-group__controller';
 					}
 
 					if ( ! empty( $tab_data['show_if_value'] ) && esc_attr( $tab_data['tab_control_group'] ) ) {
