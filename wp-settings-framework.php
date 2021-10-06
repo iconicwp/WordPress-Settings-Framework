@@ -289,6 +289,34 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			if ( ! empty( $this->settings ) ) {
 				foreach ( $this->settings as $section ) {
 					if ( $section['section_id'] == $args['id'] ) {
+						$renderClass = '';
+						if ( ! empty( $section['show_if_value'] ) && esc_attr( $section['section_control_group'] ) ) {
+							$class = ' section-control-group__show-if';
+			
+							$renderClass .= ' section-control-group';
+							$renderClass .= ' section-control-group--' . esc_attr( $section['section_control_group'] );
+							$renderClass .= $class;
+			
+							foreach ( $section['show_if_value'] as $value ) {
+								$renderClass .= $class . '--' . $value;
+							}
+						}
+			
+						if ( ! empty( $section['hide_if_value'] ) && esc_attr( $section['section_control_group'] ) ) {
+
+							$class = ' section-control-group__hide-if';
+			
+							$renderClass .= ' section-control-group';
+							$renderClass .= ' section-control-group--' . esc_attr( $section['section_control_group'] );
+							$renderClass .= $class;
+			
+							foreach ( $section['hide_if_value'] as $value ) {
+								$renderClass .= $class . '--' . $value;
+							}
+						}
+						if ( $renderClass ) {
+							echo '<span class="' . esc_attr( $renderClass ) . '"></span>';
+						}
 						if ( isset( $section['section_description'] ) && $section['section_description'] ) {
 							echo '<div class="wpsf-section-description wpsf-section-description--' . esc_attr( $section['section_id'] ) . '">' . $section['section_description'] . '</div>';
 						}
@@ -369,6 +397,12 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				$args['class'] .= ' tab-control-group';
 				$args['class'] .= ' tab-control-group--' . esc_attr( $args['tab_controller'] );
 				$args['class'] .= ' tab-control-group__controller';
+			}
+
+			if ( $args['section_controller'] ) {
+				$args['class'] .= ' section-control-group';
+				$args['class'] .= ' section-control-group--' . esc_attr( $args['section_controller'] );
+				$args['class'] .= ' section-control-group__controller';
 			}
 
 			if ( ! empty( $args['show_if_value'] ) && esc_attr( $args['show_control_group'] ) ) {

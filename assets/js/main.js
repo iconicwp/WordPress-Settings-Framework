@@ -298,13 +298,36 @@
 			$( '.control-group__hide-if' ).closest( 'tr' ).show();
 			$( '.tab-control-group__hide-if' ).closest( 'li' ).show();
 
+			var section_control_show = $( '.section-control-group__show-if' );
+			var section_control_hide = $( '.section-control-group__hide-if' );
+			
+			if ( section_control_show ) {
+				section_control_show.prev().hide();
+				section_control_show.next().hide();
+				if ( section_control_show.next().hasClass( 'wpsf-section-description' ) ) {
+					section_control_show.next().next().hide();
+				}
+			}
+
+			if ( section_control_hide ) {
+				section_control_hide.prev().show();
+				section_control_hide.next().show();
+				if ( section_control_hide.next().hasClass( 'wpsf-section-description' ) ) {
+					section_control_hide.next().next().show();
+				}
+			}
+
 			// Loop and show if the value is set.
 			$( '*[class*="control-group__show-if--"]' ).each( function() {
 				wpsf.show_hide( this, true );
 			});
 
 			$( '*[class*="tab-control-group__show-if--"]' ).each( function() {
-				wpsf.show_hide( this, true, true );
+				wpsf.show_hide( this, true, 'tab' );
+			});
+
+			$( '*[class*="section-control-group__show-if--"]' ).each( function() {
+				wpsf.show_hide( this, true, 'section' );
 			});
 
 			// Loop and hide if the value is set.
@@ -313,18 +336,22 @@
 			});
 
 			$( '*[class*="tab-control-group__hide-if--"]' ).each( function() {
-				wpsf.show_hide( this, false, true );
+				wpsf.show_hide( this, false, 'tab' );
 			});
 
-			$( document.body ).on( 'change', '.control-group__controller, .tab-control-group__controller', wpsf.control_groups );
+			$( '*[class*="section-control-group__hide-if--"]' ).each( function() {
+				wpsf.show_hide( this, false, 'section' );
+			});
+
+			$( document.body ).on( 'change', '.control-group__controller, .tab-control-group__controller, .section-control-group__controller', wpsf.control_groups );
 		},
 
 		/**
 		 * Show or hide control.
 		 */
-		show_hide: function( control, isShow, isTab ) {
-			var prefix = isTab ? 'tab-' : '';
-			var parent = isTab ? 'li' : 'tr';
+		show_hide: function( control, isShow, type ) {
+			var prefix = type ? type + '-' : '';
+			var parent = 'tab' === type ? 'li' : 'tr';
 			var showHide = isShow ? 'show' : 'hide';
 
 			var classes = control.className.split( /\s+/ );
@@ -338,18 +365,29 @@
 				return item.replace( prefix + 'control-group__' + showHide + '-if--', '' );
 			});
 
-			var controllerValue = wpsf.get_controller_value( $( '.' + prefix + 'control-group__controller.' + controller ), controller, isTab );
-			console.log( '.' + prefix + 'control-group__controller.' + controller );
-			console.log( controllerValue );
-			console.log( values );
+			var controllerValue = wpsf.get_controller_value( $( '.' + prefix + 'control-group__controller.' + controller ), controller, type );
+			
 			if ( values.includes( controllerValue ) ) {
-				console.log( 'action' );
-				if ( isShow ) {
-					console.log( 'action show' );
-					$( control ).closest( parent ).show();
+				if ( 'section' === type ) {
+					if ( isShow ) {
+						$( control ).prev().show();
+						$( control ).next().show();
+						if ( $( control ).next().hasClass( 'wpsf-section-description' ) ) {
+							$( control ).next().next().show();
+						}
+					} else {
+						$( control ).prev().hide();
+						$( control ).next().hide();
+						if ( $( control ).next().hasClass( 'wpsf-section-description' ) ) {
+							$( control ).next().next().hide();
+						}
+					}
 				} else {
-					$( control ).closest( parent ).hide();
-					console.log( 'action hide' );
+					if ( isShow ) {
+						$( control ).closest( parent ).show();
+					} else {
+						$( control ).closest( parent ).hide();
+					}
 				}
 			}
 		},
@@ -357,8 +395,8 @@
 		/** 
 		 * Return the control value.
 		 */
-		get_controller_value: function( controllerControl, controllerId, isTab ) {
-			var prefix = isTab ? 'tab-' : '';
+		get_controller_value: function( controllerControl, controllerId, type ) {
+			var prefix = type ? type + '-' : '';
 
 			if ( 'checkbox' === controllerControl.attr( 'type' ) || 'radio' === controllerControl.attr( 'type' ) ) {
 				controllerControl = $( '.' + prefix + 'control-group__controller.' + controllerId + ':checked' );

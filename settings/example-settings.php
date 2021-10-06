@@ -234,6 +234,38 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				'show_control_group' => 'control-group', // Needs to be set to the control group.
 				'hide_if_value'      => array( 'option-1' ), // hide if will show the control unless the value matches.
 			),
+			array(
+				'id'                 => 'section-control',
+				'title'              => 'Will show Additional Settings Group if toggled', 'flux-checkout',
+				'type'               => 'toggle',
+				'default'            => false,
+				'section_controller' => 'section-control', // Needs to be set to the same section control group. Does not have to match the Id of this control.
+			),
+		),
+	);
+
+	$wpsf_settings[] = array(
+		'section_id'            => 'additional',
+		'section_title'         => 'Additional Settings',
+		'section_order'         => 10,
+		'section_control_group' => 'section-control',
+		'show_if_value'      => array( true ),
+		// 'hide_if_value'      => array( true ),
+		'fields'        => array(
+			array(
+				'id'      => 'additional-text',
+				'title'   => 'Additional Text',
+				'desc'    => 'This is a description.',
+				'type'    => 'text',
+				'default' => 'This is default',
+			),
+			array(
+				'id'      => 'additional-number',
+				'title'   => 'Additional Number',
+				'desc'    => 'This is a description.',
+				'type'    => 'number',
+				'default' => 10,
+			),
 		),
 	);
 
@@ -313,7 +345,7 @@ function wpsf_tabbed_settings( $wpsf_settings ) {
 			),
 			array(
 				'id'             => 'tab-control',
-				'title'          => __( 'Will show Tab 3 if toggled', 'flux-checkout' ),
+				'title'          => 'Will show Tab 3 if toggled',
 				'type'           => 'toggle',
 				'default'        => false,
 				'tab_controller' => 'tab-control', // Needs to be set to the same tab control group. Does not have to match the Id of this control.
