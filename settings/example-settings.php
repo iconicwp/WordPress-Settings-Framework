@@ -219,7 +219,7 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 					'option-3' => 'Option 3',
 				),
 				'default'         => 'text',
-				'show_controller' => 'control-group', // Needs to be set to the same as the control group. Does not have to match the Id of this control.
+				'field_controller' => 'control-group', // Needs to be set to the same as the control group. Does not have to match the Id of this control.
 			),
 			array(
 				'id'                 => 'show-if-option-1',
@@ -228,7 +228,7 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				'type'               => 'select',
 				'type'               => 'text',
 				'default'            => 'This is default',
-				'show_control_group' => 'control-group', // Needs to be set to the control group.
+				'field_control_group' => 'control-group', // Needs to be set to the control group.
 				'show_if_value'      => array( 'option-1' ), // show if will hide the control unless the value matches.
 
 			),
@@ -239,7 +239,7 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				'type'               => 'select',
 				'type'               => 'text',
 				'default'            => 'This is default',
-				'show_control_group' => 'control-group', // Needs to be set to the control group.
+				'field_control_group' => 'control-group', // Needs to be set to the control group.
 				'show_if_value'      => array( 'option-2' ), // show if will hide the control unless the value matches.
 			),
 			array(
@@ -249,7 +249,7 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				'type'               => 'select',
 				'type'               => 'text',
 				'default'            => 'This is default',
-				'show_control_group' => 'control-group', // Needs to be set to the control group.
+				'field_control_group' => 'control-group', // Needs to be set to the control group.
 				'show_if_value'      => array( 'option-2', 'option-3' ), // show if will hide the control unless the value matches.
 			),
 			array(
@@ -259,7 +259,7 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				'type'               => 'select',
 				'type'               => 'text',
 				'default'            => 'This is default',
-				'show_control_group' => 'control-group', // Needs to be set to the control group.
+				'field_control_group' => 'control-group', // Needs to be set to the control group.
 				'hide_if_value'      => array( 'option-1' ), // hide if will show the control unless the value matches.
 			),
 			array(

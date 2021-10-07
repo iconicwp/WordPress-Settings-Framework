@@ -419,10 +419,10 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			$args['name']  = $this->generate_field_name( $args['id'] );
 
 			// Create classes from show/hide values.
-			if ( $args['show_controller'] ) {
-				$args['class'] .= ' control-group';
-				$args['class'] .= ' control-group--' . esc_attr( $args['show_controller'] );
-				$args['class'] .= ' control-group__controller';
+			if ( $args['field_controller'] ) {
+				$args['class'] .= ' field-control-group';
+				$args['class'] .= ' field-control-group--' . esc_attr( $args['field_controller'] );
+				$args['class'] .= ' field-control-group__controller';
 			}
 
 			if ( $args['tab_controller'] ) {
@@ -437,11 +437,11 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				$args['class'] .= ' section-control-group__controller';
 			}
 
-			if ( ! empty( $args['show_if_value'] ) && esc_attr( $args['show_control_group'] ) ) {
-				$class = ' control-group__show-if';
+			if ( ! empty( $args['show_if_value'] ) && esc_attr( $args['field_control_group'] ) ) {
+				$class = ' field-control-group__show-if';
 
-				$args['class'] .= ' control-group';
-				$args['class'] .= ' control-group--' . esc_attr( $args['show_control_group'] );
+				$args['class'] .= ' field-control-group';
+				$args['class'] .= ' field-control-group--' . esc_attr( $args['field_control_group'] );
 				$args['class'] .= $class;
 
 				foreach ( $args['show_if_value'] as $value ) {
@@ -449,11 +449,11 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				}
 			}
 
-			if ( ! empty( $args['hide_if_value'] ) && esc_attr( $args['show_control_group'] ) ) {
-				$class = ' control-group__hide-if';
+			if ( ! empty( $args['hide_if_value'] ) && esc_attr( $args['field_control_group'] ) ) {
+				$class = ' field-control-group__hide-if';
 
-				$args['class'] .= ' control-group';
-				$args['class'] .= ' control-group--' . esc_attr( $args['show_control_group'] );
+				$args['class'] .= ' field-control-group';
+				$args['class'] .= ' field-control-group--' . esc_attr( $args['field_control_group'] );
 				$args['class'] .= $class;
 
 				foreach ( $args['hide_if_value'] as $value ) {

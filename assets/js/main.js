@@ -291,11 +291,11 @@
 		 */
 		control_groups: function() {
 			// Hide all controls that only show if a certain value is set.
-			$( '.control-group__show-if' ).closest( 'tr' ).hide();
+			$( '.field-control-group__show-if' ).closest( 'tr' ).hide();
 			$( '.tab-control-group__show-if' ).closest( 'li' ).hide();
 
 			// Show all controls that only hide if a certain value is set.
-			$( '.control-group__hide-if' ).closest( 'tr' ).show();
+			$( '.field-control-group__hide-if' ).closest( 'tr' ).show();
 			$( '.tab-control-group__hide-if' ).closest( 'li' ).show();
 
 			var section_control_show = $( '.section-control-group__show-if' );
@@ -318,8 +318,8 @@
 			}
 
 			// Loop and show if the value is set.
-			$( '*[class*="control-group__show-if--"]' ).each( function() {
-				wpsf.show_hide( this, true );
+			$( '*[class*="field-control-group__show-if--"]' ).each( function() {
+				wpsf.show_hide( this, true, 'field' );
 			});
 
 			$( '*[class*="tab-control-group__show-if--"]' ).each( function() {
@@ -331,8 +331,8 @@
 			});
 
 			// Loop and hide if the value is set.
-			$( '*[class*="control-group__hide-if--"]' ).each( function() {
-				wpsf.show_hide( this, false );
+			$( '*[class*="field-control-group__hide-if--"]' ).each( function() {
+				wpsf.show_hide( this, false, 'field' );
 			});
 
 			$( '*[class*="tab-control-group__hide-if--"]' ).each( function() {
@@ -343,14 +343,14 @@
 				wpsf.show_hide( this, false, 'section' );
 			});
 
-			$( document.body ).on( 'change', '.control-group__controller, .tab-control-group__controller, .section-control-group__controller', wpsf.control_groups );
+			$( document.body ).on( 'change', '.field-control-group__controller, .tab-control-group__controller, .section-control-group__controller', wpsf.control_groups );
 		},
 
 		/**
 		 * Show or hide control.
 		 */
 		show_hide: function( control, isShow, type ) {
-			var prefix = type ? type + '-' : '';
+			var prefix = type + '-';
 			var parent = 'tab' === type ? 'li' : 'tr';
 			var showHide = isShow ? 'show' : 'hide';
 
@@ -396,7 +396,7 @@
 		 * Return the control value.
 		 */
 		get_controller_value: function( controllerControl, controllerId, type ) {
-			var prefix = type ? type + '-' : '';
+			var prefix = type + '-';
 
 			if ( 'checkbox' === controllerControl.attr( 'type' ) || 'radio' === controllerControl.attr( 'type' ) ) {
 				controllerControl = $( '.' + prefix + 'control-group__controller.' + controllerId + ':checked' );
