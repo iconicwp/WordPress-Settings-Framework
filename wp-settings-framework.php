@@ -290,30 +290,9 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				foreach ( $this->settings as $section ) {
 					if ( $section['section_id'] == $args['id'] ) {
 						$renderClass = '';
-						if ( ! empty( $section['show_if_value'] ) && esc_attr( $section['section_control_group'] ) ) {
-							$class = ' section-control-group__show-if';
-			
-							$renderClass .= ' section-control-group';
-							$renderClass .= ' section-control-group--' . esc_attr( $section['section_control_group'] );
-							$renderClass .= $class;
-			
-							foreach ( $section['show_if_value'] as $value ) {
-								$renderClass .= $class . '--' . $value;
-							}
-						}
-			
-						if ( ! empty( $section['hide_if_value'] ) && esc_attr( $section['section_control_group'] ) ) {
 
-							$class = ' section-control-group__hide-if';
-			
-							$renderClass .= ' section-control-group';
-							$renderClass .= ' section-control-group--' . esc_attr( $section['section_control_group'] );
-							$renderClass .= $class;
-			
-							foreach ( $section['hide_if_value'] as $value ) {
-								$renderClass .= $class . '--' . $value;
-							}
-						}
+						$renderClass .= self::add_show_hide_classes( $section );
+
 						if ( $renderClass ) {
 							echo '<span class="' . esc_attr( $renderClass ) . '"></span>';
 						}
@@ -418,48 +397,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			$args['value'] = isset( $options[ $args['id'] ] ) ? $options[ $args['id'] ] : ( isset( $args['default'] ) ? $args['default'] : '' );
 			$args['name']  = $this->generate_field_name( $args['id'] );
 
-			// Create classes from show/hide values.
-			if ( $args['field_controller'] ) {
-				$args['class'] .= ' field-control-group';
-				$args['class'] .= ' field-control-group--' . esc_attr( $args['field_controller'] );
-				$args['class'] .= ' field-control-group__controller';
-			}
-
-			if ( $args['tab_controller'] ) {
-				$args['class'] .= ' tab-control-group';
-				$args['class'] .= ' tab-control-group--' . esc_attr( $args['tab_controller'] );
-				$args['class'] .= ' tab-control-group__controller';
-			}
-
-			if ( $args['section_controller'] ) {
-				$args['class'] .= ' section-control-group';
-				$args['class'] .= ' section-control-group--' . esc_attr( $args['section_controller'] );
-				$args['class'] .= ' section-control-group__controller';
-			}
-
-			if ( ! empty( $args['show_if_value'] ) && esc_attr( $args['field_control_group'] ) ) {
-				$class = ' field-control-group__show-if';
-
-				$args['class'] .= ' field-control-group';
-				$args['class'] .= ' field-control-group--' . esc_attr( $args['field_control_group'] );
-				$args['class'] .= $class;
-
-				foreach ( $args['show_if_value'] as $value ) {
-					$args['class'] .= $class . '--' . $value;
-				}
-			}
-
-			if ( ! empty( $args['hide_if_value'] ) && esc_attr( $args['field_control_group'] ) ) {
-				$class = ' field-control-group__hide-if';
-
-				$args['class'] .= ' field-control-group';
-				$args['class'] .= ' field-control-group--' . esc_attr( $args['field_control_group'] );
-				$args['class'] .= $class;
-
-				foreach ( $args['hide_if_value'] as $value ) {
-					$args['class'] .= $class . '--' . $value;
-				}
-			}
+			$args['class'] .= self::add_show_hide_classes( $args );
 
 			do_action( 'wpsf_before_field_' . $this->option_group );
 			do_action( 'wpsf_before_field_' . $this->option_group . '_' . $args['id'] );
@@ -1028,36 +966,7 @@ endwhile;
 						$tab_data['class'] = '';
 					}
 
-					// Create classes from show/hide values.
-					if ( $tab_data['tab_control_group'] ) {
-						$tab_data['class'] .= ' tab-control-group';
-						$tab_data['class'] .= ' tab-control-group--' . esc_attr( $tab_data['tab_control_group'] );
-						// $tab_data['class'] .= ' tab-control-group__controller';
-					}
-
-					if ( ! empty( $tab_data['show_if_value'] ) && esc_attr( $tab_data['tab_control_group'] ) ) {
-						$class = ' tab-control-group__show-if';
-
-						$tab_data['class'] .= ' tab-control-group';
-						$tab_data['class'] .= ' tab-control-group--' . esc_attr( $tab_data['tab_control_group'] );
-						$tab_data['class'] .= $class;
-
-						foreach ( $tab_data['show_if_value'] as $value ) {
-							$tab_data['class'] .= $class . '--' . $value;
-						}
-					}
-
-					if ( ! empty( $tab_data['hide_if_value'] ) && esc_attr( $tab_data['tab_control_group'] ) ) {
-						$class = ' tab-control-group__hide-if';
-
-						$tab_data['class'] .= ' tab-control-group';
-						$tab_data['class'] .= ' tab-control-group--' . esc_attr( $tab_data['tab_control_group'] );
-						$tab_data['class'] .= $class;
-
-						foreach ( $tab_data['hide_if_value'] as $value ) {
-							$tab_data['class'] .= $class . '--' . $value;
-						}
-					}
+					$tab_data['class'] .= self::add_show_hide_classes( $tab_data );
 
 					$active = $i == 0 ? 'wpsf-nav__item--active' : '';
 					?>
@@ -1111,6 +1020,66 @@ endwhile;
 			}
 
 			return false;
+		}
+
+		/**
+		 * Add Show Hide Classes.
+		 */
+		public static function add_show_hide_classes( $args, $type = 'show_if' ) {
+			$class = '';
+			$slug  = ' ' . str_replace( '_', '-', $type );
+			if ( isset( $args[ $type ] ) && is_array( $args[ $type ] ) ) {
+				$class .= $slug;
+				foreach ( $args[ $type ] as $condition ) {
+					if ( isset( $condition['field'] ) && $condition['value'] ) {
+						$value_string = '';
+						foreach ( $condition['value'] as $value ) {
+							if ( ! empty( $value_string ) ) {
+								$value_string .= '||';
+							}
+							$value_string .= $value;
+						}
+
+						if ( ! empty( $value_string ) ) {
+							$class .= $slug . '--' . $condition['field'] . '===' . $value_string;
+						}
+					} else {
+						$and_string = '';
+						foreach( $condition as $and_condition ) {
+							if ( ! isset( $and_condition['field'] ) || ! isset( $and_condition['value'] ) ) {
+								continue;
+							}
+
+							if ( ! empty( $and_string ) ) {
+								$and_string .= '&&';
+							}
+
+							$value_string = '';
+							foreach ( $and_condition['value'] as $value ) {
+								if ( ! empty( $value_string ) ) {
+									$value_string .= '||';
+								}
+								$value_string .= $value;
+							}
+
+							if ( ! empty( $value_string ) ) {
+								$and_string .= $and_condition['field'] . '===' . $value_string;
+							}
+						}
+
+						if ( ! empty( $and_string ) ) {
+							$class .= $slug . '--' . $and_string;
+						}
+					}
+				}
+			}
+
+			// Run the function again with hide if.
+			if ( 'hide_if' !== $type ) {
+				$class .= self::add_show_hide_classes( $args, 'hide_if' );
+			}
+
+			return $class;
 		}
 	}
 }

@@ -19,6 +19,8 @@
 			wpsf.tabs.watch();
 			wpsf.watch_submit();
 			wpsf.control_groups();
+
+			$( document.body ).on( 'change', 'input, select, textarea', wpsf.control_groups );
 		},
 
 		/**
@@ -290,125 +292,124 @@
 		 * Dynamic control groups.
 		 */
 		control_groups: function() {
-			// Hide all controls that only show if a certain value is set.
-			$( '.field-control-group__show-if' ).closest( 'tr' ).hide();
-			$( '.tab-control-group__show-if' ).closest( 'li' ).hide();
+			// If show if, hide by default.
+			$( '.show-if' ).each( function( index ) {
+				var element = $( this );
+				var parent_tag = element.parent().prop( 'nodeName' ).toLowerCase()
+				
+				// Field.
+				if ( 'td' === parent_tag ) {
+					element.closest( 'tr' ).hide();
 
-			// Show all controls that only hide if a certain value is set.
-			$( '.field-control-group__hide-if' ).closest( 'tr' ).show();
-			$( '.tab-control-group__hide-if' ).closest( 'li' ).show();
-
-			var section_control_show = $( '.section-control-group__show-if' );
-			var section_control_hide = $( '.section-control-group__hide-if' );
-			
-			if ( section_control_show ) {
-				section_control_show.prev().hide();
-				section_control_show.next().hide();
-				if ( section_control_show.next().hasClass( 'wpsf-section-description' ) ) {
-					section_control_show.next().next().hide();
+					wpsf.maybe_show_element( element, function() {
+						element.closest( 'tr' ).show();
+					} );
 				}
-			}
 
-			if ( section_control_hide ) {
-				section_control_hide.prev().show();
-				section_control_hide.next().show();
-				if ( section_control_hide.next().hasClass( 'wpsf-section-description' ) ) {
-					section_control_hide.next().next().show();
+				// Tab.
+				if ( 'li' === parent_tag ) {
+					element.closest( 'li' ).hide();
+
+					wpsf.maybe_show_element( element, function() {
+						element.closest( 'li' ).show();
+					} );
 				}
-			}
 
-			// Loop and show if the value is set.
-			$( '*[class*="field-control-group__show-if--"]' ).each( function() {
-				wpsf.show_hide( this, true, 'field' );
-			});
+				// Section.
+				if ( 'div' === parent_tag ) {
+					element.prev().hide();
+					element.next().hide();
+					if ( element.next().hasClass( 'wpsf-section-description' ) ) {
+						element.next().next().hide();
+					}
 
-			$( '*[class*="tab-control-group__show-if--"]' ).each( function() {
-				wpsf.show_hide( this, true, 'tab' );
-			});
-
-			$( '*[class*="section-control-group__show-if--"]' ).each( function() {
-				wpsf.show_hide( this, true, 'section' );
-			});
-
-			// Loop and hide if the value is set.
-			$( '*[class*="field-control-group__hide-if--"]' ).each( function() {
-				wpsf.show_hide( this, false, 'field' );
-			});
-
-			$( '*[class*="tab-control-group__hide-if--"]' ).each( function() {
-				wpsf.show_hide( this, false, 'tab' );
-			});
-
-			$( '*[class*="section-control-group__hide-if--"]' ).each( function() {
-				wpsf.show_hide( this, false, 'section' );
-			});
-
-			$( document.body ).on( 'change', '.field-control-group__controller, .tab-control-group__controller, .section-control-group__controller', wpsf.control_groups );
+					wpsf.maybe_show_element( element, function() {
+						element.prev().show();
+						element.next().show();
+						if ( element.next().hasClass( 'wpsf-section-description' ) ) {
+							element.next().next().show();
+						}
+					} );
+				}
+			} );
 		},
 
 		/**
-		 * Show or hide control.
+		 * Maybe Show Element.
+		 * 
+		 * @param {object} element Element.
+		 * @param {function} callback Callback.
 		 */
-		show_hide: function( control, isShow, type ) {
-			var prefix = type + '-';
-			var parent = 'tab' === type ? 'li' : 'tr';
-			var showHide = isShow ? 'show' : 'hide';
-
-			var classes = control.className.split( /\s+/ );
-			var controller = classes.filter( function( item ) {
-				return item.includes( prefix + 'control-group--' );
-			})[0];
-
-			var values = classes.filter( function( item ) {
-				return item.includes( prefix + 'control-group__' + showHide + '-if--' );
-			}).map( function( item) {
-				return item.replace( prefix + 'control-group__' + showHide + '-if--', '' );
+		maybe_show_element: function( element, callback ) {
+			var classes = element.attr( 'class' ).split( /\s+/ );
+			var controllers = classes.filter( function( item ) {
+				return item.includes( 'show-if--' );
 			});
 
-			var controllerValue = wpsf.get_controller_value( $( '.' + prefix + 'control-group__controller.' + controller ), controller, type );
-			
-			if ( values.includes( controllerValue ) ) {
-				if ( 'section' === type ) {
-					if ( isShow ) {
-						$( control ).prev().show();
-						$( control ).next().show();
-						if ( $( control ).next().hasClass( 'wpsf-section-description' ) ) {
-							$( control ).next().next().show();
+			Array.from( controllers ).forEach( function( control_group ) {
+				var item = control_group.replace( 'show-if--', '' );
+				if ( item.includes( '&&' ) ) {
+					var and_group = item.split( '&&' );
+					var show_item = true;
+					Array.from( and_group ).forEach( function( and_item ) {
+						if ( ! wpsf.get_show_item_bool( show_item, and_item ) ) {
+							show_item = false;
 						}
-					} else {
-						$( control ).prev().hide();
-						$( control ).next().hide();
-						if ( $( control ).next().hasClass( 'wpsf-section-description' ) ) {
-							$( control ).next().next().hide();
-						}
+					});
+
+					if ( show_item ) {
+						callback();
+						return;
 					}
 				} else {
-					if ( isShow ) {
-						$( control ).closest( parent ).show();
-					} else {
-						$( control ).closest( parent ).hide();
+					var show_item = true;
+					show_item = wpsf.get_show_item_bool( show_item, item );
+
+					if ( show_item ) {
+						callback();
+						return;
 					}
 				}
+			});
+		},
+
+		/**
+		 * Get Show Item Bool.
+		 * 
+		 * @param {bool} show Boolean.
+		 * @param {object} item Element.
+		 * @returns {bool}
+		 */
+		get_show_item_bool: function( show = true, item ) {
+			var split = item.split( '===' );
+			var control = split[0];
+			var values = split[1].split( '||' );
+			var control_value = wpsf.get_controller_value( control );
+
+			if ( ! values.includes( control_value ) ) {
+				show = ! show;
 			}
+
+			return show;
 		},
 
 		/** 
 		 * Return the control value.
 		 */
-		get_controller_value: function( controllerControl, controllerId, type ) {
-			var prefix = type + '-';
-
-			if ( 'checkbox' === controllerControl.attr( 'type' ) || 'radio' === controllerControl.attr( 'type' ) ) {
-				controllerControl = $( '.' + prefix + 'control-group__controller.' + controllerId + ':checked' );
+		get_controller_value: function( id ) {
+			var control = $( '#' + id );
+			
+			if ( 'checkbox' === control.attr( 'type' ) || 'radio' === control.attr( 'type' ) ) {
+				control = $( '#' + id + ':checked' );
 			}
 
-			var controllerValue = controllerControl.val();
+			var value = control.val();
 
-			if ( typeof controllerValue === 'undefined' ) {
-				controllerValue = '';
+			if ( typeof value === 'undefined' ) {
+				value = '';
 			}
 
-			return controllerValue.toString();
+			return value.toString();
 		}
 	};
 
