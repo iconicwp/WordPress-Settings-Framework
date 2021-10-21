@@ -332,6 +332,47 @@
 					} );
 				}
 			} );
+
+			// If hide if, show by default.
+			$( '.hide-if' ).each( function( index ) {
+				var element = $( this );
+				var parent_tag = element.parent().prop( 'nodeName' ).toLowerCase()
+				
+				// Field.
+				if ( 'td' === parent_tag ) {
+					element.closest( 'tr' ).show();
+
+					wpsf.maybe_hide_element( element, function() {
+						element.closest( 'tr' ).hide();
+					} );
+				}
+
+				// Tab.
+				if ( 'li' === parent_tag ) {
+					element.closest( 'li' ).show();
+
+					wpsf.maybe_hide_element( element, function() {
+						element.closest( 'li' ).hide();
+					} );
+				}
+
+				// Section.
+				if ( 'div' === parent_tag ) {
+					element.prev().show();
+					element.next().show();
+					if ( element.next().hasClass( 'wpsf-section-description' ) ) {
+						element.next().next().show();
+					}
+
+					wpsf.maybe_hide_element( element, function() {
+						element.prev().hide();
+						element.next().hide();
+						if ( element.next().hasClass( 'wpsf-section-description' ) ) {
+							element.next().next().hide();
+						}
+					} );
+				}
+			} );
 		},
 
 		/**
@@ -366,6 +407,45 @@
 					show_item = wpsf.get_show_item_bool( show_item, item );
 
 					if ( show_item ) {
+						callback();
+						return;
+					}
+				}
+			});
+		},
+
+		/**
+		 * Maybe Hide Element.
+		 * 
+		 * @param {object} element Element.
+		 * @param {function} callback Callback.
+		 */
+		maybe_hide_element: function( element, callback ) {
+			var classes = element.attr( 'class' ).split( /\s+/ );
+			var controllers = classes.filter( function( item ) {
+				return item.includes( 'hide-if--' );
+			});
+
+			Array.from( controllers ).forEach( function( control_group ) {
+				var item = control_group.replace( 'hide-if--', '' );
+				if ( item.includes( '&&' ) ) {
+					var and_group = item.split( '&&' );
+					var hide_item = true;
+					Array.from( and_group ).forEach( function( and_item ) {
+						if ( ! wpsf.get_show_item_bool( hide_item, and_item ) ) {
+							hide_item = false;
+						}
+					});
+
+					if ( hide_item ) {
+						callback();
+						return;
+					}
+				} else {
+					var hide_item = true;
+					hide_item = wpsf.get_show_item_bool( hide_item, item );
+
+					if ( hide_item ) {
 						callback();
 						return;
 					}
