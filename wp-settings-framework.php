@@ -533,11 +533,13 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 							<td colspan="3" class="">
 								<span class="wpsf-group-field-header__icon dashicons dashicons-arrow-down"></span>
 								<span class="wpsf-group-field-header__title">title</span>
+								<a href="javascript: void(0);" class="wpsf-group-field-header__add" data-template="%s_template"><span class="dashicons dashicons-plus-alt"></span></a>
 							</td>
 						</tr>',
 						esc_attr( $collapse_default ),
 						esc_attr( $collapsable ),
 						esc_attr( $collapse_heading ),
+						esc_attr( $args['id'] ),
 					);
 				}
 

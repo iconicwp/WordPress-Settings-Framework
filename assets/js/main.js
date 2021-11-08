@@ -167,12 +167,16 @@
 
 			// add row
 
-			$( document ).on( 'click', '.wpsf-group__row-add', function() {
+			$( document ).on( 'click', '.wpsf-group__row-add, .wpsf-group-field-header__add', function() {
 
 				var $group = $( this ).closest( '.wpsf-group' ),
 					$row = $( this ).closest( '.wpsf-group__row' ),
 					template_name = $( this ).data( 'template' ),
 					$template = $( $( '#' + template_name ).html() );
+
+				if ( !$row.length && $( this ).parent().parent().next().is( '.wpsf-group__row' ) ) {
+					$row = $( this ).parent().parent().next();
+				}
 
 				$template.find( '.wpsf-group__row-id' ).val( wpsf.generate_random_id() );
 
@@ -181,6 +185,11 @@
 				wpsf.reindex_group( $group );
 
 				wpsf.trigger_dynamic_fields();
+
+				// hide .wpsf-group__row if header is closed.
+				if ( $template.hasClass( 'wpsf-group-field-header--close' ) ) {
+					$template.next( '.wpsf-group__row' ).hide();
+				}
 
 				return false;
 
