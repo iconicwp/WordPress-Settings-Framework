@@ -580,3 +580,37 @@ p.submit {
 .wpsf-list li:last-child {
 	margin-bottom: 0;
 }
+
+/* Styling for group collapse */
+tr.wpsf-group-field-header {
+    cursor: pointer;
+    background: #000;
+	user-select: none;
+	position: relative;
+}
+
+.wpsf-group-field-header span {
+    color: #fff;
+}
+
+tr.wpsf-group-field-header.wpsf-group-field-header--close td {
+    border-bottom: 1px solid #F0F0F1;
+}
+
+.wpsf-group-field-header__add span {
+    color: #2271b1;
+}
+
+a.wpsf-group-field-header__add {
+    position: absolute;
+    bottom: -10px;
+    background: #fff;
+    z-index: 99;
+    border-radius: 100%;
+    right: 13px;
+    display: none;
+}
+
+tr.wpsf-group-field-header.wpsf-group-field-header--close .wpsf-group-field-header__add {
+    display: block;
+}

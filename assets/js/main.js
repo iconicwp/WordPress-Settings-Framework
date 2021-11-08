@@ -167,12 +167,16 @@
 
 			// add row
 
-			$( document ).on( 'click', '.wpsf-group__row-add', function() {
+			$( document ).on( 'click', '.wpsf-group__row-add, .wpsf-group-field-header__add', function() {
 
 				var $group = $( this ).closest( '.wpsf-group' ),
 					$row = $( this ).closest( '.wpsf-group__row' ),
 					template_name = $( this ).data( 'template' ),
 					$template = $( $( '#' + template_name ).html() );
+
+				if ( !$row.length && $( this ).parent().parent().next().is( '.wpsf-group__row' ) ) {
+					$row = $( this ).parent().parent().next();
+				}
 
 				$template.find( '.wpsf-group__row-id' ).val( wpsf.generate_random_id() );
 
@@ -181,6 +185,11 @@
 				wpsf.reindex_group( $group );
 
 				wpsf.trigger_dynamic_fields();
+
+				// hide .wpsf-group__row if header is closed.
+				if ( $template.hasClass( 'wpsf-group-field-header--close' ) ) {
+					$template.next( '.wpsf-group__row' ).hide();
+				}
 
 				return false;
 
@@ -191,9 +200,14 @@
 			$( document ).on( 'click', '.wpsf-group__row-remove', function() {
 
 				var $group = jQuery( this ).closest( '.wpsf-group' ),
-					$row = jQuery( this ).closest( '.wpsf-group__row' );
+					$row = jQuery( this ).closest( '.wpsf-group__row' ),
+					$header = $row.prev();
 
 				$row.remove();
+
+				if ( $header.is( '.wpsf-group-field-header' ) ) {
+					$header.remove();
+				}
 
 				wpsf.reindex_group( $group );
 
@@ -201,6 +215,58 @@
 
 			} );
 
+
+			// Handle collapse.
+			$( document ).on( 'click',  '.wpsf-group-field-header', function() {
+				if ( $(this).hasClass( 'wpsf-group-field-header--close' ) ) {
+					$(this).removeClass( 'wpsf-group-field-header--close' );
+					$(this).next().show();
+					$(this).find( '.wpsf-group-field-header__icon' ).removeClass( 'dashicons-arrow-right' ).addClass( 'dashicons-arrow-down' );
+				} else {
+					$(this).addClass( 'wpsf-group-field-header--close' );
+					$(this).next().hide();
+					$(this).find( '.wpsf-group-field-header__icon' ).removeClass( 'dashicons-arrow-down' ).addClass( 'dashicons-arrow-right' );
+				 }
+			} );
+
+			$( '.wpsf-group' ).on( 'change', 'input, select, textarea', wpsf.update_group_header_placeholder );
+
+			// Collapse on page load.
+			$( '.wpsf-group-field-header--close' ).each( function () {
+				$( this ).find( '.wpsf-group-field-header__icon' ).removeClass( 'dashicons-arrow-down' ).addClass( 'dashicons-arrow-right' );
+				$( this ).next().hide();
+			} )
+
+			wpsf.update_group_header_placeholder();
+		},
+
+		/**
+		 * Update placeholder value for the group header title.
+		 *
+		 * Ex: replace [fname] with the actual value of fname subfield.
+		 */
+		 update_group_header_placeholder: function () {
+			$( '.wpsf-group__row' ).each( function () {
+				if ( ! $( this ).prev().is( '.wpsf-group-field-header' ) ) {
+					return;
+				}
+
+				var $row = $( this ),
+					$header = $( this ).prev(),
+					$header_span = $header.find( '.wpsf-group-field-header__title' ),
+					header_text = $header.data( 'title' );
+
+				$row.find( 'input, select, textarea' ).each( function () {
+					var name = $( this ).attr( 'name' );
+					// Example: Use regex to retrieve "sub-text" from "my_example_settings_settings[general_group][0][sub-text]".
+					var matches = name.match( /.*\[(.*)\]/ );
+					if ( matches[ 1 ] ) {
+						header_text = header_text.replace( '[' + matches[ 1 ] + ']', $( this ).val() );
+						$header_span.text( header_text );
+					}
+				} );
+
+			} );
 		},
 
 		/**
@@ -229,6 +295,8 @@
 			$groups.each( function( index, group ) {
 				wpsf.reindex_group( jQuery( group ) );
 			} );
+			
+			wpsf.update_group_header_placeholder();
 		},
 
 		/**

@@ -42,7 +42,7 @@ class WPSFTest {
 		$this->wpsf->add_settings_page( array(
 			'parent_slug' => 'woocommerce',
 			'page_title'  => __( 'Page Title', 'text-domain' ),
-			'menu_title'  => __( 'menu Title', 'text-domain' ),
+			'menu_title'  => __( 'Menu Title', 'text-domain' ),
 			'capability'  => 'manage_woocommerce',
 		) );
 	}
