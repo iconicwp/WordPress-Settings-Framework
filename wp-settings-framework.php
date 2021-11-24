@@ -289,6 +289,13 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			if ( ! empty( $this->settings ) ) {
 				foreach ( $this->settings as $section ) {
 					if ( $section['section_id'] == $args['id'] ) {
+						$renderClass = '';
+
+						$renderClass .= self::add_show_hide_classes( $section );
+
+						if ( $renderClass ) {
+							echo '<span class="' . esc_attr( $renderClass ) . '"></span>';
+						}
 						if ( isset( $section['section_description'] ) && $section['section_description'] ) {
 							echo '<div class="wpsf-section-description wpsf-section-description--' . esc_attr( $section['section_id'] ) . '">' . $section['section_description'] . '</div>';
 						}
@@ -360,10 +367,10 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Usort callback. Sorts $this->settings by "section_order"
 		 *
-		 * @param $a
-		 * @param $b
+		 * @param array $a Sortable Array.
+		 * @param array $b Sortable Array.
 		 *
-		 * @return int
+		 * @return array
 		 */
 		public function sort_array( $a, $b ) {
 			if ( ! isset( $a['section_order'] ) ) {
@@ -376,7 +383,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generates the HTML output of the settings fields
 		 *
-		 * @param array callback args from add_settings_field()
+		 * @param array $args callback args from add_settings_field()
 		 */
 		public function generate_setting( $args ) {
 			$section                = $args['section'];
@@ -389,6 +396,8 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			$args['id']    = $this->has_tabs() ? sprintf( '%s_%s_%s', $section['tab_id'], $section['section_id'], $args['id'] ) : sprintf( '%s_%s', $section['section_id'], $args['id'] );
 			$args['value'] = isset( $options[ $args['id'] ] ) ? $options[ $args['id'] ] : ( isset( $args['default'] ) ? $args['default'] : '' );
 			$args['name']  = $this->generate_field_name( $args['id'] );
+
+			$args['class'] .= self::add_show_hide_classes( $args );
 
 			do_action( 'wpsf_before_field_' . $this->option_group );
 			do_action( 'wpsf_before_field_' . $this->option_group . '_' . $args['id'] );
@@ -988,10 +997,16 @@ endwhile;
 						continue;
 					}
 
+					if ( ! isset( $tab_data['class'] ) ) {
+						$tab_data['class'] = '';
+					}
+
+					$tab_data['class'] .= self::add_show_hide_classes( $tab_data );
+
 					$active = $i == 0 ? 'wpsf-nav__item--active' : '';
 					?>
 					<li class="wpsf-nav__item <?php echo $active; ?>">
-						<a class="wpsf-nav__item-link" href="#tab-<?php echo $tab_data['id']; ?>"><?php echo $tab_data['title']; ?></a>
+						<a class="wpsf-nav__item-link <?php echo esc_attr( $tab_data['class'] ); ?>" href="#tab-<?php echo $tab_data['id']; ?>"><?php echo $tab_data['title']; ?></a>
 					</li>
 					<?php
 					$i ++;
@@ -1040,6 +1055,66 @@ endwhile;
 			}
 
 			return false;
+		}
+
+		/**
+		 * Add Show Hide Classes.
+		 */
+		public static function add_show_hide_classes( $args, $type = 'show_if' ) {
+			$class = '';
+			$slug  = ' ' . str_replace( '_', '-', $type );
+			if ( isset( $args[ $type ] ) && is_array( $args[ $type ] ) ) {
+				$class .= $slug;
+				foreach ( $args[ $type ] as $condition ) {
+					if ( isset( $condition['field'] ) && $condition['value'] ) {
+						$value_string = '';
+						foreach ( $condition['value'] as $value ) {
+							if ( ! empty( $value_string ) ) {
+								$value_string .= '||';
+							}
+							$value_string .= $value;
+						}
+
+						if ( ! empty( $value_string ) ) {
+							$class .= $slug . '--' . $condition['field'] . '===' . $value_string;
+						}
+					} else {
+						$and_string = '';
+						foreach( $condition as $and_condition ) {
+							if ( ! isset( $and_condition['field'] ) || ! isset( $and_condition['value'] ) ) {
+								continue;
+							}
+
+							if ( ! empty( $and_string ) ) {
+								$and_string .= '&&';
+							}
+
+							$value_string = '';
+							foreach ( $and_condition['value'] as $value ) {
+								if ( ! empty( $value_string ) ) {
+									$value_string .= '||';
+								}
+								$value_string .= $value;
+							}
+
+							if ( ! empty( $value_string ) ) {
+								$and_string .= $and_condition['field'] . '===' . $value_string;
+							}
+						}
+
+						if ( ! empty( $and_string ) ) {
+							$class .= $slug . '--' . $and_string;
+						}
+					}
+				}
+			}
+
+			// Run the function again with hide if.
+			if ( 'hide_if' !== $type ) {
+				$class .= self::add_show_hide_classes( $args, 'hide_if' );
+			}
+
+			return $class;
 		}
 	}
 }

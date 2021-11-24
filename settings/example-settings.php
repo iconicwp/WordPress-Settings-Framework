@@ -23,7 +23,9 @@
 add_filter( 'wpsf_register_settings_my_example_settings', 'wpsf_tabless_settings' );
 
 /**
- * Tabless example
+ * Tabless example.
+ *
+ * @param array $wpsf_settings Settings.
  */
 function wpsf_tabless_settings( $wpsf_settings ) {
 	// General Settings section
@@ -63,10 +65,10 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				'datepicker' => array(), // Array of datepicker options (http://api.jqueryui.com/datepicker/)
 			),
 			array(
-				'id'         => 'group',
-				'title'      => 'Group',
-				'desc'       => 'This is a description.',
-				'type'       => 'group',
+				'id'        => 'group',
+				'title'     => 'Group',
+				'desc'      => 'This is a description.',
+				'type'      => 'group',
 				'subfields' => array(
 					// accepts most types of fields
 					array(
@@ -77,7 +79,7 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 						'type'        => 'text',
 						'default'     => 'Sub text',
 					),
-				)
+				),
 			),
 			array(
 				'id'          => 'password',
@@ -165,19 +167,12 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 		),
 	);
 
-	// More Settings section
+	// More Settings section.
 	$wpsf_settings[] = array(
 		'section_id'    => 'more',
 		'section_title' => 'More Settings',
 		'section_order' => 10,
 		'fields'        => array(
-			array(
-				'id'      => 'more-text',
-				'title'   => 'More Text',
-				'desc'    => 'This is a description.',
-				'type'    => 'text',
-				'default' => 'This is default',
-			),
 			array(
 				'id'       => 'heading-tooltip-link',
 				'title'    => 'Heading with tooltip',
@@ -206,6 +201,117 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 					'external' => true, // Default is `true`.
 				),
 			),
+			array(
+				'id'      => 'more-text',
+				'title'   => 'More Text',
+				'desc'    => 'This is a description.',
+				'type'    => 'text',
+				'default' => 'This is default',
+			),
+			array(
+				'id'       => 'control-group',
+				'title'    => 'Control Group',
+				'subtitle' => 'Select option 1 or 2 to show and hide controls.',
+				'type'     => 'select',
+				'choices'  => array(
+					'option-1' => 'Option 1',
+					'option-2' => 'Option 2',
+					'option-3' => 'Option 3',
+				),
+				'default'  => 'text',
+			),
+			array(
+				'id'       => 'show-if-option-1',
+				'title'    => 'Show if Option 1',
+				'subtitle' => 'Will show if Option 1 is set.',
+				'type'     => 'select',
+				'type'     => 'text',
+				'default'  => 'This is default',
+				'show_if'  => array( // Field will only show, if the control `more_control-group` is set to Option 1.
+					array(
+						'field' => 'more_control-group',
+						'value' => array( 'option-1' ),
+					),
+				),
+			),
+			array(
+				'id'       => 'show-if-option-2',
+				'title'    => 'Show if Option 2',
+				'subtitle' => 'Will show if Option 2 is set.',
+				'type'     => 'select',
+				'type'     => 'text',
+				'default'  => 'This is default',
+				'show_if'  => array( // Field will only show, if the control `more_control-group` is set to Option 2.
+					array(
+						'field' => 'more_control-group',
+						'value' => array( 'option-2' ),
+					),
+				),
+			),
+			array(
+				'id'       => 'show-if-option-2-or-3',
+				'title'    => 'Show if Option 2 or 3',
+				'subtitle' => 'Will show if Option 2 or 3 is set.',
+				'type'     => 'select',
+				'type'     => 'text',
+				'default'  => 'This is default',
+				'show_if'  => array( // Field will only show, if the control `more_control-group` is set to Option 2 or Option 3.
+					array(
+						'field' => 'more_control-group',
+						'value' => array( 'option-2', 'option-3' ),
+					),
+				),
+			),
+			array(
+				'id'       => 'hide-if-option-1',
+				'title'    => 'Hide if Option 1',
+				'subtitle' => 'Will hide if Option 1 is set.',
+				'type'     => 'select',
+				'type'     => 'text',
+				'default'  => 'This is default',
+				'hide_if'  => array( // Field will only hide, if the control `more_control-group` is set to Option 1.
+					array(
+						'field' => 'more_control-group',
+						'value' => array( 'option-1' ),
+					),
+				),
+			),
+			array(
+				'id'      => 'section-control',
+				'title'   => 'Will show Additional Settings Group if toggled',
+				'flux-checkout',
+				'type'    => 'toggle',
+				'default' => false,
+			),
+		),
+	);
+
+	$wpsf_settings[] = array(
+		'section_id'            => 'additional',
+		'section_title'         => 'Additional Settings',
+		'section_order'         => 10,
+		'section_control_group' => 'section-control',
+		'show_if'               => array( // Field will only show, if the control `more_section-control` is set to true.
+			array(
+				'field' => 'more_section-control',
+				'value' => array( '1' ),
+			),
+		),
+		'fields'                => array(
+			array(
+				'id'      => 'additional-text',
+				'title'   => 'Additional Text',
+				'desc'    => 'This is a description.',
+				'type'    => 'text',
+				'default' => 'This is default',
+			),
+			array(
+				'id'      => 'additional-number',
+				'title'   => 'Additional Number',
+				'desc'    => 'This is a description.',
+				'type'    => 'number',
+				'default' => 10,
+			),
 		),
 	);
 
@@ -213,11 +319,12 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 }
 
 /**
- * Tabbed example
+ * Tabbed example.
+ *
+ * @param array $wpsf_settings settings.
  */
-
 function wpsf_tabbed_settings( $wpsf_settings ) {
-	// Tabs
+	// Tabs.
 	$wpsf_settings['tabs'] = array(
 		array(
 			'id'    => 'tab_1',
@@ -227,9 +334,20 @@ function wpsf_tabbed_settings( $wpsf_settings ) {
 			'id'    => 'tab_2',
 			'title' => __( 'Tab 2' ),
 		),
+		array(
+			'id'                => 'tab_3',
+			'title'             => __( 'Tab 3' ),
+			'tab_control_group' => 'tab-control',
+			'show_if'           => array( // Field will only show if the control `tab_2_section_2_tab-control` is set to true.
+				array(
+					'field' => 'tab_2_section_3_tab-control',
+					'value' => array( '1' ),
+				),
+			),
+		),
 	);
 
-	// Settings
+	// Settings.
 	$wpsf_settings['sections'] = array(
 		array(
 			'tab_id'        => 'tab_1',
@@ -273,6 +391,109 @@ function wpsf_tabbed_settings( $wpsf_settings ) {
 					'desc'    => 'This is a description.',
 					'type'    => 'text',
 					'default' => 'This is default',
+				),
+				array(
+					'id'      => 'tab-control',
+					'title'   => 'Will show Tab 3 if toggled',
+					'type'    => 'toggle',
+					'default' => false,
+				),
+			),
+		),
+		array(
+			'tab_id'        => 'tab_3',
+			'section_id'    => 'section_4',
+			'section_title' => 'Section 4',
+			'section_order' => 10,
+			'fields'        => array(
+				array(
+					'id'      => 'text-4',
+					'title'   => 'Text',
+					'desc'    => 'This is a description.',
+					'type'    => 'text',
+					'default' => 'This is default',
+				),
+				array(
+					'id'       => 'complex-group-1',
+					'title'    => 'Complex Show Hide 1',
+					'subtitle' => 'Multiple controls can show or hide fields',
+					'type'     => 'select',
+					'choices'  => array(
+						'option-1' => 'Option 1',
+						'option-2' => 'Option 2',
+						'option-3' => 'Option 3',
+					),
+					'default'  => 'text',
+				),
+				array(
+					'id'       => 'complex-group-2',
+					'title'    => 'Complex Show Hide 2',
+					'subtitle' => 'Multiple controls can show or hide fields',
+					'type'     => 'toggle',
+					'default'  => false,
+				),
+				array(
+					'id'       => 'complex-group-3',
+					'title'    => 'Complex Show Hide 3',
+					'subtitle' => 'Multiple controls can show or hide fields',
+					'type'     => 'toggle',
+					'default'  => false,
+				),
+				array(
+					'id'       => 'complex-group-show',
+					'title'    => 'Complex Show Example',
+					'subtitle' => 'Will show if Control 1 is Option 1 or Option 2 AND Control 2 is True, OR if Control 3 is true',
+					'type'     => 'select',
+					'type'     => 'text',
+					'default'  => 'This is default',
+					'show_if'  => array(
+						// An array here is an AND group.
+						array(
+							// Show if Control 1 is Option 1 OR Option 2.
+							array(
+								'field' => 'tab_3_section_4_complex-group-1',
+								'value' => array( 'option-1', 'option-2' ),
+							),
+							// AND Control 2 is True.
+							array(
+								'field' => 'tab_3_section_4_complex-group-2',
+								'value' => array( '1' ),
+							),
+						),
+						// OR show if Control 3 is True.
+						array(
+							'field' => 'tab_3_section_4_complex-group-3',
+							'value' => array( '1' ),
+						),
+					),
+				),
+				array(
+					'id'       => 'complex-group-hide',
+					'title'    => 'Complex Hide Example',
+					'subtitle' => 'Will hide if Control 1 is Option 1 or Option 2 AND Control 2 is True, OR if Control 3 is true',
+					'type'     => 'select',
+					'type'     => 'text',
+					'default'  => 'This is default',
+					'hide_if'  => array(
+						// An array here is an AND group.
+						array(
+							// Hide if Control 1 is Option 1 OR Option 2.
+							array(
+								'field' => 'tab_3_section_4_complex-group-1',
+								'value' => array( 'option-1', 'option-2' ),
+							),
+							// AND Control 2 is True.
+							array(
+								'field' => 'tab_3_section_4_complex-group-2',
+								'value' => array( '1' ),
+							),
+						),
+						// OR hide if Control 3 is True.
+						array(
+							'field' => 'tab_3_section_4_complex-group-3',
+							'value' => array( '1' ),
+						),
+					),
 				),
 			),
 		),
