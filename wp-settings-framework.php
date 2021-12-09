@@ -819,6 +819,29 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		}
 
 		/**
+		 * Generate: Codeeditor field
+		 *
+		 * @param array $args
+		 */
+		public function generate_codeeditor_field( $args ) {
+			$args['value'] = esc_html( esc_attr( $args['value'] ) );
+ 			
+			echo '<textarea name="' . $args['name'] . '" id="' . $args['id'] . '" placeholder="' . $args['placeholder'] . '" rows="5" cols="60" class="' . $args['class'] . '">' . $args['value'] . '</textarea>';
+
+    	$settings = wp_enqueue_code_editor( array( 'type' => $args['mimetype'] ) );
+
+			wp_add_inline_script(
+        'code-editor',
+        sprintf(
+            'jQuery( function() { wp.codeEditor.initialize( "' . $args['id'] . '", %s ); } );',
+            wp_json_encode( $settings )
+        )
+    	);
+
+			$this->generate_description( $args['desc'] );
+		}
+
+		/**
 		 * Generate: Custom field
 		 *
 		 * @param array $args

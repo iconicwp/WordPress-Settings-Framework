@@ -164,6 +164,15 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				'type'    => 'editor',
 				'default' => '',
 			),
+			array(
+				'id'          => 'codeeditor',
+				'title'       => 'Code Editor',
+				'desc'        => 'This is a description.',
+				'placeholder' => 'This is a placeholder.',
+				'type'        => 'codeeditor',
+				'mimetype'    => 'css',
+				'default'     => 'This is default.',
+			),
 		),
 	);
 
