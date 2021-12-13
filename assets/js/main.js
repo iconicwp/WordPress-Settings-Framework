@@ -298,7 +298,7 @@
 				var parent_tag = element.parent().prop( 'nodeName' ).toLowerCase()
 				
 				// Field.
-				if ( 'td' === parent_tag ) {
+				if ( 'td' === parent_tag || 'label' === parent_tag ) {
 					element.closest( 'tr' ).hide();
 
 					wpsf.maybe_show_element( element, function() {
@@ -339,7 +339,7 @@
 				var parent_tag = element.parent().prop( 'nodeName' ).toLowerCase()
 				
 				// Field.
-				if ( 'td' === parent_tag ) {
+				if ( 'td' === parent_tag || 'label' === parent_tag ) {
 					element.closest( 'tr' ).show();
 
 					wpsf.maybe_hide_element( element, function() {
