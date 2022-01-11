@@ -261,9 +261,9 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			wp_enqueue_script( 'wpsf' );
 
 			$data = array(
-				'select_file'          => 'Please select a file to import',
-				'invalid_file'         => 'Invalid file',
-				'something_went_wrong' => 'Something went wrong',
+				'select_file'          => __( 'Please select a file to import' ),
+				'invalid_file'         => __( 'Invalid file' ),
+				'something_went_wrong' => __( 'Something went wrong' ),
 			);
 			wp_localize_script( 'wpsf', 'wpsf_vars', $data );
 
