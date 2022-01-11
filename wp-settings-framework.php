@@ -260,6 +260,13 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			wp_enqueue_script( 'jquery-ui-timepicker' );
 			wp_enqueue_script( 'wpsf' );
 
+			$data = array(
+				'select_file'          => 'Please select a file to import',
+				'invalid_file'         => 'Invalid file',
+				'something_went_wrong' => 'Something went wrong',
+			);
+			wp_localize_script( 'wpsf', 'wpsf_vars', $data );
+
 			// styles
 			wp_register_style( 'jquery-ui-timepicker', $this->options_url . 'assets/vendor/jquery-timepicker/jquery.ui.timepicker.css' );
 			wp_register_style( 'wpsf', $this->options_url . 'assets/css/main.css' );

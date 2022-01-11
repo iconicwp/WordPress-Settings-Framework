@@ -501,25 +501,30 @@
 				$( ".wpsf-import-button" ).click( function ( e ) {
 					$this = $( this );
 					$td = $this.parent();
-					$td.find( '.spinner' ).addClass( 'is-active' );
 					var file_field = $td.find( '.wpsf-import-field' ).get( 0 ),
 						settings = "",
 						wpsf_import_nonce = $td.find( '.wpsf_import_nonce' ).val();
 						wpsf_import_option_group = $td.find( '.wpsf_import_option_group' ).val();
 					
+					if ( 'undefined' === typeof file_field.files[ 0 ] ) {
+						alert( wpsf_vars.select_file );
+						return;
+					}
+
 					wpsf.importer.read_file_text( file_field.files[0], function ( content ) {
 						try {
 							JSON.parse( content );
 							settings = content;
 						} catch  {
 							settings = false;
-							alert( 'Invalid file.' );
+							alert( wpsf_vars.invalid_file );
 						}
 
 						if ( !settings ) {
 							return;
 						}
 						
+						$td.find( '.spinner' ).addClass( 'is-active' );
 						// Run an ajax call to save settings.
 						$.ajax( {
 							url: 'admin-ajax.php',
@@ -534,8 +539,10 @@
 								if ( response.success ) {
 									location.reload();
 								} else {
-									alert( 'Something went wrong.' );
+									alert( wpsf_vars.something_went_wrong );
 								}
+
+								$td.find( '.spinner' ).removeClass( 'is-active' );
 							}
 						});
 					} )
