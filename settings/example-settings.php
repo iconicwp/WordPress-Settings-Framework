@@ -172,7 +172,7 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 			),
 			array(
 				'id'       => 'import',
-				'title'    => 'Import',
+				'title'    => 'Import Settings',
 				'subtitle' => 'Import settings.',
 				'type'     => 'import',
 			),
