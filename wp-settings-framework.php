@@ -525,7 +525,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			$args['value'] = empty( $args['value'] ) ? __( 'Import Settings' ) : $args['value'];
 			$option_group  = $this->option_group;
 
-			echo sprintf( '<input type="file" name="wpsf_import" class="wpsf-import-field" id="%s" value="Browse" />', $args['id'] );
+			echo sprintf( '<input type="file" name="wpsf_import" class="wpsf-import-field" id="%s" accept=".json"/>', $args['id'] );
 			echo sprintf( '<button type="button" name="wpsf_import_button" class="button button-primary wpsf-import-button" id="%s">%s</button>', $args['id'], $args['value'] );
 			echo sprintf( '<input type="hidden" class="wpsf_import_nonce" value="%s"></input>', wp_create_nonce( 'wpsf_import_settings' ) );
 			echo sprintf( '<input type="hidden" class="wpsf_import_option_group" value="%s"></input>', $this->option_group );
