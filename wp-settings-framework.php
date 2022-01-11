@@ -120,6 +120,9 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 					remove_action( 'wpsf_do_settings_sections_' . $this->option_group, array( $this, 'do_tabless_settings_sections' ), 10 );
 					add_action( 'wpsf_do_settings_sections_' . $this->option_group, array( $this, 'do_tabbed_settings_sections' ), 10 );
 				}
+
+				add_action( 'wp_ajax_wpsf_export_settings', array( $this, 'export_settings' ) );
+				add_action( 'wp_ajax_wpsf_import_settings', array( $this, 'import_settings' ) );
 			}
 		}
 
@@ -485,6 +488,41 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			echo '<input type="text" name="' . $args['name'] . '" id="' . $args['id'] . '" value="' . $args['value'] . '" class="datepicker regular-text ' . $args['class'] . '" data-datepicker="' . $datepicker . '" />';
 
+			$this->generate_description( $args['desc'] );
+		}
+
+		/**
+		 * Generate Export Field.
+		 *
+		 * @param array $args Arguments.
+		 */
+		public function generate_export_field( $args ) {
+			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
+			$args['value'] = empty( $args['value'] ) ? __( 'Export Settings' ) : $args['value'];
+			$option_group  = $this->option_group;
+			$export_url    = site_url() . '/wp-admin/admin-ajax.php?action=wpsf_export_settings&_wpnonce=' . wp_create_nonce( 'wpsf_export_settings' ) . '&option_group=' . $option_group;
+
+			echo '<a target=_blank href="' . $export_url . '" class="button" name="' . $args['name'] . '" id="' . $args['id'] . '">' . $args['value'] . '</a>';
+
+			$options = get_option( $option_group . '_settings' );
+			$this->generate_description( $args['desc'] );
+		}
+
+		/**
+		 * Generate Import Field.
+		 *
+		 * @param array $args Arguments.
+		 */
+		public function generate_import_field( $args ) {
+			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
+			$args['value'] = empty( $args['value'] ) ? __( 'Import Settings' ) : $args['value'];
+			$option_group  = $this->option_group;
+
+			echo sprintf( '<input type="file" name="wpsf_import" class="wpsf-import-field" id="%s" value="Browse" />', $args['id'] );
+			echo sprintf( '<button type="button" name="wpsf_import_button" class="button button-primary wpsf-import-button" id="%s">%s</button>', $args['id'], $args['value'] );
+			echo sprintf( '<input type="hidden" class="wpsf_import_nonce" value="%s"></input>', wp_create_nonce( 'wpsf_import_settings' ) );
+			echo sprintf( '<input type="hidden" class="wpsf_import_option_group" value="%s"></input>', $this->option_group );
+			echo '<span class="spinner"></span>';
 			$this->generate_description( $args['desc'] );
 		}
 
@@ -890,7 +928,7 @@ endwhile;
 		public function settings() {
 			do_action( 'wpsf_before_settings_' . $this->option_group );
 			?>
-			<form action="options.php" method="post" novalidate>
+			<form action="options.php" method="post" novalidate enctype="multipart/form-data">
 				<?php do_action( 'wpsf_before_settings_fields_' . $this->option_group ); ?>
 				<?php settings_fields( $this->option_group ); ?>
 
@@ -1115,6 +1153,58 @@ endwhile;
 			}
 
 			return $class;
+		}
+
+		/**
+		 * Handle export settings action.
+		 */
+		public static function export_settings() {
+			$_wpnonce     = filter_input( INPUT_GET, '_wpnonce' );
+			$option_group = filter_input( INPUT_GET, 'option_group' );
+			if ( empty( $_wpnonce ) || ! wp_verify_nonce( $_wpnonce, 'wpsf_export_settings' ) ) {
+				wp_die( esc_html__( 'Action failed.' ) );
+			}
+
+			if ( empty( $option_group ) ) {
+				wp_die( esc_html__( 'No option group specified.' ) );
+			}
+
+			$options = get_option( $option_group . '_settings' );
+			$options = wp_json_encode( $options );
+
+			// output the file contents to the browser.
+			header( 'Content-Type: text/json; charset=utf-8' );
+			header( 'Content-Disposition: attachment; filename=wpsf-settings-' . $option_group . '.json' );
+			echo $options;
+			exit;
+		}
+
+		/**
+		 * Import settings.
+		 */
+		public function import_settings() {
+			$_wpnonce     = filter_input( INPUT_POST, '_wpnonce' );
+			$option_group = filter_input( INPUT_POST, 'option_group' );
+			$settings     = filter_input( INPUT_POST, 'settings' );
+
+			if ( $option_group !== $this->option_group ) {
+				return;
+			}
+
+			// verify nonce.
+			if ( empty( $_wpnonce ) || ! wp_verify_nonce( $_wpnonce, 'wpsf_import_settings' ) ) {
+				wp_send_json_error();
+			}
+
+			// check if $settings is a valid json.
+			if ( ! is_string( $settings ) || ! is_array( json_decode( $settings, true ) ) ) {
+				wp_send_json_error();
+			}
+
+			$settings_data = json_decode( $settings, true );
+			update_option( $option_group . '_settings', $settings_data );
+
+			wp_send_json_success();
 		}
 	}
 }
