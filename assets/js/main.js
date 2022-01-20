@@ -498,24 +498,30 @@
 		 */
 		importer: {
 			init: function () {
-				$( ".wpsf-import-button" ).click( function ( e ) {
+				$( ".wpsf-import__file_field" ).change( function ( e ) {
 					$this = $( this );
-					$td = $this.parent();
-					var file_field = $td.find( '.wpsf-import-field' ).get( 0 ),
+					$td = $this.closest( 'td' );
+
+					var file_field = $this.get( 0 ),
 						settings = "",
 						wpsf_import_nonce = $td.find( '.wpsf_import_nonce' ).val();
 						wpsf_import_option_group = $td.find( '.wpsf_import_option_group' ).val();
+					
 					
 					if ( 'undefined' === typeof file_field.files[ 0 ] ) {
 						alert( wpsf_vars.select_file );
 						return;
 					}
 
-					wpsf.importer.read_file_text( file_field.files[0], function ( content ) {
+					if ( ! confirm( 'Are you sure you want to overrid existing setting?' ) ) {
+						return;
+					}
+
+					wpsf.importer.read_file_text( file_field.files[ 0 ], function ( content ) {
 						try {
 							JSON.parse( content );
 							settings = content;
-						} catch  {
+						} catch {
 							settings = false;
 							alert( wpsf_vars.invalid_file );
 						}
@@ -544,8 +550,8 @@
 
 								$td.find( '.spinner' ).removeClass( 'is-active' );
 							}
-						});
-					} )
+						} );
+					} );
 				} );
 			},
 

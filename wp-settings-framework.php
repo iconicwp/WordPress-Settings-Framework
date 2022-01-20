@@ -525,11 +525,24 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			$args['value'] = empty( $args['value'] ) ? __( 'Import Settings' ) : $args['value'];
 			$option_group  = $this->option_group;
 
-			echo sprintf( '<input type="file" name="wpsf_import" class="wpsf-import-field" id="%s" accept=".json"/>', $args['id'] );
-			echo sprintf( '<button type="button" name="wpsf_import_button" class="button button-primary wpsf-import-button" id="%s">%s</button>', $args['id'], $args['value'] );
-			echo sprintf( '<input type="hidden" class="wpsf_import_nonce" value="%s"></input>', wp_create_nonce( 'wpsf_import_settings' ) );
-			echo sprintf( '<input type="hidden" class="wpsf_import_option_group" value="%s"></input>', $this->option_group );
-			echo '<span class="spinner"></span>';
+			echo sprintf(
+				'
+				<div class="wpsf-import">
+					<div class="wpsf-import__false_btn">
+						<input type="file" name="wpsf-import-field" class="wpsf-import__file_field" id="%s" accept=".json"/>
+						<button type="button" name="wpsf_import_button" class="button button-primary wpsf-import__button" id="%s">%s</button>
+						<input type="hidden" class="wpsf_import_nonce" value="%s"></input>
+						<input type="hidden" class="wpsf_import_option_group" value="%s"></input>
+					</div>
+					<span class="spinner"></span>
+				</div>',
+				esc_attr( $args['id'] ),
+				esc_attr( $args['id'] ),
+				esc_attr( $args['value'] ),
+				esc_attr( wp_create_nonce( 'wpsf_import_settings' ) ),
+				esc_attr( $this->option_group )
+			);
+
 			$this->generate_description( $args['desc'] );
 		}
 
