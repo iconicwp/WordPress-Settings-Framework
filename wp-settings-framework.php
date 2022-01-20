@@ -1181,6 +1181,7 @@ endwhile;
 		public static function export_settings() {
 			$_wpnonce     = filter_input( INPUT_GET, '_wpnonce' );
 			$option_group = filter_input( INPUT_GET, 'option_group' );
+
 			if ( empty( $_wpnonce ) || ! wp_verify_nonce( $_wpnonce, 'wpsf_export_settings' ) ) {
 				wp_die( esc_html__( 'Action failed.' ) );
 			}
