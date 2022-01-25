@@ -94,10 +94,14 @@
 			 * @param tab_id
 			 */
 			set_active_tab: function( tab_id ) {
-				var $tab = $( tab_id );
+				var $tab = $( tab_id ),
+					$tab_link = $( '.wpsf-nav__item-link[href="' + tab_id + '"]' );
 
-				if ( $tab.length <= 0 ) {
-					return;
+				if ( $tab.length <= 0 || $tab_link.length <= 0 ) {
+					// Reset to first available tab.
+					$tab_link = $( '.wpsf-nav__item-link' ).first();
+					tab_id = $tab_link.attr( 'href' );
+					$tab = $( tab_id );
 				}
 
 				// Set tab link active class
