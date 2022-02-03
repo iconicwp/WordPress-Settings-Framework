@@ -530,7 +530,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				<div class="wpsf-import">
 					<div class="wpsf-import__false_btn">
 						<input type="file" name="wpsf-import-field" class="wpsf-import__file_field" id="%s" accept=".json"/>
-						<button type="button" name="wpsf_import_button" class="button button-primary wpsf-import__button" id="%s">%s</button>
+						<button type="button" name="wpsf_import_button" class="button wpsf-import__button" id="%s">%s</button>
 						<input type="hidden" class="wpsf_import_nonce" value="%s"></input>
 						<input type="hidden" class="wpsf_import_option_group" value="%s"></input>
 					</div>
