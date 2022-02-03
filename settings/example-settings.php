@@ -164,6 +164,18 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				'type'    => 'editor',
 				'default' => '',
 			),
+			array(
+				'id'       => 'export',
+				'title'    => 'Export settings',
+				'subtitle' => 'Export settings.',
+				'type'     => 'export',
+			),
+			array(
+				'id'       => 'import',
+				'title'    => 'Import Settings',
+				'subtitle' => 'Import settings.',
+				'type'     => 'import',
+			),
 		),
 	);
 
