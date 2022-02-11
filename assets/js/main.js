@@ -575,6 +575,6 @@
 		}
 	};
 
-	$( document ).ready( wpsf.on_ready() );
+	$( document ).ready( wpsf.on_ready );
 
 }( jQuery, document ));
