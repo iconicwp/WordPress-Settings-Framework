@@ -531,10 +531,6 @@ p.submit {
 	margin: 15px 0 0;
 }
 
-.wpsf-import {
-    overflow: hidden;
-}
-
 .wpsf-import__false_btn {
 	position: relative;
 	overflow: hidden;
