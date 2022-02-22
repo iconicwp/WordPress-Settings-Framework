@@ -133,7 +133,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			$this->settings_wrapper = apply_filters( 'wpsf_register_settings_' . $this->option_group, array() );
 
 			if ( ! is_array( $this->settings_wrapper ) ) {
-				return new WP_Error( 'broke', __( 'WPSF settings must be an array' ) );
+				return new WP_Error( 'broke', esc_html__( 'WPSF settings must be an array', 'wpsf' ) );
 			}
 
 			// If "sections" is set, this settings group probably has tabs
@@ -212,7 +212,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 		public function settings_page_content() {
 			if ( ! current_user_can( $this->settings_page['capability'] ) ) {
-				wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
+				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'wpsf' ) );
 			}
 			?>
 			<div class="wpsf-settings wpsf-settings--<?php echo esc_attr( $this->option_group ); ?>">
@@ -261,9 +261,9 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			wp_enqueue_script( 'wpsf' );
 
 			$data = array(
-				'select_file'          => __( 'Please select a file to import' ),
-				'invalid_file'         => __( 'Invalid file' ),
-				'something_went_wrong' => __( 'Something went wrong' ),
+				'select_file'          => esc_html__( 'Please select a file to import', 'wpsf' ),
+				'invalid_file'         => esc_html__( 'Invalid file', 'wpsf' ),
+				'something_went_wrong' => esc_html__( 'Something went wrong', 'wpsf' ),
 			);
 			wp_localize_script( 'wpsf', 'wpsf_vars', $data );
 
@@ -335,7 +335,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 									if ( isset( $field['link'] ) && is_array( $field['link'] ) ) {
 										$link_url      = ( isset( $field['link']['url'] ) ) ? esc_html( $field['link']['url'] ) : '';
-										$link_text     = ( isset( $field['link']['text'] ) ) ? esc_html( $field['link']['text'] ) : __( 'Learn More' );
+										$link_text     = ( isset( $field['link']['text'] ) ) ? esc_html( $field['link']['text'] ) : esc_html__( 'Learn More', 'wpsf' );
 										$link_external = ( isset( $field['link']['external'] ) ) ? (bool) $field['link']['external'] : true;
 										$link_type     = ( isset( $field['link']['type'] ) ) ? esc_attr( $field['link']['type'] ) : 'tooltip';
 										$link_target   = ( $link_external ) ? ' target="_blank"' : '';
@@ -505,7 +505,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 */
 		public function generate_export_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
-			$args['value'] = empty( $args['value'] ) ? __( 'Export Settings' ) : $args['value'];
+			$args['value'] = empty( $args['value'] ) ? esc_html__( 'Export Settings', 'wpsf' ) : $args['value'];
 			$option_group  = $this->option_group;
 			$export_url    = site_url() . '/wp-admin/admin-ajax.php?action=wpsf_export_settings&_wpnonce=' . wp_create_nonce( 'wpsf_export_settings' ) . '&option_group=' . $option_group;
 
@@ -522,7 +522,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 */
 		public function generate_import_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
-			$args['value'] = empty( $args['value'] ) ? __( 'Import Settings' ) : $args['value'];
+			$args['value'] = empty( $args['value'] ) ? esc_html__( 'Import Settings', 'wpsf' ) : $args['value'];
 			$option_group  = $this->option_group;
 
 			echo sprintf(
@@ -831,9 +831,9 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 						// Create the media frame.
 						file_frame = wp.media.frames.file_frame = wp.media({
-							title: '<?php echo __( 'Select a image to upload' ); ?>',
+							title: '<?php echo esc_html__( 'Select a image to upload', 'wpsf' ); ?>',
 							button: {
-								text: '<?php echo __( 'Use this image' ); ?>',
+								text: '<?php echo esc_html__( 'Use this image', 'wpsf' ); ?>',
 							},
 							multiple: false	// Set to true to allow multiple files to be selected
 						});
@@ -1183,11 +1183,11 @@ endwhile;
 			$option_group = filter_input( INPUT_GET, 'option_group' );
 
 			if ( empty( $_wpnonce ) || ! wp_verify_nonce( $_wpnonce, 'wpsf_export_settings' ) ) {
-				wp_die( esc_html__( 'Action failed.' ) );
+				wp_die( esc_html__( 'Action failed.', 'wpsf' ) );
 			}
 
 			if ( empty( $option_group ) ) {
-				wp_die( esc_html__( 'No option group specified.' ) );
+				wp_die( esc_html__( 'No option group specified.', 'wpsf' ) );
 			}
 
 			$options = get_option( $option_group . '_settings' );
