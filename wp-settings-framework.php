@@ -883,7 +883,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 */
 		public function generate_custom_field( $args ) {
 			if ( isset( $args['output'] ) && is_callable( $args['output'] ) ) {
-				$args['output']( $args );
+				call_user_func( $args['output'], $args );
 				return;
 			}
 
