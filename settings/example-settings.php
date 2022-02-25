@@ -173,6 +173,18 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				'mimetype'    => 'css',
 				'default'     => 'This is default.',
 			),
+			array(
+				'id'       => 'export',
+				'title'    => 'Export settings',
+				'subtitle' => 'Export settings.',
+				'type'     => 'export',
+			),
+			array(
+				'id'       => 'import',
+				'title'    => 'Import Settings',
+				'subtitle' => 'Import settings.',
+				'type'     => 'import',
+			),
 		),
 	);
 
@@ -337,15 +349,15 @@ function wpsf_tabbed_settings( $wpsf_settings ) {
 	$wpsf_settings['tabs'] = array(
 		array(
 			'id'    => 'tab_1',
-			'title' => __( 'Tab 1' ),
+			'title' => esc_html__( 'Tab 1', 'text-domain' ),
 		),
 		array(
 			'id'    => 'tab_2',
-			'title' => __( 'Tab 2' ),
+			'title' => esc_html__( 'Tab 2', 'text-domain' ),
 		),
 		array(
 			'id'                => 'tab_3',
-			'title'             => __( 'Tab 3' ),
+			'title'             => esc_html__( 'Tab 3', 'text-domain' ),
 			'tab_control_group' => 'tab-control',
 			'show_if'           => array( // Field will only show if the control `tab_2_section_2_tab-control` is set to true.
 				array(
