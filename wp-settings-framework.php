@@ -824,16 +824,14 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * @param array $args
 		 */
 		public function generate_code_editor_field( $args ) {
-			$args['value'] = esc_html( esc_attr( $args['value'] ) );
- 			
-			echo '<textarea name="' . $args['name'] . '" id="' . $args['id'] . '" placeholder="' . $args['placeholder'] . '" rows="5" cols="60" class="' . $args['class'] . '">' . $args['value'] . '</textarea>';
+			printf( '<textarea name="%s" id="%s" placeholder="%s" rows="5" cols="60" class="%s">%s</textarea>', esc_attr( $args['name'] ), esc_attr( $args['id'] ), esc_attr( $args['placeholder'] ), esc_attr( $args['class'] ), esc_html( esc_attr( $args['value'] ) ) );
 
-    	$settings = wp_enqueue_code_editor( array( 'type' => $args['mimetype'] ) );
+    	$settings = wp_enqueue_code_editor( array( 'type' => esc_attr( $args['mimetype'] ) ) );
 
 			wp_add_inline_script(
         'code-editor',
         sprintf(
-            'jQuery( function() { wp.codeEditor.initialize( "' . $args['id'] . '", %s ); } );',
+            'jQuery( function() { wp.codeEditor.initialize( "' . esc_attr( $args['id'] ) . '", %s ); } );',
             wp_json_encode( $settings )
         )
     	);
