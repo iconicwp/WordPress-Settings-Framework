@@ -531,6 +531,26 @@ p.submit {
 	margin: 15px 0 0;
 }
 
+.wpsf-import__false_btn {
+	position: relative;
+	overflow: hidden;
+	display: inline-block;
+}
+
+.wpsf-import input[type=file] {
+    position: absolute;
+    font-size: 100px;
+    opacity: 0;
+}
+
+.wpsf-import__file {
+    position: relative;
+    display: inline-block;
+    width: 200px;
+    overflow: hidden;
+}
+
+
 @media screen and (max-width: 782px) {
 	.wpsf-subtitle {
 		margin: 10px 0 15px;

@@ -120,6 +120,9 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 					remove_action( 'wpsf_do_settings_sections_' . $this->option_group, array( $this, 'do_tabless_settings_sections' ), 10 );
 					add_action( 'wpsf_do_settings_sections_' . $this->option_group, array( $this, 'do_tabbed_settings_sections' ), 10 );
 				}
+
+				add_action( 'wp_ajax_wpsf_export_settings', array( $this, 'export_settings' ) );
+				add_action( 'wp_ajax_wpsf_import_settings', array( $this, 'import_settings' ) );
 			}
 		}
 
@@ -130,7 +133,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			$this->settings_wrapper = apply_filters( 'wpsf_register_settings_' . $this->option_group, array() );
 
 			if ( ! is_array( $this->settings_wrapper ) ) {
-				return new WP_Error( 'broke', __( 'WPSF settings must be an array' ) );
+				return new WP_Error( 'broke', esc_html__( 'WPSF settings must be an array', 'wpsf' ) );
 			}
 
 			// If "sections" is set, this settings group probably has tabs
@@ -209,7 +212,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 		public function settings_page_content() {
 			if ( ! current_user_can( $this->settings_page['capability'] ) ) {
-				wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
+				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'wpsf' ) );
 			}
 			?>
 			<div class="wpsf-settings wpsf-settings--<?php echo esc_attr( $this->option_group ); ?>">
@@ -256,6 +259,13 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			wp_enqueue_script( 'jquery-ui-datepicker' );
 			wp_enqueue_script( 'jquery-ui-timepicker' );
 			wp_enqueue_script( 'wpsf' );
+
+			$data = array(
+				'select_file'          => esc_html__( 'Please select a file to import', 'wpsf' ),
+				'invalid_file'         => esc_html__( 'Invalid file', 'wpsf' ),
+				'something_went_wrong' => esc_html__( 'Something went wrong', 'wpsf' ),
+			);
+			wp_localize_script( 'wpsf', 'wpsf_vars', $data );
 
 			// styles
 			wp_register_style( 'jquery-ui-timepicker', $this->options_url . 'assets/vendor/jquery-timepicker/jquery.ui.timepicker.css' );
@@ -324,26 +334,26 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 									$tooltip     = '';
 
 									if ( isset( $field['link'] ) && is_array( $field['link'] ) ) {
-										$link_url      = isset( $field['link']['url'] ) ? esc_html( $field['link']['url'] ) : '';
-										$link_text     = isset( $field['link']['text'] ) ? esc_html( $field['link']['text'] ) : __( 'Learn More' );
-										$link_external = isset( $field['link']['external'] ) ? (bool) $field['link']['external'] : true;
-										$link_type     = isset( $field['link']['type'] ) ? esc_attr( $field['link']['type'] ) : 'tooltip';
-										$link_target   = $link_external ? ' target="_blank"' : '';
+										$link_url      = ( isset( $field['link']['url'] ) ) ? esc_html( $field['link']['url'] ) : '';
+										$link_text     = ( isset( $field['link']['text'] ) ) ? esc_html( $field['link']['text'] ) : esc_html__( 'Learn More', 'wpsf' );
+										$link_external = ( isset( $field['link']['external'] ) ) ? (bool) $field['link']['external'] : true;
+										$link_type     = ( isset( $field['link']['type'] ) ) ? esc_attr( $field['link']['type'] ) : 'tooltip';
+										$link_target   = ( $link_external ) ? ' target="_blank"' : '';
 
 										if ( 'tooltip' === $link_type ) {
 											$link_text = sprintf( '<i class="dashicons dashicons-info wpsf-link-icon" title="%s"><span class="screen-reader-text">%s</span></i>', $link_text, $link_text );
 										}
 
-										$link = $link_url ? sprintf( '<a class="wpsf-link" href="%s"%s>%s</a>', $link_url, $link_target, $link_text ) : '';
+										$link = ( $link_url ) ? sprintf( '<a class="wpsf-link" href="%s"%s>%s</a>', $link_url, $link_target, $link_text ) : '';
 										
 										if ( $link && 'tooltip' === $link_type ) {
 											$tooltip = $link;
 										} elseif ( $link ) {
-											$field['subtitle'] .= empty( $field['subtitle'] ) ? $link : sprintf( '<br/><br/>%s', $link );
+											$field['subtitle'] .= ( empty( $field['subtitle'] ) ) ? $link : sprintf( '<br/><br/>%s', $link );
 										}
 									}
 
-									$title = ! empty( $field['subtitle'] ) ? sprintf( '%s %s<span class="wpsf-subtitle">%s</span>', $field['title'], $tooltip, $field['subtitle'] ) : sprintf( '%s %s', $field['title'], $tooltip );
+									$title = ( ! empty( $field['subtitle'] ) ) ? sprintf( '%s %s<span class="wpsf-subtitle">%s</span>', $field['title'], $tooltip, $field['subtitle'] ) : sprintf( '%s %s', $field['title'], $tooltip );
 
 									add_settings_field(
 										$field['id'],
@@ -377,7 +387,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				return 0;
 			}
 
-			return $a['section_order'] > $b['section_order'] ? 1 : 0;
+			return ( $a['section_order'] > $b['section_order'] ) ? 1 : 0;
 		}
 
 		/**
@@ -393,8 +403,8 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			$options = get_option( $this->option_group . '_settings' );
 
-			$args['id']    = $this->has_tabs() ? sprintf( '%s_%s_%s', $section['tab_id'], $section['section_id'], $args['id'] ) : sprintf( '%s_%s', $section['section_id'], $args['id'] );
-			$args['value'] = isset( $options[ $args['id'] ] ) ? $options[ $args['id'] ] : ( isset( $args['default'] ) ? $args['default'] : '' );
+			$args['id']    = ( $this->has_tabs() ) ? sprintf( '%s_%s_%s', $section['tab_id'], $section['section_id'], $args['id'] ) : sprintf( '%s_%s', $section['section_id'], $args['id'] );
+			$args['value'] = ( isset( $options[ $args['id'] ] ) ) ? $options[ $args['id'] ] : ( isset( $args['default'] ) ? $args['default'] : '' );
 			$args['name']  = $this->generate_field_name( $args['id'] );
 
 			$args['class'] .= self::add_show_hide_classes( $args );
@@ -466,7 +476,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		public function generate_time_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
 
-			$timepicker = ! empty( $args['timepicker'] ) ? htmlentities( json_encode( $args['timepicker'] ) ) : null;
+			$timepicker = ( ! empty( $args['timepicker'] ) ) ? htmlentities( json_encode( $args['timepicker'] ) ) : null;
 
 			echo '<input type="text" name="' . $args['name'] . '" id="' . $args['id'] . '" value="' . $args['value'] . '" class="timepicker regular-text ' . $args['class'] . '" data-timepicker="' . $timepicker . '" />';
 
@@ -481,9 +491,57 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		public function generate_date_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
 
-			$datepicker = ! empty( $args['datepicker'] ) ? htmlentities( json_encode( $args['datepicker'] ) ) : null;
+			$datepicker = ( ! empty( $args['datepicker'] ) ) ? htmlentities( json_encode( $args['datepicker'] ) ) : null;
 
 			echo '<input type="text" name="' . $args['name'] . '" id="' . $args['id'] . '" value="' . $args['value'] . '" class="datepicker regular-text ' . $args['class'] . '" data-datepicker="' . $datepicker . '" />';
+
+			$this->generate_description( $args['desc'] );
+		}
+
+		/**
+		 * Generate Export Field.
+		 *
+		 * @param array $args Arguments.
+		 */
+		public function generate_export_field( $args ) {
+			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
+			$args['value'] = empty( $args['value'] ) ? esc_html__( 'Export Settings', 'wpsf' ) : $args['value'];
+			$option_group  = $this->option_group;
+			$export_url    = site_url() . '/wp-admin/admin-ajax.php?action=wpsf_export_settings&_wpnonce=' . wp_create_nonce( 'wpsf_export_settings' ) . '&option_group=' . $option_group;
+
+			echo '<a target=_blank href="' . $export_url . '" class="button" name="' . $args['name'] . '" id="' . $args['id'] . '">' . $args['value'] . '</a>';
+
+			$options = get_option( $option_group . '_settings' );
+			$this->generate_description( $args['desc'] );
+		}
+
+		/**
+		 * Generate Import Field.
+		 *
+		 * @param array $args Arguments.
+		 */
+		public function generate_import_field( $args ) {
+			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
+			$args['value'] = empty( $args['value'] ) ? esc_html__( 'Import Settings', 'wpsf' ) : $args['value'];
+			$option_group  = $this->option_group;
+
+			echo sprintf(
+				'
+				<div class="wpsf-import">
+					<div class="wpsf-import__false_btn">
+						<input type="file" name="wpsf-import-field" class="wpsf-import__file_field" id="%s" accept=".json"/>
+						<button type="button" name="wpsf_import_button" class="button wpsf-import__button" id="%s">%s</button>
+						<input type="hidden" class="wpsf_import_nonce" value="%s"></input>
+						<input type="hidden" class="wpsf_import_option_group" value="%s"></input>
+					</div>
+					<span class="spinner"></span>
+				</div>',
+				esc_attr( $args['id'] ),
+				esc_attr( $args['id'] ),
+				esc_attr( $args['value'] ),
+				esc_attr( wp_create_nonce( 'wpsf_import_settings' ) ),
+				esc_attr( $this->option_group )
+			);
 
 			$this->generate_description( $args['desc'] );
 		}
@@ -497,7 +555,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 */
 		public function generate_group_field( $args ) {
 			$value     = (array) $args['value'];
-			$row_count = ! empty( $value ) ? count( $value ) : 1;
+			$row_count = ( ! empty( $value ) ) ? count( $value ) : 1;
 
 			echo '<table class="widefat wpsf-group" cellspacing="0">';
 
@@ -527,11 +585,11 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 */
 		public function generate_group_row_template( $args, $blank = false, $row = 0 ) {
 			$row_template = false;
-			$row_id       = ! empty( $args['value'][ $row ]['row_id'] ) ? $args['value'][ $row ]['row_id'] : $row;
-			$row_id_value = $blank ? '' : $row_id;
+			$row_id       = ( ! empty( $args['value'][ $row ]['row_id'] ) ) ? $args['value'][ $row ]['row_id'] : $row;
+			$row_id_value = ( $blank ) ? '' : $row_id;
 
 			if ( $args['subfields'] ) {
-				$row_class = $row % 2 == 0 ? 'alternate' : '';
+				$row_class = ( $row % 2 == 0 ) ? 'alternate' : '';
 
 				$row_template .= sprintf( '<tr class="wpsf-group__row %s">', $row_class );
 
@@ -589,14 +647,14 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				if ( is_array( $text ) ) {
 					echo sprintf( '<optgroup label="%s">', esc_html( $value ) );
 					foreach ( $text as $group_value => $group_text ) {
-						$selected = $group_value === $args['value'] ? 'selected="selected"' : '';
+						$selected = ( $group_value === $args['value'] ) ? 'selected="selected"' : '';
 						echo sprintf( '<option value="%s" %s>%s</option>', esc_attr( $group_value ), esc_html( $selected ), esc_html( $group_text ) );
 					}
 					echo '</optgroup>';
 					continue;
 				}
 
-				$selected = strval( $value ) === $args['value'] ? 'selected="selected"' : '';
+				$selected = ( strval( $value ) === $args['value'] ) ? 'selected="selected"' : '';
 
 				echo sprintf( '<option value="%s" %s>%s</option>', esc_attr( $value ), esc_html( $selected ), esc_html( $text ) );
 			}
@@ -642,7 +700,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			foreach ( $args['choices'] as $value => $text ) {
 				$field_id = sprintf( '%s_%s', $args['id'], $value );
-				$checked  = $value == $args['value'] ? 'checked="checked"' : '';
+				$checked  = ( $value == $args['value'] ) ? 'checked="checked"' : '';
 
 				echo sprintf( '<label><input type="radio" name="%s" id="%s" value="%s" class="%s" %s> %s</label><br />', $args['name'], $field_id, $value, $args['class'], $checked, $text );
 			}
@@ -657,7 +715,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 */
 		public function generate_checkbox_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
-			$checked       = $args['value'] ? 'checked="checked"' : '';
+			$checked       = ( $args['value'] ) ? 'checked="checked"' : '';
 
 			echo '<input type="hidden" name="' . $args['name'] . '" value="0" />';
 			echo '<label><input type="checkbox" name="' . $args['name'] . '" id="' . $args['id'] . '" value="1" class="' . $args['class'] . '" ' . $checked . '> ' . $args['desc'] . '</label>';
@@ -670,7 +728,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 */
 		public function generate_toggle_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
-			$checked       = $args['value'] ? 'checked="checked"' : '';
+			$checked       = ( $args['value'] ) ? 'checked="checked"' : '';
 
 			echo '<input type="hidden" name="' . $args['name'] . '" value="0" />';
 			echo '<label class="switch"><input type="checkbox" name="' . $args['name'] . '" id="' . $args['id'] . '" value="1" class="' . $args['class'] . '" ' . $checked . '> ' . $args['desc'] . '<span class="slider"></span></label>';
@@ -687,7 +745,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			echo '<ul class="wpsf-list wpsf-list--checkboxes">';
 
 			foreach ( $args['choices'] as $value => $text ) {
-				$checked  = is_array( $args['value'] ) && in_array( strval( $value ), array_map( 'strval', $args['value'] ), true ) ? 'checked="checked"' : '';
+				$checked  = ( is_array( $args['value'] ) && in_array( strval( $value ), array_map( 'strval', $args['value'] ), true ) ) ? 'checked="checked"' : '';
 				$field_id = sprintf( '%s_%s', $args['id'], $value );
 
 				echo sprintf( '<li><label><input type="checkbox" name="%s[]" id="%s" value="%s" class="%s" %s> %s</label></li>', $args['name'], $field_id, $value, $args['class'], $checked, $text );
@@ -773,9 +831,9 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 						// Create the media frame.
 						file_frame = wp.media.frames.file_frame = wp.media({
-							title: '<?php echo __( 'Select a image to upload' ); ?>',
+							title: '<?php echo esc_html__( 'Select a image to upload', 'wpsf' ); ?>',
 							button: {
-								text: '<?php echo __( 'Use this image' ); ?>',
+								text: '<?php echo esc_html__( 'Use this image', 'wpsf' ); ?>',
 							},
 							multiple: false	// Set to true to allow multiple files to be selected
 						});
@@ -846,11 +904,11 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 */
 		public function generate_custom_field( $args ) {
 			if ( isset( $args['output'] ) && is_callable( $args['output'] ) ) {
-				$args['output']( $args );
+				call_user_func( $args['output'], $args );
 				return;
 			}
 
-			echo isset( $args['output'] ) ? $args['output'] : $args['default'];
+			echo ( isset( $args['output'] ) ) ? $args['output'] : $args['default'];
 		}
 
 		/**
@@ -911,7 +969,7 @@ endwhile;
 		public function settings() {
 			do_action( 'wpsf_before_settings_' . $this->option_group );
 			?>
-			<form action="options.php" method="post" novalidate>
+			<form action="options.php" method="post" novalidate enctype="multipart/form-data">
 				<?php do_action( 'wpsf_before_settings_fields_' . $this->option_group ); ?>
 				<?php settings_fields( $this->option_group ); ?>
 
@@ -954,7 +1012,7 @@ endwhile;
 						$field['default'] = array_values( $field['default'] );
 					}
 
-					$setting_key = $this->has_tabs() ? sprintf( '%s_%s_%s', $section['tab_id'], $section['section_id'], $field['id'] ) : sprintf( '%s_%s', $section['section_id'], $field['id'] );
+					$setting_key = ( $this->has_tabs() ) ? sprintf( '%s_%s_%s', $section['tab_id'], $section['section_id'], $field['id'] ) : sprintf( '%s_%s', $section['section_id'], $field['id'] );
 
 					if ( isset( $saved_settings[ $setting_key ] ) ) {
 						$settings[ $settings_name ][ $setting_key ] = $saved_settings[ $setting_key ];
@@ -1024,7 +1082,7 @@ endwhile;
 
 					$tab_data['class'] .= self::add_show_hide_classes( $tab_data );
 
-					$active = $i == 0 ? 'wpsf-nav__item--active' : '';
+					$active = ( $i == 0 ) ? 'wpsf-nav__item--active' : '';
 					?>
 					<li class="wpsf-nav__item <?php echo $active; ?>">
 						<a class="wpsf-nav__item-link <?php echo esc_attr( $tab_data['class'] ); ?>" href="#tab-<?php echo $tab_data['id']; ?>"><?php echo $tab_data['title']; ?></a>
@@ -1136,6 +1194,59 @@ endwhile;
 			}
 
 			return $class;
+		}
+
+		/**
+		 * Handle export settings action.
+		 */
+		public static function export_settings() {
+			$_wpnonce     = filter_input( INPUT_GET, '_wpnonce' );
+			$option_group = filter_input( INPUT_GET, 'option_group' );
+
+			if ( empty( $_wpnonce ) || ! wp_verify_nonce( $_wpnonce, 'wpsf_export_settings' ) ) {
+				wp_die( esc_html__( 'Action failed.', 'wpsf' ) );
+			}
+
+			if ( empty( $option_group ) ) {
+				wp_die( esc_html__( 'No option group specified.', 'wpsf' ) );
+			}
+
+			$options = get_option( $option_group . '_settings' );
+			$options = wp_json_encode( $options );
+
+			// output the file contents to the browser.
+			header( 'Content-Type: text/json; charset=utf-8' );
+			header( 'Content-Disposition: attachment; filename=wpsf-settings-' . $option_group . '.json' );
+			echo $options;
+			exit;
+		}
+
+		/**
+		 * Import settings.
+		 */
+		public function import_settings() {
+			$_wpnonce     = filter_input( INPUT_POST, '_wpnonce' );
+			$option_group = filter_input( INPUT_POST, 'option_group' );
+			$settings     = filter_input( INPUT_POST, 'settings' );
+
+			if ( $option_group !== $this->option_group ) {
+				return;
+			}
+
+			// verify nonce.
+			if ( empty( $_wpnonce ) || ! wp_verify_nonce( $_wpnonce, 'wpsf_import_settings' ) ) {
+				wp_send_json_error();
+			}
+
+			// check if $settings is a valid json.
+			if ( ! is_string( $settings ) || ! is_array( json_decode( $settings, true ) ) ) {
+				wp_send_json_error();
+			}
+
+			$settings_data = json_decode( $settings, true );
+			update_option( $option_group . '_settings', $settings_data );
+
+			wp_send_json_success();
 		}
 	}
 }
