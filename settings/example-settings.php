@@ -165,11 +165,11 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				'default' => '',
 			),
 			array(
-				'id'          => 'codeeditor',
+				'id'          => 'code_editor',
 				'title'       => 'Code Editor',
 				'desc'        => 'This is a description.',
 				'placeholder' => 'This is a placeholder.',
-				'type'        => 'codeeditor',
+				'type'        => 'code_editor',
 				'mimetype'    => 'css',
 				'default'     => 'This is default.',
 			),

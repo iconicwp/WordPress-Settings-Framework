@@ -819,11 +819,11 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		}
 
 		/**
-		 * Generate: Codeeditor field
+		 * Generate: Code editor field
 		 *
 		 * @param array $args
 		 */
-		public function generate_codeeditor_field( $args ) {
+		public function generate_code_editor_field( $args ) {
 			$args['value'] = esc_html( esc_attr( $args['value'] ) );
  			
 			echo '<textarea name="' . $args['name'] . '" id="' . $args['id'] . '" placeholder="' . $args['placeholder'] . '" rows="5" cols="60" class="' . $args['class'] . '">' . $args['value'] . '</textarea>';

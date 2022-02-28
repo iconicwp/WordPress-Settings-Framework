@@ -137,10 +137,10 @@ Valid `fields` values are:
 * `title` - Field title
 * `desc` - Field description
 * `placeholder` - Field placeholder
-* `type` - Field type (text/password/textarea/select/radio/checkbox/checkboxes/color/file/editor/codeeditor)
+* `type` - Field type (text/password/textarea/select/radio/checkbox/checkboxes/color/file/editor/code_editor)
 * `default` - Default value (or selected option)
 * `choices` - Array of options (for select/radio/checkboxes)
-* `mimetype` - Any valid mime type accepted by Code Mirror for syntax highlighting (for codeeditor)
+* `mimetype` - Any valid mime type accepted by Code Mirror for syntax highlighting (for code_editor)
 
 See `settings/example-settings.php` for an example of possible values.
 
