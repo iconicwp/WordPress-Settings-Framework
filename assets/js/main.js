@@ -19,6 +19,7 @@
 			wpsf.tabs.watch();
 			wpsf.watch_submit();
 			wpsf.control_groups();
+			wpsf.setup_visual_radio_checkbox_field();
 			wpsf.importer.init();
 
 			$( document.body ).on( 'change', 'input, select, textarea', wpsf.control_groups );
@@ -495,6 +496,33 @@
 			}
 
 			return value.toString();
+		},
+
+		/**
+		 * Add checked class when radio button changes.
+		 */
+		setup_visual_radio_checkbox_field: function() {
+			var checked_class = 'wpsf-visual-field__item--checked';
+
+			$( document ).on( 'change', '.wpsf-visual-field input[type="radio"], .wpsf-visual-field input[type="checkbox"]', function() {
+				var $this = $( this ),
+					$list = $this.closest( '.wpsf-visual-field' ),
+					$list_item = $this.closest( '.wpsf-visual-field__item' ),
+					$checked = $list.find( '.' + checked_class ),
+					is_multi_select = $list.hasClass( 'wpsf-visual-field--image-checkboxes' );
+
+				if ( is_multi_select ) {
+					if ( $this.prop( 'checked' ) ) {
+						$list_item.addClass( checked_class );
+					} else {
+						$list_item.removeClass( checked_class );
+					}
+				} else {
+					$checked.removeClass( checked_class );
+					$list_item.addClass( checked_class );
+				}
+
+			} );
 		},
 
 		/**
