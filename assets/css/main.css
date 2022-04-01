@@ -538,9 +538,7 @@ p.submit {
 }
 
 .wpsf-import input[type=file] {
-    position: absolute;
-    font-size: 100px;
-    opacity: 0;
+    display: none;
 }
 
 .wpsf-import__file {
