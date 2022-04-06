@@ -165,6 +165,15 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				'default' => '',
 			),
 			array(
+				'id'          => 'code_editor',
+				'title'       => 'Code Editor',
+				'desc'        => 'This is a description.',
+				'placeholder' => 'This is a placeholder.',
+				'type'        => 'code_editor',
+				'mimetype'    => 'css',
+				'default'     => 'This is default.',
+			),
+			array(
 				'id'       => 'export',
 				'title'    => 'Export settings',
 				'subtitle' => 'Export settings.',

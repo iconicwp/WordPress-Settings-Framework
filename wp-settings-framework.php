@@ -8,11 +8,11 @@
  * @license MIT
  */
 
-if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
+if ( ! class_exists( 'Iconic_WSSV_Settings_Framework' ) ) {
 	/**
 	 * WordPressSettingsFramework class
 	 */
-	class WordPressSettingsFramework {
+	class Iconic_WSSV_Settings_Framework {
 		/**
 		 * @access private
 		 * @var array
@@ -872,6 +872,42 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 */
 		public function generate_editor_field( $args ) {
 			wp_editor( $args['value'], $args['id'], array( 'textarea_name' => $args['name'] ) );
+
+			$this->generate_description( $args['desc'] );
+		}
+
+		/**
+		 * Generate: Code editor field
+		 *
+		 * @param array $args
+		 */
+		public function generate_code_editor_field( $args ) {
+			printf(
+				'<textarea
+					name="%s"
+					id="%s"
+					placeholder="%s"
+					rows="5"
+					cols="60"
+					class="%s"
+				>%s</textarea>', 
+				esc_attr( $args['name'] ),
+				esc_attr( $args['id'] ),
+				esc_attr( $args['placeholder'] ),
+				esc_attr( $args['class'] ),
+				esc_html( $args['value'] ) 
+			);
+
+    		$settings = wp_enqueue_code_editor( array( 'type' => esc_attr( $args['mimetype'] ) ) );
+
+			wp_add_inline_script(
+				'code-editor',
+				sprintf(
+					'jQuery( function() { wp.codeEditor.initialize( "%s", %s ); } );',
+					esc_attr( $args['id'] ),
+					wp_json_encode( $settings )
+				)
+			);
 
 			$this->generate_description( $args['desc'] );
 		}
