@@ -8,11 +8,11 @@
  * @license MIT
  */
 
-if ( ! class_exists( 'Iconic_WSSV_Settings_Framework' ) ) {
+if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 	/**
 	 * WordPressSettingsFramework class
 	 */
-	class Iconic_WSSV_Settings_Framework {
+	class WordPressSettingsFramework {
 		/**
 		 * @access private
 		 * @var array
