@@ -502,6 +502,11 @@
 		 */
 		importer: {
 			init: function () {
+
+				$( '.wpsf-import__button' ).click( function () {
+					$( this ).parent().find( '.wpsf-import__file_field' ).trigger( 'click' );
+				} );
+
 				$( ".wpsf-import__file_field" ).change( function ( e ) {
 					$this = $( this );
 					$td = $this.closest( 'td' );
