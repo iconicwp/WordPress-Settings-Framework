@@ -598,3 +598,94 @@ p.submit {
 .wpsf-list li:last-child {
 	margin-bottom: 0;
 }
+
+
+.wpsf-visual-field--grid {
+	display: grid;
+	grid-gap: 5%;
+	grid-row-gap: 18px;
+}
+
+
+/* Image Checkbox field starts. */
+ul.wpsf-visual-field--image-checkboxes {
+	display: grid;
+	grid-template-columns: 21.25% 21.25% 21.25% 21.25%;
+	text-align: center;
+}
+
+ul.wpsf-visual-field--image-checkboxes img {
+	max-width: 100%;
+}
+
+/* Image Radio field starts. */
+ul.wpsf-visual-field--image-radio {
+	text-align: center;
+	grid-template-columns: 21.25% 21.25% 21.25% 21.25%;
+	grid-column-gap: 5%;
+}
+
+ul.wpsf-visual-field--image-radio img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+	margin: 0 auto;
+}
+
+.wpsf-visual-field__item {
+	margin: 0;
+	padding: 0;
+	border-radius: 4px;
+	border: 1px solid #c9c9cd;
+	opacity: 0.5;
+	transition: opacity 0.25s ease-in-out;
+	position: relative;
+}
+
+.wpsf-visual-field__item label {
+	display: block;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+	user-select: none;
+}
+
+.wpsf-visual-field input[type=checkbox],
+.wpsf-visual-field input[type=radio] {
+	display: none;
+}
+
+.wpsf-visual-field__item--checked {
+	opacity: 1;
+	box-shadow: 0 0.3px 0.5px rgba(0, 0, 0, 0.035), 0 2px 4px rgba(0, 0, 0, 0.07);
+	border-color: #24242d;
+}
+
+.wpsf-visual-field__item--checked:before {
+	content: "\f147";
+	font-family: dashicons;
+	font-size: 20px;
+	position: absolute;
+	top: 4px;
+	left: 4px;
+	left: 4px;
+	line-height: 24px;
+	width: 30px;
+	height: 30px;
+	background: #93939b;
+	color: #fff;
+	border-radius: 100%;
+	border: 3px solid #fff;
+	box-sizing: border-box;
+	text-align: center;
+}
+
+.wpsf-visual-field-image-radio__img_wrap {
+    height: 100px;
+    display: flex;
+    margin-bottom: 5px;
+}
+
+.wpsf-visual-field__item-text {
+    display: block;
+}

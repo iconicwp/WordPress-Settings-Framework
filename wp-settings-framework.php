@@ -574,6 +574,89 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			$this->generate_description( $args['desc'] );
 		}
 
+
+		/**
+		 * Generate Image Checkboxes.
+		 *
+		 * @param array $args Arguments.
+		 *
+		 * @return void
+		 */
+		public function generate_image_checkboxes_field( $args ) {
+
+			echo '<input type="hidden" name="' . esc_attr( $args['name'] ) . '" value="0" />';
+
+			echo '<ul class="wpsf-visual-field wpsf-visual-field--image-checkboxes wpsf-visual-field--grid wpsf-visual-field--cols">';
+
+			foreach ( $args['choices'] as $value => $choice ) {
+				$field_id      = sprintf( '%s_%s', $args['id'], $value );
+				$is_checked    = is_array( $args['value'] ) && in_array( $value, $args['value'] );
+				$checked_class = $is_checked ? 'wpsf-visual-field__item--checked' : '';
+
+				echo sprintf(
+					'<li class="wpsf-visual-field__item %s">
+						<label>
+							<img src="%s" >
+							<input type="checkbox" name="%s[]" id="%s" value="%s" class="%s" %s>
+							<span class="wpsf-visual-field__item-text">%s</span>
+						</label>
+					</li>',
+					esc_attr( $checked_class ),
+					esc_url( $choice['image'] ),
+					esc_attr( $args['name'] ),
+					esc_attr( $field_id ),
+					esc_attr( $value ),
+					esc_attr( $args['class'] ),
+					checked( true, $is_checked, false ),
+					esc_attr( $choice['text'] )
+				);
+			}
+
+			echo '</ul>';
+
+			$this->generate_description( $args['desc'] );
+		}
+
+		/**
+		 * Generate: Image Radio field
+		 *
+		 * @param array $args Arguments.
+		 */
+		public function generate_image_radio_field( $args ) {
+			$args['value'] = esc_html( esc_attr( $args['value'] ) );
+			$count         = count( $args['choices'] );
+
+			echo sprintf( '<ul class="wpsf-visual-field wpsf-visual-field--image-radio wpsf-visual-field--grid wpsf-visual-field--cols wpsf-visual-field--col-%s ">', esc_attr( $count ) );
+
+			foreach ( $args['choices'] as $value => $choice ) {
+				$field_id = sprintf( '%s_%s', $args['id'], $value );
+				$checked  = $value == $args['value'] ? 'checked="checked"' : '';
+
+				echo sprintf(
+					'<li class="wpsf-visual-field__item %s">				
+						<label>
+							<div class="wpsf-visual-field-image-radio__img_wrap">
+								<img src="%s">
+							</div>
+							<input type="radio" name="%s" id="%s" value="%s" class="%s" %s>
+							<span class="wpsf-visual-field__item-text">%s</span>
+						</label>
+					</li>',
+					( $checked ? 'wpsf-visual-field__item--checked' : '' ),
+					esc_attr( $choice['image'] ),
+					esc_attr( $args['name'] ),
+					esc_attr( $field_id ),
+					esc_attr( $value ),
+					esc_attr( $args['class'] ),
+					esc_attr( $checked ),
+					esc_attr( $choice['text'] )
+				);
+			}
+			echo '</ul>';
+
+			$this->generate_description( $args['desc'] );
+		}
+
 		/**
 		 * Generate group row template
 		 *

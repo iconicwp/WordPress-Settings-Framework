@@ -65,6 +65,42 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				'datepicker' => array(), // Array of datepicker options (http://api.jqueryui.com/datepicker/)
 			),
 			array(
+				'id'      => 'image_radio',
+				'title'   => 'Select a radio',
+				'desc'    => 'This is a description.',
+				'type'    => 'image_radio',
+				'choices' => array(
+					'choice-1' => array(
+						'text'  => 'Choice 1',
+						'image' => 'https://picsum.photos/100',
+					),
+					'choice-2' => array(
+						'text'  => 'Choice 2',
+						'image' => 'https://picsum.photos/100',
+					),
+				),
+			),
+			array(
+				'id'      => 'image_checkboxes',
+				'title'   => 'Select a Checkbox',
+				'desc'    => 'This is a description.',
+				'type'    => 'image_checkboxes',
+				'choices' => array(
+					'choice-1' => array(
+						'text'  => 'Choice 1',
+						'image' => 'https://picsum.photos/100',
+					),
+					'choice-2' => array(
+						'text'  => 'Choice 2',
+						'image' => 'https://picsum.photos/100',
+					),
+					'choice-2' => array(
+						'text'  => 'Choice 3',
+						'image' => 'https://picsum.photos/100',
+					),
+				),
+			),
+			array(
 				'id'        => 'group',
 				'title'     => 'Group',
 				'desc'      => 'This is a description.',
