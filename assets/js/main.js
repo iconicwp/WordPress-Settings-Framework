@@ -83,6 +83,14 @@
 			 * @returns {boolean}
 			 */
 			get_tab_id: function() {
+				// If the tab id is specified in the URL has, use that.
+				if ( window.location.hash ) {
+					// Check if hash is a tab.
+					if ( $( `.wpsf-nav a[href="${window.location.hash}"]` ).length ) {
+						return window.location.hash;
+					}
+				}
+
 				if ( !wpsf.tabs.has_storage ) {
 					return false;
 				}
