@@ -20,7 +20,7 @@
  * and check out the tabbed settings function on line 156.
  */
 
-add_filter( 'wpsf_register_settings_my_example_settings', 'wpsf_tabbed_settings' );
+add_filter( 'wpsf_register_settings_my_example_settings', 'wpsf_tabless_settings' );
 
 /**
  * Tabless example.
