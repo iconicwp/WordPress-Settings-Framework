@@ -596,9 +596,13 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				echo sprintf(
 					'<li class="wpsf-visual-field__item %s">
 						<label>
-							<img src="%s" >
-							<input type="checkbox" name="%s[]" id="%s" value="%s" class="%s" %s>
-							<span class="wpsf-visual-field__item-text">%s</span>
+							<div class="wpsf-visual-field-image-radio__img_wrap">
+								<img src="%s">
+							</div>
+							<div class="wpsf-visual-field__item-footer">
+								<input type="checkbox" name="%s[]" id="%s" value="%s" class="%s" %s>
+								<span class="wpsf-visual-field__item-text">%s</span>
+							</div>
 						</label>
 					</li>',
 					esc_attr( $checked_class ),
@@ -638,8 +642,10 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 							<div class="wpsf-visual-field-image-radio__img_wrap">
 								<img src="%s">
 							</div>
-							<input type="radio" name="%s" id="%s" value="%s" class="%s" %s>
-							<span class="wpsf-visual-field__item-text">%s</span>
+							<div class="wpsf-visual-field__item-footer">
+								<input type="radio" name="%s" id="%s" value="%s" class="%s" %s>
+								<span class="wpsf-visual-field__item-text">%s</span>
+							</div>
 						</label>
 					</li>',
 					( $checked ? 'wpsf-visual-field__item--checked' : '' ),
