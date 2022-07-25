@@ -2,10 +2,10 @@
 /**
  * WordPress Settings Framework
  *
- * @author  Gilbert Pellegrom, James Kemp
  * @link    https://github.com/gilbitron/WordPress-Settings-Framework
  * @version 1.6.11
- * @license MIT
+ *
+ * @package wordpress-settings-framework
  */
 
 if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
@@ -14,49 +14,57 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 	 */
 	class WordPressSettingsFramework {
 		/**
-		 * @access private
+		 * Settings wrapper.
+		 *
 		 * @var array
 		 */
 		private $settings_wrapper;
 
 		/**
-		 * @access private
+		 * Settings.
+		 *
 		 * @var array
 		 */
 		private $settings;
 
 		/**
-		 * @access private
+		 * Tabs.
+		 *
 		 * @var array
 		 */
 		private $tabs;
 
 		/**
-		 * @access private
+		 * Option group.
+		 *
 		 * @var string
 		 */
 		private $option_group;
 
 		/**
-		 * @access private
+		 * Settings page.
+		 *
 		 * @var array
 		 */
 		private $settings_page = array();
 
 		/**
-		 * @access private
+		 * Options path.
+		 *
 		 * @var string
 		 */
 		private $options_path;
 
 		/**
-		 * @access private
+		 * Options URL.
+		 *
 		 * @var string
 		 */
 		private $options_url;
 
 		/**
-		 * @access protected
+		 * Setting defaults.
+		 *
 		 * @var array
 		 */
 		protected $setting_defaults = array(
@@ -136,11 +144,11 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				return new WP_Error( 'broke', esc_html__( 'WPSF settings must be an array', 'wpsf' ) );
 			}
 
-			// If "sections" is set, this settings group probably has tabs
+			// If "sections" is set, this settings group probably has tabs.
 			if ( isset( $this->settings_wrapper['sections'] ) ) {
 				$this->tabs     = ( isset( $this->settings_wrapper['tabs'] ) ) ? $this->settings_wrapper['tabs'] : array();
 				$this->settings = $this->settings_wrapper['sections'];
-				// If not, it's probably just an array of settings
+				// If not, it's probably just an array of settings.
 			} else {
 				$this->settings = $this->settings_wrapper;
 			}
@@ -168,7 +176,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Add Settings Page
 		 *
-		 * @param array $args
+		 * @param array $args Arguments.
 		 */
 		public function add_settings_page( $args ) {
 			$defaults = array(
@@ -209,7 +217,6 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Settings Page Content
 		 */
-
 		public function settings_page_content() {
 			if ( ! current_user_can( $this->settings_page['capability'] ) ) {
 				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'wpsf' ) );
@@ -230,7 +237,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		public function settings_header() {
 			?>
 			<div class="wpsf-settings__header">
-				<h2><?php echo apply_filters( 'wpsf_title_' . $this->option_group, $this->settings_page['title'] ); ?></h2>
+				<h2><?php echo esc_html( apply_filters( 'wpsf_title_' . $this->option_group, $this->settings_page['title'] ) ); ?></h2>
 				<?php do_action( 'wpsf_after_title_' . $this->option_group ); ?>
 			</div>
 			<?php
@@ -247,7 +254,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * Enqueue scripts and styles
 		 */
 		public function admin_enqueue_scripts() {
-			// scripts
+			// Scripts.
 			wp_register_script( 'jquery-ui-timepicker', $this->options_url . 'assets/vendor/jquery-timepicker/jquery.ui.timepicker.js', array( 'jquery', 'jquery-ui-core' ), false, true );
 			wp_register_script( 'wpsf', $this->options_url . 'assets/js/main.js', array( 'jquery' ), false, true );
 
@@ -267,7 +274,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			);
 			wp_localize_script( 'wpsf', 'wpsf_vars', $data );
 
-			// styles
+			// Styles.
 			wp_register_style( 'jquery-ui-timepicker', $this->options_url . 'assets/vendor/jquery-timepicker/jquery.ui.timepicker.css' );
 			wp_register_style( 'wpsf', $this->options_url . 'assets/css/main.css' );
 			wp_register_style( 'jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/themes/ui-darkness/jquery-ui.css' );
@@ -282,7 +289,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Adds a filter for settings validation.
 		 *
-		 * @param $input
+		 * @param mixed $input Input data.
 		 *
 		 * @return array
 		 */
@@ -293,21 +300,21 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Displays the "section_description" if specified in $this->settings
 		 *
-		 * @param array callback args from add_settings_section()
+		 * @param array $args callback args from add_settings_section().
 		 */
 		public function section_intro( $args ) {
 			if ( ! empty( $this->settings ) ) {
 				foreach ( $this->settings as $section ) {
-					if ( $section['section_id'] == $args['id'] ) {
-						$renderClass = '';
+					if ( $section['section_id'] === $args['id'] ) {
+						$render_class = '';
 
-						$renderClass .= self::add_show_hide_classes( $section );
+						$render_class .= self::add_show_hide_classes( $section );
 
-						if ( $renderClass ) {
-							echo '<span class="' . esc_attr( $renderClass ) . '"></span>';
+						if ( $render_class ) {
+							echo '<span class="' . esc_attr( $render_class ) . '"></span>';
 						}
 						if ( isset( $section['section_description'] ) && $section['section_description'] ) {
-							echo '<div class="wpsf-section-description wpsf-section-description--' . esc_attr( $section['section_id'] ) . '">' . $section['section_description'] . '</div>';
+							echo '<div class="wpsf-section-description wpsf-section-description--' . esc_attr( $section['section_id'] ) . '">' . wp_kses_post( $section['section_description'] ) . '</div>';
 						}
 						break;
 					}
@@ -331,7 +338,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 						if ( isset( $section['fields'] ) && is_array( $section['fields'] ) && ! empty( $section['fields'] ) ) {
 							foreach ( $section['fields'] as $field ) {
 								if ( isset( $field['id'] ) && $field['id'] && isset( $field['title'] ) ) {
-									$tooltip     = '';
+									$tooltip = '';
 
 									if ( isset( $field['link'] ) && is_array( $field['link'] ) ) {
 										$link_url      = ( isset( $field['link']['url'] ) ) ? esc_html( $field['link']['url'] ) : '';
@@ -345,7 +352,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 										}
 
 										$link = ( $link_url ) ? sprintf( '<a class="wpsf-link" href="%s"%s>%s</a>', $link_url, $link_target, $link_text ) : '';
-										
+
 										if ( $link && 'tooltip' === $link_type ) {
 											$tooltip = $link;
 										} elseif ( $link ) {
@@ -439,7 +446,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		public function generate_text_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
 
-			echo '<input type="text" name="' . $args['name'] . '" id="' . $args['id'] . '" value="' . $args['value'] . '" placeholder="' . $args['placeholder'] . '" class="regular-text ' . $args['class'] . '" />';
+			echo '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="regular-text ' . $args['class'] . '" />';
 
 			$this->generate_description( $args['desc'] );
 		}
@@ -452,7 +459,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		public function generate_hidden_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
 
-			echo '<input type="hidden" name="' . $args['name'] . '" id="' . $args['id'] . '" value="' . $args['value'] . '"  class="hidden-field ' . $args['class'] . '" />';
+			echo '<input type="hidden" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '"  class="hidden-field ' . $args['class'] . '" />';
 		}
 
 		/**
@@ -463,7 +470,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		public function generate_number_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
 
-			echo '<input type="number" name="' . $args['name'] . '" id="' . $args['id'] . '" value="' . $args['value'] . '" placeholder="' . $args['placeholder'] . '" class="regular-text ' . $args['class'] . '" />';
+			echo '<input type="number" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="regular-text ' . $args['class'] . '" />';
 
 			$this->generate_description( $args['desc'] );
 		}
@@ -478,7 +485,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			$timepicker = ( ! empty( $args['timepicker'] ) ) ? htmlentities( json_encode( $args['timepicker'] ) ) : null;
 
-			echo '<input type="text" name="' . $args['name'] . '" id="' . $args['id'] . '" value="' . $args['value'] . '" class="timepicker regular-text ' . $args['class'] . '" data-timepicker="' . $timepicker . '" />';
+			echo '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" class="timepicker regular-text ' . $args['class'] . '" data-timepicker="' . esc_attr( $timepicker ) . '" />';
 
 			$this->generate_description( $args['desc'] );
 		}
@@ -493,7 +500,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			$datepicker = ( ! empty( $args['datepicker'] ) ) ? htmlentities( json_encode( $args['datepicker'] ) ) : null;
 
-			echo '<input type="text" name="' . $args['name'] . '" id="' . $args['id'] . '" value="' . $args['value'] . '" class="datepicker regular-text ' . $args['class'] . '" data-datepicker="' . $datepicker . '" />';
+			echo '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" class="datepicker regular-text ' . $args['class'] . '" data-datepicker="' . esc_attr( $datepicker ) . '" />';
 
 			$this->generate_description( $args['desc'] );
 		}
@@ -509,7 +516,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			$option_group  = $this->option_group;
 			$export_url    = site_url() . '/wp-admin/admin-ajax.php?action=wpsf_export_settings&_wpnonce=' . wp_create_nonce( 'wpsf_export_settings' ) . '&option_group=' . $option_group;
 
-			echo '<a target=_blank href="' . $export_url . '" class="button" name="' . $args['name'] . '" id="' . $args['id'] . '">' . $args['value'] . '</a>';
+			echo '<a target=_blank href="' . esc_url( $export_url ) . '" class="button" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '">' . esc_html( $args['value'] ) . '</a>';
 
 			$options = get_option( $option_group . '_settings' );
 			$this->generate_description( $args['desc'] );
@@ -761,7 +768,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		public function generate_password_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
 
-			echo '<input type="password" name="' . $args['name'] . '" id="' . $args['id'] . '" value="' . $args['value'] . '" placeholder="' . $args['placeholder'] . '" class="regular-text ' . $args['class'] . '" />';
+			echo '<input type="password" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="regular-text ' . $args['class'] . '" />';
 
 			$this->generate_description( $args['desc'] );
 		}
@@ -774,7 +781,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		public function generate_textarea_field( $args ) {
 			$args['value'] = esc_html( esc_attr( $args['value'] ) );
 
-			echo '<textarea name="' . $args['name'] . '" id="' . $args['id'] . '" placeholder="' . $args['placeholder'] . '" rows="5" cols="60" class="' . $args['class'] . '">' . $args['value'] . '</textarea>';
+			echo '<textarea name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" rows="5" cols="60" class="' . $args['class'] . '">' . esc_html( $args['value'] ) . '</textarea>';
 
 			$this->generate_description( $args['desc'] );
 		}
@@ -902,7 +909,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 					var wp_media_post_id = wp.media.model.settings.post.id; // Store the old id.
 					var set_to_post_id = 0;
 
-					jQuery( document.body ).on('click', '#<?php echo esc_attr( $button_id );?>', function( event ){
+					jQuery( document.body ).on('click', '#<?php echo esc_attr( $button_id ); ?>', function( event ){
 
 						event.preventDefault();
 
@@ -935,7 +942,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 							// Do something with attachment.id and/or attachment.url here
 							$( '#image-preview' ).attr( 'src', attachment.url ).css( 'width', 'auto' );
 							$( '#image_attachment_id' ).val( attachment.id );
-							$( '#<?php echo esc_attr( $args['id']) ;?>' ).val( attachment.url );
+							$( '#<?php echo esc_attr( $args['id'] ); ?>' ).val( attachment.url );
 
 							// Restore the main post ID
 							wp.media.model.settings.post.id = wp_media_post_id;
@@ -979,15 +986,15 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 					rows="5"
 					cols="60"
 					class="%s"
-				>%s</textarea>', 
+				>%s</textarea>',
 				esc_attr( $args['name'] ),
 				esc_attr( $args['id'] ),
 				esc_attr( $args['placeholder'] ),
 				esc_attr( $args['class'] ),
-				esc_html( $args['value'] ) 
+				esc_html( $args['value'] )
 			);
 
-    		$settings = wp_enqueue_code_editor( array( 'type' => esc_attr( $args['mimetype'] ) ) );
+			$settings = wp_enqueue_code_editor( array( 'type' => esc_attr( $args['mimetype'] ) ) );
 
 			wp_add_inline_script(
 				'code-editor',
@@ -1018,7 +1025,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Multi Inputs field
 		 *
-		 * @param array $args
+		 * @param array $args Arguments.
 		 */
 		public function generate_multiinputs_field( $args ) {
 			$field_titles = array_keys( $args['default'] );
@@ -1033,7 +1040,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				$value    = esc_attr( stripslashes( $values[ $i ] ) );
 
 				echo '<div class="wpsf-multifields__field">';
-				echo '<input type="text" name="' . $args['name'] . '[]" id="' . $field_id . '" value="' . $value . '" class="regular-text ' . $args['class'] . '" placeholder="' . $args['placeholder'] . '" />';
+				echo '<input type="text" name="' . esc_attr( $args['name'] ) . '[]" id="' . esc_attr( $field_id ) . '" value="' . esc_attr( $value ) . '" class="regular-text ' . esc_attr( $args['class'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" />';
 				echo '<br><span>' . $field_titles[ $i ] . '</span>';
 				echo '</div>';
 
@@ -1048,7 +1055,7 @@ endwhile;
 		/**
 		 * Generate: Field ID
 		 *
-		 * @param mixed $id
+		 * @param mixed $id Field ID.
 		 *
 		 * @return string
 		 */
@@ -1059,11 +1066,11 @@ endwhile;
 		/**
 		 * Generate: Description
 		 *
-		 * @param mixed $description
+		 * @param mixed $description Field description.
 		 */
 		public function generate_description( $description ) {
-			if ( $description && $description !== '' ) {
-				echo '<p class="description">' . $description . '</p>';
+			if ( $description && '' !== $description ) {
+				echo '<p class="description">' . esc_html( $description ) . '</p>';
 			}
 		}
 
@@ -1081,7 +1088,7 @@ endwhile;
 
 				<?php if ( apply_filters( 'wpsf_show_save_changes_button_' . $this->option_group, true ) ) { ?>
 					<p class="submit">
-						<input type="submit" class="button-primary" value="<?php _e( 'Save Changes' ); ?>" />
+						<input type="submit" class="button-primary" value="<?php esc_attr_e( 'Save Changes' ); ?>" />
 					</p>
 				<?php } ?>
 			</form>
@@ -1147,8 +1154,8 @@ endwhile;
 			$i = 0;
 			foreach ( $this->tabs as $tab_data ) {
 				?>
-				<div id="tab-<?php echo $tab_data['id']; ?>" class="wpsf-section wpsf-tab wpsf-tab--<?php echo $tab_data['id']; ?> <?php
-				if ( $i == 0 ) {
+				<div id="tab-<?php echo esc_attr( $tab_data['id'] ); ?>" class="wpsf-section wpsf-tab wpsf-tab--<?php echo esc_attr( $tab_data['id'] ); ?> <?php
+				if ( 0 === $i ) {
 					echo 'wpsf-tab--active';
 				}
 				?>
@@ -1186,10 +1193,10 @@ endwhile;
 
 					$tab_data['class'] .= self::add_show_hide_classes( $tab_data );
 
-					$active = ( $i == 0 ) ? 'wpsf-nav__item--active' : '';
+					$active = ( 0 === $i ) ? 'wpsf-nav__item--active' : '';
 					?>
-					<li class="wpsf-nav__item <?php echo $active; ?>">
-						<a class="wpsf-nav__item-link <?php echo esc_attr( $tab_data['class'] ); ?>" href="#tab-<?php echo $tab_data['id']; ?>"><?php echo $tab_data['title']; ?></a>
+					<li class="wpsf-nav__item <?php echo esc_attr( $active ); ?>">
+						<a class="wpsf-nav__item-link <?php echo esc_attr( $tab_data['class'] ); ?>" href="#tab-<?php echo esc_attr( $tab_data['id'] ); ?>"><?php echo esc_html( $tab_data['title'] ); ?></a>
 					</li>
 					<?php
 					$i ++;
@@ -1209,7 +1216,7 @@ endwhile;
 		/**
 		 * Does this tab have settings?
 		 *
-		 * @param string $tab_id
+		 * @param string $tab_id Tab ID.
 		 *
 		 * @return bool
 		 */
@@ -1242,6 +1249,9 @@ endwhile;
 
 		/**
 		 * Add Show Hide Classes.
+		 *
+		 * @param array  $args Arguments.
+		 * @param string $type Type.
 		 */
 		public static function add_show_hide_classes( $args, $type = 'show_if' ) {
 			$class = '';
@@ -1263,7 +1273,7 @@ endwhile;
 						}
 					} else {
 						$and_string = '';
-						foreach( $condition as $and_condition ) {
+						foreach ( $condition as $and_condition ) {
 							if ( ! isset( $and_condition['field'] ) || ! isset( $and_condition['value'] ) ) {
 								continue;
 							}
@@ -1359,9 +1369,9 @@ if ( ! function_exists( 'wpsf_get_setting' ) ) {
 	/**
 	 * Get a setting from an option group
 	 *
-	 * @param string $option_group
-	 * @param string $section_id May also be prefixed with tab ID
-	 * @param string $field_id
+	 * @param string $option_group Option group.
+	 * @param string $section_id   May also be prefixed with tab ID.
+	 * @param string $field_id     Field ID.
 	 *
 	 * @return mixed
 	 */
@@ -1379,7 +1389,7 @@ if ( ! function_exists( 'wpsf_delete_settings' ) ) {
 	/**
 	 * Delete all the saved settings from a settings file/option group
 	 *
-	 * @param string $option_group
+	 * @param string $option_group Option group.
 	 */
 	function wpsf_delete_settings( $option_group ) {
 		delete_option( $option_group . '_settings' );

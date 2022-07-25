@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<ruleset name="WooCommerce Core">
+	<description>WooCommerce Core coding standards.</description>
+
+    <!-- Include all of our custom sniffs -->
+    <rule ref="WooCommerce" />
+
+	<!-- PHPCompatibility -->
+	<rule ref="PHPCompatibilityWP" />
+
+	<!-- WordPress -->
+	<rule ref="WordPress">
+		<exclude name="WordPress.DB.DirectDatabaseQuery.NoCaching" />
+		<exclude name="WordPress.DB.DirectDatabaseQuery.DirectQuery" />
+		<exclude name="WordPress.DB.DirectDatabaseQuery.SchemaChange" />
+	</rule>
+
+	<rule ref="WordPress.Security.ValidatedSanitizedInput">
+		<properties>
+			<property name="customSanitizingFunctions" type="array" value="wc_clean,wc_sanitize_tooltip,wc_format_decimal,wc_stock_amount,wc_sanitize_permalink,wc_sanitize_textarea" />
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.Security.EscapeOutput">
+		<properties>
+			<property name="customEscapingFunctions" type="array" value="wc_help_tip,wc_sanitize_tooltip,wc_selected,wc_kses_notice,wc_esc_json,wc_query_string_form_fields,wc_make_phone_clickable" />
+		</properties>
+	</rule>
+
+	<rule ref="Squiz.Commenting">
+		<exclude name="Squiz.Commenting.LongConditionClosingComment" />
+		<exclude name="Squiz.Commenting.PostStatementComment" />
+	</rule>
+</ruleset>

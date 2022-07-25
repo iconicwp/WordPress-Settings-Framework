@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<ruleset name="WooCommerce Core" namespace="WooCommerce">
+    <description>WooCommerce coding standards.</description>
+</ruleset>
