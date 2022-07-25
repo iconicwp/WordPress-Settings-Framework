@@ -1,5 +1,0 @@
-{
-    "phpcs.standard": "PSR2",
-    "phpcs.autoConfigSearch": false,
-    "phpcs.showSources": true
-}
