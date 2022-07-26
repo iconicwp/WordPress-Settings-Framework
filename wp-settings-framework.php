@@ -115,8 +115,8 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				add_action( 'admin_init', array( $this, 'admin_init' ) );
 				add_action( 'wpsf_do_settings_sections_' . $this->option_group, array( $this, 'do_tabless_settings_sections' ), 10 );
 
-				if ( isset( $_GET['page'] ) && $_GET['page'] === $this->settings_page['slug'] ) {
-					if ( $pagenow !== 'options-general.php' ) {
+				if ( filter_input( INPUT_GET, 'page' ) && filter_input( INPUT_GET, 'page' ) === $this->settings_page['slug'] ) {
+					if ( 'options-general.php' !== $pagenow ) {
 						add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 					}
 					add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
@@ -176,7 +176,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Add Settings Page
 		 *
-		 * @param array $args Arguments.
+		 * @param array $args Settings page arguments.
 		 */
 		public function add_settings_page( $args ) {
 			$defaults = array(
@@ -400,7 +400,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generates the HTML output of the settings fields
 		 *
-		 * @param array $args callback args from add_settings_field()
+		 * @param array $args callback args from add_settings_field().
 		 */
 		public function generate_setting( $args ) {
 			$section                = $args['section'];
@@ -428,7 +428,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Do field method, if it exists
 		 *
-		 * @param array $args
+		 * @param array $args Field arguments.
 		 */
 		public function do_field_method( $args ) {
 			$generate_field_method = sprintf( 'generate_%s_field', $args['type'] );
@@ -441,12 +441,12 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Text field
 		 *
-		 * @param array $args
+		 * @param array $args Field arguments.
 		 */
 		public function generate_text_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
 
-			echo '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="regular-text ' . $args['class'] . '" />';
+			echo '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="regular-text ' . esc_attr( $args['class'] ) . '" />';
 
 			$this->generate_description( $args['desc'] );
 		}
@@ -454,23 +454,23 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Hidden field.
 		 *
-		 * @param array $args
+		 * @param array $args Field arguments.
 		 */
 		public function generate_hidden_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
 
-			echo '<input type="hidden" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '"  class="hidden-field ' . $args['class'] . '" />';
+			echo '<input type="hidden" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '"  class="hidden-field ' . esc_attr( $args['class'] ) . '" />';
 		}
 
 		/**
 		 * Generate: Number field
 		 *
-		 * @param array $args
+		 * @param array $args Field arguments.
 		 */
 		public function generate_number_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
 
-			echo '<input type="number" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="regular-text ' . $args['class'] . '" />';
+			echo '<input type="number" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="regular-text ' . esc_attr( $args['class'] ) . '" />';
 
 			$this->generate_description( $args['desc'] );
 		}
@@ -478,14 +478,14 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Time field
 		 *
-		 * @param array $args
+		 * @param array $args Field arguments.
 		 */
 		public function generate_time_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
 
-			$timepicker = ( ! empty( $args['timepicker'] ) ) ? htmlentities( json_encode( $args['timepicker'] ) ) : null;
+			$timepicker = ( ! empty( $args['timepicker'] ) ) ? htmlentities( wp_json_encode( $args['timepicker'] ) ) : null;
 
-			echo '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" class="timepicker regular-text ' . $args['class'] . '" data-timepicker="' . esc_attr( $timepicker ) . '" />';
+			echo '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" class="timepicker regular-text ' . esc_attr( $args['class'] ) . '" data-timepicker="' . esc_attr( $timepicker ) . '" />';
 
 			$this->generate_description( $args['desc'] );
 		}
@@ -493,14 +493,14 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Date field
 		 *
-		 * @param array $args
+		 * @param array $args Field arguments.
 		 */
 		public function generate_date_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
 
-			$datepicker = ( ! empty( $args['datepicker'] ) ) ? htmlentities( json_encode( $args['datepicker'] ) ) : null;
+			$datepicker = ( ! empty( $args['datepicker'] ) ) ? htmlentities( wp_json_encode( $args['datepicker'] ) ) : null;
 
-			echo '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" class="datepicker regular-text ' . $args['class'] . '" data-datepicker="' . esc_attr( $datepicker ) . '" />';
+			echo '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" class="datepicker regular-text ' . esc_attr( $args['class'] ) . '" data-datepicker="' . esc_attr( $datepicker ) . '" />';
 
 			$this->generate_description( $args['desc'] );
 		}
@@ -508,7 +508,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate Export Field.
 		 *
-		 * @param array $args Arguments.
+		 * @param array $args Field arguments.
 		 */
 		public function generate_export_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
@@ -525,7 +525,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate Import Field.
 		 *
-		 * @param array $args Arguments.
+		 * @param array $args Field rguments.
 		 */
 		public function generate_import_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
@@ -558,7 +558,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 *
 		 * Generates a table of subfields, and a javascript template for create new repeatable rows
 		 *
-		 * @param array $args
+		 * @param array $args Field arguments.
 		 */
 		public function generate_group_field( $args ) {
 			$value     = (array) $args['value'];
@@ -569,14 +569,22 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			echo '<tbody>';
 
 			for ( $row = 0; $row < $row_count; $row ++ ) {
+				// @codingStandardsIgnoreStart
 				echo $this->generate_group_row_template( $args, false, $row );
+				// @codingStandardsIgnoreEnd
 			}
 
 			echo '</tbody>';
 
 			echo '</table>';
 
-			printf( '<script type="text/html" id="%s_template">%s</script>', $args['id'], $this->generate_group_row_template( $args, true ) );
+			printf(
+				'<script type="text/html" id="%s_template">%s</script>',
+				esc_attr( $args['id'] ),
+				// @codingStandardsIgnoreStart
+				$this->generate_group_row_template( $args, true )
+				// @codingStandardsIgnoreEnd
+			);
 
 			$this->generate_description( $args['desc'] );
 		}
@@ -585,7 +593,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate Image Checkboxes.
 		 *
-		 * @param array $args Arguments.
+		 * @param array $args Field arguments.
 		 *
 		 * @return void
 		 */
@@ -597,7 +605,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			foreach ( $args['choices'] as $value => $choice ) {
 				$field_id      = sprintf( '%s_%s', $args['id'], $value );
-				$is_checked    = is_array( $args['value'] ) && in_array( $value, $args['value'] );
+				$is_checked    = is_array( $args['value'] ) && in_array( $value, $args['value'], true );
 				$checked_class = $is_checked ? 'wpsf-visual-field__item--checked' : '';
 
 				echo sprintf(
@@ -631,7 +639,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Image Radio field
 		 *
-		 * @param array $args Arguments.
+		 * @param array $args Field arguments.
 		 */
 		public function generate_image_radio_field( $args ) {
 			$args['value'] = esc_html( esc_attr( $args['value'] ) );
@@ -641,7 +649,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			foreach ( $args['choices'] as $value => $choice ) {
 				$field_id = sprintf( '%s_%s', $args['id'], $value );
-				$checked  = $value == $args['value'] ? 'checked="checked"' : '';
+				$checked  = $value === $args['value'] ? 'checked="checked"' : '';
 
 				echo sprintf(
 					'<li class="wpsf-visual-field__item %s">				
@@ -661,7 +669,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 					esc_attr( $field_id ),
 					esc_attr( $value ),
 					esc_attr( $args['class'] ),
-					esc_attr( $checked ),
+					esc_html( $checked ),
 					esc_attr( $choice['text'] )
 				);
 			}
@@ -673,9 +681,9 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate group row template
 		 *
-		 * @param array $args  Field arguments
-		 * @param bool  $blank Blank values
-		 * @param int   $row   Iterator
+		 * @param array $args  Field arguments.
+		 * @param bool  $blank Blank values.
+		 * @param int   $row   Iterator.
 		 *
 		 * @return string|bool
 		 */
@@ -685,7 +693,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			$row_id_value = ( $blank ) ? '' : $row_id;
 
 			if ( $args['subfields'] ) {
-				$row_class = ( $row % 2 == 0 ) ? 'alternate' : '';
+				$row_class = ( 0 === $row % 2 ) ? 'alternate' : '';
 
 				$row_template .= sprintf( '<tr class="wpsf-group__row %s">', $row_class );
 
@@ -732,7 +740,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Select field
 		 *
-		 * @param array $args Arguments.
+		 * @param array $args Field rguments.
 		 */
 		public function generate_select_field( $args ) {
 			$args['value'] = esc_html( esc_attr( $args['value'] ) );
@@ -763,12 +771,12 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Password field
 		 *
-		 * @param array $args
+		 * @param array $args Field arguments.
 		 */
 		public function generate_password_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
 
-			echo '<input type="password" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="regular-text ' . $args['class'] . '" />';
+			echo '<input type="password" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="regular-text ' . esc_attr( $args['class'] ) . '" />';
 
 			$this->generate_description( $args['desc'] );
 		}
@@ -776,12 +784,12 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Textarea field
 		 *
-		 * @param array $args
+		 * @param array $args Field arguments.
 		 */
 		public function generate_textarea_field( $args ) {
 			$args['value'] = esc_html( esc_attr( $args['value'] ) );
 
-			echo '<textarea name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" rows="5" cols="60" class="' . $args['class'] . '">' . esc_html( $args['value'] ) . '</textarea>';
+			echo '<textarea name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" rows="5" cols="60" class="' . esc_attr( $args['class'] ) . '">' . esc_html( $args['value'] ) . '</textarea>';
 
 			$this->generate_description( $args['desc'] );
 		}
@@ -789,16 +797,16 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Radio field
 		 *
-		 * @param array $args
+		 * @param array $args Field arguments.
 		 */
 		public function generate_radio_field( $args ) {
 			$args['value'] = esc_html( esc_attr( $args['value'] ) );
 
 			foreach ( $args['choices'] as $value => $text ) {
 				$field_id = sprintf( '%s_%s', $args['id'], $value );
-				$checked  = ( $value == $args['value'] ) ? 'checked="checked"' : '';
+				$checked  = ( $value === $args['value'] ) ? 'checked="checked"' : '';
 
-				echo sprintf( '<label><input type="radio" name="%s" id="%s" value="%s" class="%s" %s> %s</label><br />', $args['name'], $field_id, $value, $args['class'], $checked, $text );
+				echo sprintf( '<label><input type="radio" name="%s" id="%s" value="%s" class="%s" %s> %s</label><br />', esc_attr( $args['name'] ), esc_attr( $field_id ), esc_html( $value ), esc_attr( $args['class'] ), esc_html( $checked ), esc_html( $text ) );
 			}
 
 			$this->generate_description( $args['desc'] );
@@ -807,36 +815,36 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Checkbox field
 		 *
-		 * @param array $args
+		 * @param array $args Field arguments.
 		 */
 		public function generate_checkbox_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
 			$checked       = ( $args['value'] ) ? 'checked="checked"' : '';
 
-			echo '<input type="hidden" name="' . $args['name'] . '" value="0" />';
-			echo '<label><input type="checkbox" name="' . $args['name'] . '" id="' . $args['id'] . '" value="1" class="' . $args['class'] . '" ' . $checked . '> ' . $args['desc'] . '</label>';
+			echo '<input type="hidden" name="' . esc_attr( $args['name'] ) . '" value="0" />';
+			echo '<label><input type="checkbox" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" class="' . esc_attr( $args['class'] ) . '" ' . esc_html( $checked ) . '> ' . esc_attr( $args['desc'] ) . '</label>';
 		}
 
 		/**
 		 * Generate: Toggle field
 		 *
-		 * @param array $args
+		 * @param array $args Field arguments.
 		 */
 		public function generate_toggle_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
 			$checked       = ( $args['value'] ) ? 'checked="checked"' : '';
 
-			echo '<input type="hidden" name="' . $args['name'] . '" value="0" />';
-			echo '<label class="switch"><input type="checkbox" name="' . $args['name'] . '" id="' . $args['id'] . '" value="1" class="' . $args['class'] . '" ' . $checked . '> ' . $args['desc'] . '<span class="slider"></span></label>';
+			echo '<input type="hidden" name="' . esc_attr( $args['name'] ) . '" value="0" />';
+			echo '<label class="switch"><input type="checkbox" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" class="' . esc_attr( $args['class'] ) . '" ' . esc_html( $checked ) . '> ' . esc_html( $args['desc'] ) . '<span class="slider"></span></label>';
 		}
 
 		/**
 		 * Generate: Checkboxes field
 		 *
-		 * @param array $args
+		 * @param array $args Field arguments.
 		 */
 		public function generate_checkboxes_field( $args ) {
-			echo '<input type="hidden" name="' . $args['name'] . '" value="0" />';
+			echo '<input type="hidden" name="' . esc_attr( $args['name'] ) . '" value="0" />';
 
 			echo '<ul class="wpsf-list wpsf-list--checkboxes">';
 
@@ -844,7 +852,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				$checked  = ( is_array( $args['value'] ) && in_array( strval( $value ), array_map( 'strval', $args['value'] ), true ) ) ? 'checked="checked"' : '';
 				$field_id = sprintf( '%s_%s', $args['id'], $value );
 
-				echo sprintf( '<li><label><input type="checkbox" name="%s[]" id="%s" value="%s" class="%s" %s> %s</label></li>', $args['name'], $field_id, $value, $args['class'], $checked, $text );
+				echo sprintf( '<li><label><input type="checkbox" name="%s[]" id="%s" value="%s" class="%s" %s> %s</label></li>', esc_attr( $args['name'] ), esc_attr( $field_id ), esc_html( $value ), esc_attr( $args['class'] ), esc_html( $checked ), esc_html( $text ) );
 			}
 
 			echo '</ul>';
@@ -855,7 +863,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Color field
 		 *
-		 * @param array $args
+		 * @param array $args Field arguments.
 		 */
 		public function generate_color_field( $args ) {
 			$color_picker_id = sprintf( '%s_cp', $args['id'] );
@@ -863,21 +871,21 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			echo '<div style="position:relative;">';
 
-			echo sprintf( '<input type="text" name="%s" id="%s" value="%s" class="%s">', $args['name'], $args['id'], $args['value'], $args['class'] );
+			echo sprintf( '<input type="text" name="%s" id="%s" value="%s" class="%s">', esc_attr( $args['name'] ), esc_attr( $args['id'] ), esc_attr( $args['value'] ), esc_attr( $args['class'] ) );
 
-			echo sprintf( '<div id="%s" style="position:absolute;top:0;left:190px;background:#fff;z-index:9999;"></div>', $color_picker_id );
+			echo sprintf( '<div id="%s" style="position:absolute;top:0;left:190px;background:#fff;z-index:9999;"></div>', esc_attr( $color_picker_id ) );
 
 			$this->generate_description( $args['desc'] );
 
 			echo '<script type="text/javascript">
                 jQuery(document).ready(function($){
-                    var colorPicker = $("#' . $color_picker_id . '");
-                    colorPicker.farbtastic("#' . $args['id'] . '");
+                    var colorPicker = $("#' . esc_attr( $color_picker_id ) . '");
+                    colorPicker.farbtastic("#' . esc_attr( $args['id'] ) . '");
                     colorPicker.hide();
-                    $("#' . $args['id'] . '").on("focus", function(){
+                    $("#' . esc_attr( $args['id'] ) . '").on("focus", function(){
                         colorPicker.show();
                     });
-                    $("#' . $args['id'] . '").on("blur", function(){
+                    $("#' . esc_attr( $args['id'] ) . '").on("blur", function(){
                         colorPicker.hide();
                         if($(this).val() == "") $(this).val("#");
                     });
@@ -890,15 +898,15 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: File field
 		 *
-		 * @param array $args
+		 * @param array $args Field arguments.
 		 */
 		public function generate_file_field( $args ) {
 			$args['value'] = esc_attr( $args['value'] );
 			$button_id     = sprintf( '%s_button', $args['id'] );
 
-			echo sprintf( '<input type="text" name="%s" id="%s" value="%s" class="regular-text %s"> ', $args['name'], $args['id'], $args['value'], $args['class'] );
+			echo sprintf( '<input type="text" name="%s" id="%s" value="%s" class="regular-text %s"> ', esc_attr( $args['name'] ), esc_attr( $args['id'] ), esc_html( $args['value'] ), esc_attr( $args['class'] ) );
 
-			echo sprintf( '<input type="button" class="button wpsf-browse" id="%s" value="Browse" />', $button_id );
+			echo sprintf( '<input type="button" class="button wpsf-browse" id="%s" value="Browse" />', esc_attr( $button_id ) );
 
 			?>
 			<script type='text/javascript'>
@@ -964,7 +972,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Editor field
 		 *
-		 * @param array $args
+		 * @param array $args Field arguments.
 		 */
 		public function generate_editor_field( $args ) {
 			wp_editor( $args['value'], $args['id'], array( 'textarea_name' => $args['name'] ) );
@@ -975,7 +983,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Code editor field
 		 *
-		 * @param array $args
+		 * @param array $args Field arguments.
 		 */
 		public function generate_code_editor_field( $args ) {
 			printf(
@@ -1011,7 +1019,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		/**
 		 * Generate: Custom field
 		 *
-		 * @param array $args
+		 * @param array $args Field arguments.
 		 */
 		public function generate_custom_field( $args ) {
 			if ( isset( $args['output'] ) && is_callable( $args['output'] ) ) {
@@ -1019,13 +1027,15 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				return;
 			}
 
-			echo ( isset( $args['output'] ) ) ? $args['output'] : $args['default'];
+			// @codingStandardsIgnoreStart
+			echo ( isset( $args['output'] ) ) ? $args['output'] : $args['default']; // This output isn't easily escaped.
+			// @codingStandardsIgnoreEnd
 		}
 
 		/**
 		 * Generate: Multi Inputs field
 		 *
-		 * @param array $args Arguments.
+		 * @param array $args Field arguments.
 		 */
 		public function generate_multiinputs_field( $args ) {
 			$field_titles = array_keys( $args['default'] );
@@ -1034,14 +1044,15 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			echo '<div class="wpsf-multifields">';
 
 			$i = 0;
-			while ( $i < count( $values ) ) :
+			$c = count( $values );
+			while ( $i < $c ) :
 
 				$field_id = sprintf( '%s_%s', $args['id'], $i );
 				$value    = esc_attr( stripslashes( $values[ $i ] ) );
 
 				echo '<div class="wpsf-multifields__field">';
 				echo '<input type="text" name="' . esc_attr( $args['name'] ) . '[]" id="' . esc_attr( $field_id ) . '" value="' . esc_attr( $value ) . '" class="regular-text ' . esc_attr( $args['class'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" />';
-				echo '<br><span>' . $field_titles[ $i ] . '</span>';
+				echo '<br><span>' . esc_html( $field_titles[ $i ] ) . '</span>';
 				echo '</div>';
 
 				$i ++;
@@ -1250,7 +1261,7 @@ endwhile;
 		/**
 		 * Add Show Hide Classes.
 		 *
-		 * @param array  $args Arguments.
+		 * @param array  $args Field arguments.
 		 * @param string $type Type.
 		 */
 		public static function add_show_hide_classes( $args, $type = 'show_if' ) {
@@ -1331,7 +1342,9 @@ endwhile;
 			// output the file contents to the browser.
 			header( 'Content-Type: text/json; charset=utf-8' );
 			header( 'Content-Disposition: attachment; filename=wpsf-settings-' . $option_group . '.json' );
-			echo $options;
+			// @codingStandardsIgnoreStart
+			echo $options; // The string is already encoded, and option values will have already been escaped.
+			// @codingStandardsIgnoreEnd
 			exit;
 		}
 
