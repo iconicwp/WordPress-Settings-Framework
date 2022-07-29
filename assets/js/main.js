@@ -22,7 +22,11 @@
 			wpsf.setup_visual_radio_checkbox_field();
 			wpsf.importer.init();
 
-			$( document.body ).on( 'change', 'input, select, textarea', wpsf.control_groups );
+			$( document.body ).on( 
+				'change',
+				'input, select, textarea, .wpsf-visual-field input[type="radio"], .wpsf-visual-field input[type="checkbox"]', 
+				wpsf.control_groups
+			);
 		},
 
 		/**
@@ -478,7 +482,7 @@
 			var split = item.split( '===' );
 			var control = split[0];
 			var values = split[1].split( '||' );
-			var control_value = wpsf.get_controller_value( control );
+			var control_value = wpsf.get_controller_value( control, values );
 
 			if ( ! values.includes( control_value ) ) {
 				show = ! show;
@@ -490,14 +494,19 @@
 		/** 
 		 * Return the control value.
 		 */
-		get_controller_value: function( id ) {
+		get_controller_value: function( id, values ) {
 			var control = $( '#' + id );
-			
-			if ( 'checkbox' === control.attr( 'type' ) || 'radio' === control.attr( 'type' ) ) {
-				control = $( '#' + id + ':checked' );
+
+			// This may be an image_radio field.
+			if ( ! control.length && values.length ) {
+				control = $( '#' + id + '_' + values[0] );
 			}
 
-			var value = control.val();
+			if ( control.length && ( 'checkbox' === control.attr( 'type' ) || 'radio' === control.attr( 'type' ) ) ) {
+				control = ( control.is( ':checked' ) ) ? control : false;
+			}
+
+			var value = ( control.length ) ? control.val() : 'undefined';
 
 			if ( typeof value === 'undefined' ) {
 				value = '';
