@@ -891,7 +891,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			echo sprintf( '<input type="text" name="%s" id="%s" value="%s" class="regular-text %s"> ', $args['name'], $args['id'], $args['value'], $args['class'] );
 
-			echo sprintf( '<input type="button" class="button wpsf-browse" id="%s" value="Browse" />', $button_id );
+			echo sprintf( '<input type="button" class="button wpsf-browse" id="%s" value="%s" />', esc_attr( $button_id ), esc_html__( 'Browse', 'wpsf' ) );
 
 			?>
 			<script type='text/javascript'>
