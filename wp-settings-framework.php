@@ -138,6 +138,13 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * Construct Settings.
 		 */
 		public function construct_settings() {
+			/**
+			 * Filter: modify settings for a given option group.
+			 *
+			 * @filter wpsf_register_settings_<option_group>
+			 * @since 1.6.9
+			 * @param array
+			 */
 			$this->settings_wrapper = apply_filters( 'wpsf_register_settings_' . $this->option_group, array() );
 
 			if ( ! is_array( $this->settings_wrapper ) ) {
@@ -208,7 +215,21 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 					$args['capability'],
 					$this->settings_page['slug'],
 					array( $this, 'settings_page_content' ),
+					/**
+					 * Filter: modify icon URL for a given option group.
+					 *
+					 * @filter wpsf_menu_icon_url_<option_group>
+					 * @since 1.6.9
+					 * @param string
+					 */
 					apply_filters( 'wpsf_menu_icon_url_' . $this->option_group, '' ),
+					/**
+					 * Filter: modify menu position for a given option group.
+					 *
+					 * @filter wpsf_menu_position_<option_group>
+					 * @since 1.6.9
+					 * @param int|null
+					 */
 					apply_filters( 'wpsf_menu_position_' . $this->option_group, null )
 				);
 			}
@@ -237,8 +258,29 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		public function settings_header() {
 			?>
 			<div class="wpsf-settings__header">
-				<h2><?php echo esc_html( apply_filters( 'wpsf_title_' . $this->option_group, $this->settings_page['title'] ) ); ?></h2>
-				<?php do_action( 'wpsf_after_title_' . $this->option_group ); ?>
+				<h2>
+					<?php
+					echo esc_html(
+						/**
+						 * Filter: modify title for a given option group.
+						 *
+						 * @filter wpsf_title_<option_group>
+						 * @since 1.6.9
+						 * @param string $title Title for the group settings header.
+						 */
+						apply_filters( 'wpsf_title_' . $this->option_group, $this->settings_page['title'] )
+					);
+					?>
+				</h2>
+				<?php
+				/**
+				 * Hook: execute a callback after the option group title.
+				 *
+				 * @hook wpsf_after_title_<option_group>
+				 * @since 1.6.9
+				 */
+				do_action( 'wpsf_after_title_' . $this->option_group );
+				?>
 			</div>
 			<?php
 		}
@@ -329,6 +371,13 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * @return array
 		 */
 		public function settings_validate( $input ) {
+			/**
+			 * Filter: validate field input for a given option group.
+			 *
+			 * @filter <option_group>_settings_validate
+			 * @since 1.6.9
+			 * @param mixed
+			 */
 			return apply_filters( $this->option_group . '_settings_validate', $input );
 		}
 
@@ -438,7 +487,14 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * @param array $args callback args from add_settings_field().
 		 */
 		public function generate_setting( $args ) {
-			$section                = $args['section'];
+			$section = $args['section'];
+			/**
+			 * Filter: filter the default setting values for a given option group.
+			 *
+			 * @filter wpsf_defaults_<option_group>
+			 * @since 1.6.9
+			 * @param mixed $setting_defaults Default values for settings.
+			 */
 			$this->setting_defaults = apply_filters( 'wpsf_defaults_' . $this->option_group, $this->setting_defaults );
 
 			$args = wp_parse_args( $args['field'], $this->setting_defaults );
@@ -451,12 +507,38 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			$args['class'] .= self::add_show_hide_classes( $args );
 
+			/**
+			 * Hook: execute callback before a given group.
+			 *
+			 * @hook wpsf_before_field_<option_group>
+			 * @since 1.6.9
+			 */
 			do_action( 'wpsf_before_field_' . $this->option_group );
+
+			/**
+			 * Hook: execute callback before a specific field in a given group.
+			 *
+			 * @hook wpsf_before_field_<option_group>_<field_id>
+			 * @since 1.6.9
+			 */
 			do_action( 'wpsf_before_field_' . $this->option_group . '_' . $args['id'] );
 
 			$this->do_field_method( $args );
 
+			/**
+			 * Hook: execute callback after a given group.
+			 *
+			 * @hook wpsf_after_field_<option_group>
+			 * @since 1.6.9
+			 */
 			do_action( 'wpsf_after_field_' . $this->option_group );
+
+			/**
+			 * Hook: execute callback after a specific field in a given group.
+			 *
+			 * @hook wpsf_after_field_<option_group>_<field_id>
+			 * @since 1.6.9
+			 */
 			do_action( 'wpsf_after_field_' . $this->option_group . '_' . $args['id'] );
 		}
 
@@ -1123,21 +1205,58 @@ endwhile;
 		 * Output the settings form
 		 */
 		public function settings() {
+			/**
+			 * Hook: execute callback before the settings form for a given group.
+			 *
+			 * @hook wpsf_before_settings_<option_group>
+			 * @since 1.6.9
+			 */
 			do_action( 'wpsf_before_settings_' . $this->option_group );
 			?>
 			<form action="options.php" method="post" novalidate enctype="multipart/form-data">
-				<?php do_action( 'wpsf_before_settings_fields_' . $this->option_group ); ?>
+				<?php
+				/**
+				 * Hook: execute callback before the settings fields for a given group.
+				 *
+				 * @hook wpsf_before_settings_fields_<option_group>
+				 * @since 1.6.9
+				 */
+				do_action( 'wpsf_before_settings_fields_' . $this->option_group );
+				?>
 				<?php settings_fields( $this->option_group ); ?>
 
-				<?php do_action( 'wpsf_do_settings_sections_' . $this->option_group ); ?>
+				<?php
+				/**
+				 * Hook: execute callback to output the settings sections for a given group.
+				 *
+				 * @hook wpsf_do_settings_sections_<option_group>
+				 * @since 1.6.9
+				 */
+				do_action( 'wpsf_do_settings_sections_' . $this->option_group );
+				?>
 
-				<?php if ( apply_filters( 'wpsf_show_save_changes_button_' . $this->option_group, true ) ) { ?>
+				<?php
+				/**
+				 * Filter: control whether the save changes button should be visible or not for a given option group.
+				 *
+				 * @filter wpsf_show_save_changes_button_<option_group>
+				 * @since 1.6.9
+				 * @param boolean
+				 */
+				if ( apply_filters( 'wpsf_show_save_changes_button_' . $this->option_group, true ) ) {
+					?>
 					<p class="submit">
 						<input type="submit" class="button-primary" value="<?php esc_attr_e( 'Save Changes' ); ?>" />
 					</p>
 				<?php } ?>
 			</form>
 			<?php
+			/**
+			 * Hook: execute callback after the settings form for a given group.
+			 *
+			 * @hook wpsf_after_settings_<option_group>
+			 * @since 1.6.9
+			 */
 			do_action( 'wpsf_after_settings_' . $this->option_group );
 		}
 
@@ -1218,10 +1337,23 @@ endwhile;
 		 * Output the tab links
 		 */
 		public function tab_links() {
+			/**
+			 * Filter: control whether the tab links should be visible or not for a given option group.
+			 *
+			 * @filter wpsf_show_tab_links_<option_group>
+			 * @since 1.6.9
+			 * @param boolean
+			 */
 			if ( ! apply_filters( 'wpsf_show_tab_links_' . $this->option_group, true ) ) {
 				return;
 			}
 
+			/**
+			 * Hook: execute callback before the tab links for a given option group.
+			 *
+			 * @hook wpsf_before_tab_links_<option_group>
+			 * @since 1.6.9
+			 */
 			do_action( 'wpsf_before_tab_links_' . $this->option_group );
 			?>
 			<ul class="wpsf-nav">
@@ -1255,6 +1387,12 @@ endwhile;
 			<?php // Add this here so notices are moved. ?>
 			<div class="wrap wpsf-notices"><h2>&nbsp;</h2></div>
 			<?php
+			/**
+			 * Hook: execute callback after the tab links for a given option group.
+			 *
+			 * @hook wpsf_after_tab_links_<option_group>
+			 * @since 1.6.9
+			 */
 			do_action( 'wpsf_after_tab_links_' . $this->option_group );
 		}
 
