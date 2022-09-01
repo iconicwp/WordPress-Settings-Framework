@@ -260,7 +260,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			<div class="wpsf-settings__header">
 				<h2>
 					<?php
-					echo esc_html(
+					echo wp_kses_post(
 						/**
 						 * Filter: modify title for a given option group.
 						 *
