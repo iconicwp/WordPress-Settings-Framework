@@ -260,7 +260,11 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			<div class="wpsf-settings__header">
 				<h2>
 					<?php
-					echo wp_kses_post(
+					global $allowedposttags;
+					$protocols   = wp_allowed_protocols();
+					$protocols[] = 'data';
+
+					echo wp_kses(
 						/**
 						 * Filter: modify title for a given option group.
 						 *
@@ -268,7 +272,9 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 						 * @since 1.6.9
 						 * @param string $title Title for the group settings header.
 						 */
-						apply_filters( 'wpsf_title_' . $this->option_group, $this->settings_page['title'] )
+						apply_filters( 'wpsf_title_' . $this->option_group, $this->settings_page['title'] ),
+						$allowedposttags,
+						$protocols
 					);
 					?>
 				</h2>
