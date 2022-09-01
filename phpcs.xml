@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<ruleset name="WooCommerce Coding Standards">
+    <description>Generally-applicable sniffs for WooCommerce plugins</description>
+
+    <!-- Configs -->
+    <config name="minimum_supported_wp_version" value="4.7"/>
+    <config name="testVersion" value="5.6-"/>
+
+    <!-- Rules -->
+    <rule ref="WordPress">
+        <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+        <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+    </rule>
+
+    <rule ref="WooCommerce-Core"/>
+    <rule ref="PHPCompatibility"/>
+
+    <!-- Args -->
+    <arg name="extensions" value="php"/>
+    <arg value="s"/>
+
+    <!-- Excludes -->
+    <exclude-pattern>*/dev-lib/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>.github/</exclude-pattern>
+</ruleset>

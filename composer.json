@@ -1,9 +1,12 @@
 {
-    "name": "iconicwp/WordPress-Settings-Framework",
+    "name": "iconicwp/wordpress-settings-framework",
     "authors": [
         {
             "name": "James Kemp",
             "email": "me@jckemp.com"
         }
-    ]
+    ],
+    "require": {
+        "woocommerce/woocommerce-sniffs": "^0.1.0"
+    }
 }

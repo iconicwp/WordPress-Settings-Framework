@@ -2,9 +2,8 @@
 /**
  * WordPress Settings Framework
  *
- * @author  Gilbert Pellegrom, James Kemp
- * @link    https://github.com/gilbitron/WordPress-Settings-Framework
- * @license MIT
+ * @link https://github.com/gilbitron/WordPress-Settings-Framework
+ * @package wpsf
  */
 
 /**
@@ -28,7 +27,7 @@ add_filter( 'wpsf_register_settings_my_example_settings', 'wpsf_tabless_settings
  * @param array $wpsf_settings Settings.
  */
 function wpsf_tabless_settings( $wpsf_settings ) {
-	// General Settings section
+	// General Settings section.
 	$wpsf_settings[] = array(
 		'section_id'          => 'general',
 		'section_title'       => 'General Settings',
@@ -55,14 +54,14 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				'title'      => 'Time Picker',
 				'desc'       => 'This is a description.',
 				'type'       => 'time',
-				'timepicker' => array(), // Array of timepicker options (http://fgelinas.com/code/timepicker)
+				'timepicker' => array(), // Array of timepicker options (http://fgelinas.com/code/timepicker).
 			),
 			array(
 				'id'         => 'date',
 				'title'      => 'Date Picker',
 				'desc'       => 'This is a description.',
 				'type'       => 'date',
-				'datepicker' => array(), // Array of datepicker options (http://api.jqueryui.com/datepicker/)
+				'datepicker' => array(), // Array of datepicker options (http://api.jqueryui.com/datepicker/).
 			),
 			array(
 				'id'      => 'image_radio',
@@ -106,7 +105,7 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				'desc'      => 'This is a description.',
 				'type'      => 'group',
 				'subfields' => array(
-					// accepts most types of fields
+					// accepts most types of fields.
 					array(
 						'id'          => 'sub-text',
 						'title'       => 'Sub Text',
