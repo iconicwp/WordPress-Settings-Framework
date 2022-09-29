@@ -1379,7 +1379,7 @@ endwhile;
 					$active = ( 0 === $i ) ? 'wpsf-nav__item--active' : '';
 					?>
 					<li class="wpsf-nav__item <?php echo esc_attr( $active ); ?>">
-						<a class="wpsf-nav__item-link <?php echo esc_attr( $tab_data['class'] ); ?>" href="#tab-<?php echo esc_attr( $tab_data['id'] ); ?>"><?php echo esc_html( $tab_data['title'] ); ?></a>
+						<a class="wpsf-nav__item-link <?php echo esc_attr( $tab_data['class'] ); ?>" href="#tab-<?php echo esc_attr( $tab_data['id'] ); ?>"><?php echo wp_kses_post( $tab_data['title'] ); ?></a>
 					</li>
 					<?php
 					$i ++;
