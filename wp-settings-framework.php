@@ -46,7 +46,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 *
 		 * @var array
 		 */
-		private $settings_page = array();
+		public $settings_page = array();
 
 		/**
 		 * Options path.
