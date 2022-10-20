@@ -1097,7 +1097,10 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * @param array $args Field arguments.
 		 */
 		public function generate_editor_field( $args ) {
-			wp_editor( $args['value'], $args['id'], array( 'textarea_name' => $args['name'] ) );
+			$settings                  = ( isset( $args['editor_settings'] ) && is_array( $args['editor_settings'] ) ) ? $args['editor_settings'] : array();
+			$settings['textarea_name'] = $args['name'];
+
+			wp_editor( $args['value'], $args['id'], $settings );
 
 			$this->generate_description( $args['desc'] );
 		}
