@@ -193,11 +193,14 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				'default' => '',
 			),
 			array(
-				'id'      => 'editor',
-				'title'   => 'Editor',
-				'desc'    => 'This is a description.',
-				'type'    => 'editor',
-				'default' => '',
+				'id'              => 'editor',
+				'title'           => 'Editor',
+				'desc'            => 'This is a description.',
+				'type'            => 'editor',
+				'default'         => '',
+				'editor_settings' => array(
+					'teeny' => false,
+				),
 			),
 			array(
 				'id'          => 'code_editor',
