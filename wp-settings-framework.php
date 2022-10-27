@@ -441,7 +441,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 											$link_text = sprintf( '<i class="dashicons dashicons-info wpsf-link-icon" title="%s"><span class="screen-reader-text">%s</span></i>', $link_text, $link_text );
 										}
 
-										$link = ( $link_url ) ? sprintf( '<a class="wpsf-link" href="%s"%s>%s</a>', $link_url, $link_target, $link_text ) : '';
+										$link = ( $link_url ) ? sprintf( '<a class="wpsf-label__link" href="%s"%s>%s</a>', $link_url, $link_target, $link_text ) : '';
 
 										if ( $link && 'tooltip' === $link_type ) {
 											$tooltip = $link;
@@ -450,7 +450,11 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 										}
 									}
 
-									$title = ( ! empty( $field['subtitle'] ) ) ? sprintf( '%s %s<span class="wpsf-subtitle">%s</span>', $field['title'], $tooltip, $field['subtitle'] ) : sprintf( '%s %s', $field['title'], $tooltip );
+									$title = sprintf( '<span class="wpsf-label">%s %s</span>', $field['title'], $tooltip );
+
+									if ( ! empty( $field['subtitle'] ) ) {
+										$title .= sprintf( '<span class="wpsf-subtitle">%s</span>', $field['subtitle'] );
+									}
 
 									add_settings_field(
 										$field['id'],
