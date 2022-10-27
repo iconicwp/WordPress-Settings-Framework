@@ -521,6 +521,18 @@ p.submit {
 
 }
 
+/* $. Field Label */
+
+.wpsf-label {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+
+.wpsf-label__link {
+	line-height: 21px;
+}
+
 /* $. Subtitle */
 
 .wpsf-subtitle {
@@ -531,6 +543,8 @@ p.submit {
 	font-style: italic;
 	margin: 15px 0 0;
 }
+
+/* $. Import */
 
 .wpsf-import__false_btn {
 	position: relative;
