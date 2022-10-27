@@ -526,10 +526,11 @@ p.submit {
 .wpsf-label {
 	display: flex;
 	align-items: center;
+	gap: 4px;
 }
 
 .wpsf-label__link {
-	margin: 0 0 0 4px;
+	line-height: 21px;
 }
 
 /* $. Subtitle */
