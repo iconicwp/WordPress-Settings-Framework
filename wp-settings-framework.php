@@ -1210,7 +1210,7 @@ endwhile;
 		 */
 		public function generate_description( $description ) {
 			if ( $description && '' !== $description ) {
-				echo '<p class="description">' . esc_html( $description ) . '</p>';
+				echo '<p class="description">' . wp_kses_post( $description ) . '</p>';
 			}
 		}
 
