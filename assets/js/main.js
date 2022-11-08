@@ -91,7 +91,7 @@
 				if ( href.indexOf( '|' ) > 0 ) {
 					parts = href.split( '|' );
 					tab_id = parts[ 0 ];
-					element_id = parts[ 0 ];
+					element_id = parts[ 1 ];
 				} else {
 					tab_id = href;
 				}
@@ -99,7 +99,7 @@
 				wpsf.tabs.set_active_tab( tab_id );
 
 				if ( element_id ) {
-					$('html, body').animate({scrollTop: $(`${element_id}`).offset().top - 50 }, 'fast');
+					$('html, body').animate({scrollTop: $(`#${element_id}`).offset().top - 100 }, 'fast');
 				}
 			},
 
