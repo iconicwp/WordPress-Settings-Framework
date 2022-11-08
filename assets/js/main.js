@@ -61,12 +61,47 @@
 
 					e.preventDefault();
 				} );
+
+				$( '.wsf-internal-link' ).click( wpsf.tabs.follow_link );
 			},
 
 			/**
 			 * Is storage available.
 			 */
-			has_storage: 'undefined' !== typeof (Storage),
+			has_storage: 'undefined' !== typeof ( Storage ),
+			
+			/**
+			 * Handle click on the Internal link.
+			 * 
+			 * Format of link is #tab-id|field-id. Field-id can be skipped.
+			 * 
+			 * @param {*} e
+			 * @returns
+			 */
+			follow_link: function ( e ) {
+				e.preventDefault();
+				var href = $( this ).attr( 'href' );
+				var tab_id, parts, element_id;
+
+				if ( href.indexOf( '#tab-' ) != 0 ) {
+					return;
+				}
+
+				// has "|" i.e. element ID.
+				if ( href.indexOf( '|' ) > 0 ) {
+					parts = href.split( '|' );
+					tab_id = parts[ 0 ];
+					element_id = parts[ 1 ];
+				} else {
+					tab_id = href;
+				}
+
+				wpsf.tabs.set_active_tab( tab_id );
+
+				if ( element_id ) {
+					$('html, body').animate({scrollTop: $(`#${element_id}`).offset().top - 100 }, 'fast');
+				}
+			},
 
 			/**
 			 * Store tab ID.

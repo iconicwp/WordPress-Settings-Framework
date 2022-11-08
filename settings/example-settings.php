@@ -432,7 +432,8 @@ function wpsf_tabbed_settings( $wpsf_settings ) {
 				array(
 					'id'      => 'text-2',
 					'title'   => 'Text',
-					'desc'    => 'This is a description.',
+					// Format of href is #tab-id|field-id. You can choose to skip the field id.
+					'desc'    => 'This is a description. This is a <a href="#tab-tab_2|tab_2_section_3_text-3" class="wsf-internal-link">link</a> to a setting in a different tab.',
 					'type'    => 'text',
 					'default' => 'This is default',
 				),
