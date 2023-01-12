@@ -349,9 +349,9 @@
 			$( '.show-if' ).each( function( index ) {
 				var element = $( this );
 				var parent_tag = element.parent().prop( 'nodeName' ).toLowerCase()
-				
+
 				// Field.
-				if ( 'td' === parent_tag || 'label' === parent_tag ) {
+				if ( 'td' === parent_tag || 'label' === parent_tag || element.parent().hasClass( 'wpsf-visual-field__item-footer' ) ) {
 					element.closest( 'tr' ).hide();
 
 					wpsf.maybe_show_element( element, function() {
@@ -369,7 +369,7 @@
 				}
 
 				// Section.
-				if ( 'div' === parent_tag ) {
+				if ( 'div' === parent_tag && ! element.parent().hasClass( 'wpsf-visual-field__item-footer' ) ) {
 					element.prev().hide();
 					element.next().hide();
 					if ( element.next().hasClass( 'wpsf-section-description' ) ) {
@@ -390,9 +390,9 @@
 			$( '.hide-if' ).each( function( index ) {
 				var element = $( this );
 				var parent_tag = element.parent().prop( 'nodeName' ).toLowerCase()
-				
+
 				// Field.
-				if ( 'td' === parent_tag || 'label' === parent_tag ) {
+				if ( 'td' === parent_tag || 'label' === parent_tag || element.parent().hasClass( 'wpsf-visual-field__item-footer' ) ) {
 					element.closest( 'tr' ).show();
 
 					wpsf.maybe_hide_element( element, function() {
@@ -410,7 +410,7 @@
 				}
 
 				// Section.
-				if ( 'div' === parent_tag ) {
+				if ( 'div' === parent_tag && ! element.parent().hasClass( 'wpsf-visual-field__item-footer' ) ) {
 					element.prev().show();
 					element.next().show();
 					if ( element.next().hasClass( 'wpsf-section-description' ) ) {
