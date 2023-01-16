@@ -393,7 +393,7 @@
 				    parent_tag = element.parent().prop( 'nodeName' ).toLowerCase();
 
 				// Field.
-				if ( 'td' === parent_tag || 'label' === parent_tag || wpsf.is_visual_field( element ) {
+				if ( 'td' === parent_tag || 'label' === parent_tag || wpsf.is_visual_field( element ) ) {
 					element.closest( 'tr' ).show();
 
 					wpsf.maybe_hide_element( element, function() {
