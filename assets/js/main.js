@@ -347,11 +347,12 @@
 		control_groups: function() {
 			// If show if, hide by default.
 			$( '.show-if' ).each( function( index ) {
-				var element = $( this );
-				var parent_tag = element.parent().prop( 'nodeName' ).toLowerCase()
+				var element = $( this ),
+				    parent_tag = element.parent().prop( 'nodeName' ).toLowerCase();
 				
+
 				// Field.
-				if ( 'td' === parent_tag || 'label' === parent_tag ) {
+				if ( 'td' === parent_tag || 'label' === parent_tag || wpsf.is_visual_field( element ) ) {
 					element.closest( 'tr' ).hide();
 
 					wpsf.maybe_show_element( element, function() {
@@ -369,7 +370,7 @@
 				}
 
 				// Section.
-				if ( 'div' === parent_tag ) {
+				if ( 'div' === parent_tag && ! wpsf.is_visual_field( element ) ) {
 					element.prev().hide();
 					element.next().hide();
 					if ( element.next().hasClass( 'wpsf-section-description' ) ) {
@@ -388,11 +389,11 @@
 
 			// If hide if, show by default.
 			$( '.hide-if' ).each( function( index ) {
-				var element = $( this );
-				var parent_tag = element.parent().prop( 'nodeName' ).toLowerCase()
-				
+				var element = $( this ),
+				    parent_tag = element.parent().prop( 'nodeName' ).toLowerCase();
+
 				// Field.
-				if ( 'td' === parent_tag || 'label' === parent_tag ) {
+				if ( 'td' === parent_tag || 'label' === parent_tag || wpsf.is_visual_field( element ) ) {
 					element.closest( 'tr' ).show();
 
 					wpsf.maybe_hide_element( element, function() {
@@ -410,7 +411,7 @@
 				}
 
 				// Section.
-				if ( 'div' === parent_tag ) {
+				if ( 'div' === parent_tag && ! wpsf.is_visual_field( element ) ) {
 					element.prev().show();
 					element.next().show();
 					if ( element.next().hasClass( 'wpsf-section-description' ) ) {
@@ -426,6 +427,15 @@
 					} );
 				}
 			} );
+		},
+		
+		/**
+		 * Is the element part of a visual field?
+		 * 
+		 * @param {object} element Element.
+		 */
+		is_visual_field: function( element ) {
+			return element.parent().hasClass( 'wpsf-visual-field__item-footer' );
 		},
 
 		/**
