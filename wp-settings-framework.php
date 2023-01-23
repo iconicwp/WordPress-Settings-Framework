@@ -513,7 +513,9 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			$args['id']    = ( $this->has_tabs() ) ? sprintf( '%s_%s_%s', $section['tab_id'], $section['section_id'], $args['id'] ) : sprintf( '%s_%s', $section['section_id'], $args['id'] );
 			$args['value'] = ( isset( $options[ $args['id'] ] ) ) ? $options[ $args['id'] ] : ( isset( $args['default'] ) ? $args['default'] : '' );
-			$args['name']  = $this->generate_field_name( $args['id'] );
+			
+			$field_name   = isset( $args['name'] ) ? $args['name'] : $args['id'];
+			$args['name'] = $this->generate_field_name( $field_name );
 
 			$args['class'] .= self::add_show_hide_classes( $args );
 
