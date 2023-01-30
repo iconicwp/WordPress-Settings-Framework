@@ -1303,6 +1303,11 @@ endwhile;
 
 					$setting_key = ( $this->has_tabs() ) ? sprintf( '%s_%s_%s', $section['tab_id'], $section['section_id'], $field['id'] ) : sprintf( '%s_%s', $section['section_id'], $field['id'] );
 
+					// If a field name override has been provided, use it.
+					if ( ! empty( $field['name'] ) ) {
+						$setting_key = $field['name'];
+					}
+					
 					if ( isset( $saved_settings[ $setting_key ] ) ) {
 						$settings[ $settings_name ][ $setting_key ] = $saved_settings[ $setting_key ];
 					} else {
