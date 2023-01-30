@@ -1301,11 +1301,11 @@ endwhile;
 						$field['default'] = array_values( $field['default'] );
 					}
 
-					$setting_key = ( $this->has_tabs() ) ? sprintf( '%s_%s_%s', $section['tab_id'], $section['section_id'], $field['id'] ) : sprintf( '%s_%s', $section['section_id'], $field['id'] );
-
 					// If a field name override has been provided, use it.
 					if ( ! empty( $field['name'] ) ) {
 						$setting_key = $field['name'];
+					} else {
+						$setting_key = ( $this->has_tabs() ) ? sprintf( '%s_%s_%s', $section['tab_id'], $section['section_id'], $field['id'] ) : sprintf( '%s_%s', $section['section_id'], $field['id'] );
 					}
 					
 					if ( isset( $saved_settings[ $setting_key ] ) ) {
