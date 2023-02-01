@@ -133,15 +133,20 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				'default'     => 'This is default',
 			),
 			array(
-				'id'      => 'select',
-				'title'   => 'Select',
-				'desc'    => 'This is a description.',
-				'type'    => 'select',
-				'default' => 'green',
-				'choices' => array(
+				'id'               => 'select',
+				'title'            => 'Select',
+				'desc'             => 'This is a description.',
+				'type'             => 'select',
+				'default'          => 'green',
+				'choices'          => array(
 					'red'   => 'Red',
 					'green' => 'Green',
 					'blue'  => 'Blue',
+				),
+				'conditional_desc' => array(
+					'red'   => 'Description for value: red',
+					'green' => 'Description for value: green',
+					'blue'  => 'Description for value: blue',
 				),
 			),
 			array(
