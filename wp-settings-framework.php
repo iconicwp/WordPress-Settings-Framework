@@ -871,23 +871,30 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * @param array $args Field rguments.
 		 */
 		public function generate_select_field( $args ) {
-			$args['value'] = esc_html( esc_attr( $args['value'] ) );
+			$is_multiple = isset( $args['multiple'] ) && filter_var( $args['multiple'], FILTER_VALIDATE_BOOLEAN );
+			$multiple    = $is_multiple ? ' multiple="true" ' : ' ';
 
-			echo '<select name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" class="' . esc_attr( $args['class'] ) . '">';
+			if ( $is_multiple ) {
+				$args['name'] .= '[]';
+			}
+
+			$values = (array) $args['value'];
+			$values = array_map( 'strval', $values );
+
+			echo '<select ' . esc_html( $multiple ) . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" class="' . esc_attr( $args['class'] ) . '" >';
 
 			foreach ( $args['choices'] as $value => $text ) {
 				if ( is_array( $text ) ) {
 					echo sprintf( '<optgroup label="%s">', esc_html( $value ) );
 					foreach ( $text as $group_value => $group_text ) {
-						$selected = ( $group_value === $args['value'] ) ? 'selected="selected"' : '';
+						$selected = in_array( (string) $group_value, $values, true ) ? ' selected="selected" ' : '';
 						echo sprintf( '<option value="%s" %s>%s</option>', esc_attr( $group_value ), esc_html( $selected ), esc_html( $group_text ) );
 					}
 					echo '</optgroup>';
 					continue;
 				}
 
-				$selected = ( strval( $value ) === $args['value'] ) ? 'selected="selected"' : '';
-
+				$selected = in_array( (string) $value, $values, true ) ? ' selected="selected" ' : '';
 				echo sprintf( '<option value="%s" %s>%s</option>', esc_attr( $value ), esc_html( $selected ), esc_html( $text ) );
 			}
 
