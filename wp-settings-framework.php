@@ -68,15 +68,16 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * @var array
 		 */
 		protected $setting_defaults = array(
-			'id'          => 'default_field',
-			'title'       => 'Default Field',
-			'desc'        => '',
-			'std'         => '',
-			'type'        => 'text',
-			'placeholder' => '',
-			'choices'     => array(),
-			'class'       => '',
-			'subfields'   => array(),
+			'id'           => 'default_field',
+			'title'        => 'Default Field',
+			'desc'         => '',
+			'std'          => '',
+			'type'         => 'text',
+			'placeholder'  => '',
+			'choices'      => array(),
+			'class'        => '',
+			'subfields'    => array(),
+			'autocomplete' => '',
 		);
 
 		/**
@@ -911,7 +912,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		public function generate_password_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
 
-			echo '<input type="password" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="regular-text ' . esc_attr( $args['class'] ) . '" />';
+			echo '<input type="password" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="regular-text ' . esc_attr( $args['class'] ) . '" autocomplete="' . esc_attr( $args['autocomplete'] ) . '"/>';
 
 			$this->generate_description( $args['desc'] );
 		}
