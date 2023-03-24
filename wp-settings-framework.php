@@ -1536,15 +1536,10 @@ endwhile;
 			}
 
 			$options = get_option( $option_group . '_settings' );
-			$options = wp_json_encode( $options );
 
-			// output the file contents to the browser.
-			header( 'Content-Type: text/json; charset=utf-8' );
 			header( 'Content-Disposition: attachment; filename=wpsf-settings-' . $option_group . '.json' );
-			// @codingStandardsIgnoreStart
-			echo $options; // The string is already encoded, and option values will have already been escaped.
-			// @codingStandardsIgnoreEnd
-			exit;
+
+			wp_send_json( $options );
 		}
 
 		/**
