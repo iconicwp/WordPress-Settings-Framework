@@ -36,6 +36,7 @@
 
 			wpsf.setup_timepickers();
 			wpsf.setup_datepickers();
+			wpsf.setup_datetimepickers();
 
 		},
 
@@ -216,6 +217,19 @@
 					$( datepicker.settings.altField ).val( '' );
 				}
 			});
+		},
+
+
+		/**
+		 * Set up datetimepickers
+		 */
+		setup_datetimepickers: function() {
+
+			$( '.datetimepicker' ).each( function() {
+				var datetimepicker_args = $( this ).data( 'datetimepicker' );
+				flatpickr(this, datetimepicker_args);
+			} );
+
 		},
 
 		/**
