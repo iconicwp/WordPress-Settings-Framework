@@ -8,5 +8,13 @@
     ],
     "require-dev": {
         "woocommerce/woocommerce-sniffs": "^0.1.0"
+    },
+    "scripts": {
+        "format": "vendor/bin/phpcbf -p"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }
