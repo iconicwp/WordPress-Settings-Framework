@@ -255,8 +255,9 @@
 
 				wpsf.trigger_dynamic_fields();
 
-				return false;
+				$row.trigger('wpsfGroupRowAdded', [$row]);
 
+				return false;
 			} );
 
 			// remove row
