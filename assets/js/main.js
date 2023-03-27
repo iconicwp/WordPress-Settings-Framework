@@ -313,7 +313,10 @@
 				}
 
 				$( this ).find( "label" ).each( function() {
-					$( this ).attr('for', $( this ).attr('for' ).replace( /\_\d+\_/, '_' + index + '_' ) );
+					const name = $( this ).attr( 'for' );
+					if ( typeof name !== typeof undefined && name !== false ) {
+						$( this ).attr('for', $( this ).attr('for' ).replace( /\_\d+\_/, '_' + index + '_' ) );
+					}
 				} );
 
 				$( this ).find( "input" ).each( function() {
