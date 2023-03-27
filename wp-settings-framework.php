@@ -817,7 +817,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * @return string|bool
 		 */
 		public function generate_group_row_template( $args, $blank = false, $row = 0 ) {
-			$row_template = false;
+			$row_template = '';
 			$row_id       = ( ! empty( $args['value'][ $row ]['row_id'] ) ) ? $args['value'][ $row ]['row_id'] : $row;
 			$row_id_value = ( $blank ) ? '' : $row_id;
 
@@ -1315,7 +1315,7 @@ endwhile;
 					} else {
 						$setting_key = ( $this->has_tabs() ) ? sprintf( '%s_%s_%s', $section['tab_id'], $section['section_id'], $field['id'] ) : sprintf( '%s_%s', $section['section_id'], $field['id'] );
 					}
-					
+
 					if ( isset( $saved_settings[ $setting_key ] ) ) {
 						$settings[ $settings_name ][ $setting_key ] = $saved_settings[ $setting_key ];
 					} else {
