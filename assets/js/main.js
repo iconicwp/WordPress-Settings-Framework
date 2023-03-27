@@ -327,7 +327,26 @@
 					$( this ).addClass( 'alternate' );
 				}
 
+				$( this ).find( "label" ).each( function() {
+					$( this ).attr('for', $( this ).attr('for' ).replace( /\_\d+\_/, '_' + index + '_' ) );
+				} );
+
 				$( this ).find( "input" ).each( function() {
+					var this_input = this,
+						name = jQuery( this ).attr( 'name' );
+
+					if ( typeof name !== typeof undefined && name !== false ) {
+						$( this_input ).attr( 'name', name.replace( /\[\d+\]/, '[' + index + ']' ) );
+					}
+
+					$.each( this_input.attributes, function() {
+						if ( this.name && this_input && $.inArray( this.name, reindex_attributes ) > -1 ) {
+							$( this_input ).attr( this.name, this.value.replace( /\_\d+\_/, '_' + index + '_' ) );
+						}
+					} );
+				} );
+
+				$( this ).find( "select" ).each( function() {
 					var this_input = this,
 						name = jQuery( this ).attr( 'name' );
 
