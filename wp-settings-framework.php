@@ -1315,7 +1315,7 @@ endwhile;
 					} else {
 						$setting_key = ( $this->has_tabs() ) ? sprintf( '%s_%s_%s', $section['tab_id'], $section['section_id'], $field['id'] ) : sprintf( '%s_%s', $section['section_id'], $field['id'] );
 					}
-					
+
 					if ( isset( $saved_settings[ $setting_key ] ) ) {
 						$settings[ $settings_name ][ $setting_key ] = $saved_settings[ $setting_key ];
 					} else {
