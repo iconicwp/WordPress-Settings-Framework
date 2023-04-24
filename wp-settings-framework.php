@@ -324,6 +324,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			wp_enqueue_script( 'jquery' );
 			wp_enqueue_script( 'farbtastic' );
+			wp_enqueue_media();
 			wp_enqueue_script( 'media-upload' );
 			wp_enqueue_script( 'thickbox' );
 			wp_enqueue_script( 'jquery-ui-core' );
