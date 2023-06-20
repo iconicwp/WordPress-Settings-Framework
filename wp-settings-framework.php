@@ -578,7 +578,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			echo '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="regular-text ' . esc_attr( $args['class'] ) . '" />';
 
-			$this->generate_description( $args['desc'] );
+			$this->generate_description( $args );
 		}
 
 		/**
@@ -602,7 +602,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			echo '<input type="number" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="regular-text ' . esc_attr( $args['class'] ) . '" />';
 
-			$this->generate_description( $args['desc'] );
+			$this->generate_description( $args );
 		}
 
 		/**
@@ -617,7 +617,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			echo '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" class="timepicker regular-text ' . esc_attr( $args['class'] ) . '" data-timepicker="' . esc_attr( $timepicker ) . '" />';
 
-			$this->generate_description( $args['desc'] );
+			$this->generate_description( $args );
 		}
 
 		/**
@@ -632,7 +632,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			echo '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" class="datepicker regular-text ' . esc_attr( $args['class'] ) . '" data-datepicker="' . esc_attr( $datepicker ) . '" />';
 
-			$this->generate_description( $args['desc'] );
+			$this->generate_description( $args );
 		}
 
 		/**
@@ -649,7 +649,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			echo '<a target=_blank href="' . esc_url( $export_url ) . '" class="button" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '">' . esc_html( $args['value'] ) . '</a>';
 
 			$options = get_option( $option_group . '_settings' );
-			$this->generate_description( $args['desc'] );
+			$this->generate_description( $args );
 		}
 
 		/**
@@ -680,7 +680,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				esc_attr( $this->option_group )
 			);
 
-			$this->generate_description( $args['desc'] );
+			$this->generate_description( $args );
 		}
 
 		/**
@@ -716,7 +716,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				// @codingStandardsIgnoreEnd
 			);
 
-			$this->generate_description( $args['desc'] );
+			$this->generate_description( $args );
 		}
 
 
@@ -763,7 +763,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			echo '</ul>';
 
-			$this->generate_description( $args['desc'] );
+			$this->generate_description( $args );
 		}
 
 		/**
@@ -805,7 +805,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			}
 			echo '</ul>';
 
-			$this->generate_description( $args['desc'] );
+			$this->generate_description( $args );
 		}
 
 		/**
@@ -902,7 +902,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			echo '</select>';
 
-			$this->generate_description( $args['desc'] );
+			$this->generate_description( $args );
 		}
 
 		/**
@@ -915,7 +915,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			echo '<input type="password" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="regular-text ' . esc_attr( $args['class'] ) . '" autocomplete="' . esc_attr( $args['autocomplete'] ) . '"/>';
 
-			$this->generate_description( $args['desc'] );
+			$this->generate_description( $args );
 		}
 
 		/**
@@ -928,7 +928,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			echo '<textarea name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" rows="5" cols="60" class="' . esc_attr( $args['class'] ) . '">' . esc_html( $args['value'] ) . '</textarea>';
 
-			$this->generate_description( $args['desc'] );
+			$this->generate_description( $args );
 		}
 
 		/**
@@ -946,7 +946,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				echo sprintf( '<label><input type="radio" name="%s" id="%s" value="%s" class="%s" %s> %s</label><br />', esc_attr( $args['name'] ), esc_attr( $field_id ), esc_html( $value ), esc_attr( $args['class'] ), esc_html( $checked ), esc_html( $text ) );
 			}
 
-			$this->generate_description( $args['desc'] );
+			$this->generate_description( $args );
 		}
 
 		/**
@@ -994,7 +994,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			echo '</ul>';
 
-			$this->generate_description( $args['desc'] );
+			$this->generate_description( $args );
 		}
 
 		/**
@@ -1012,7 +1012,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			echo sprintf( '<div id="%s" style="position:absolute;top:0;left:190px;background:#fff;z-index:9999;"></div>', esc_attr( $color_picker_id ) );
 
-			$this->generate_description( $args['desc'] );
+			$this->generate_description( $args );
 
 			echo '<script type="text/javascript">
                 jQuery(document).ready(function($){
@@ -1116,7 +1116,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			wp_editor( $args['value'], $args['id'], $settings );
 
-			$this->generate_description( $args['desc'] );
+			$this->generate_description( $args );
 		}
 
 		/**
@@ -1152,7 +1152,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				)
 			);
 
-			$this->generate_description( $args['desc'] );
+			$this->generate_description( $args );
 		}
 
 		/**
@@ -1199,7 +1199,7 @@ endwhile;
 
 			echo '</div>';
 
-			$this->generate_description( $args['desc'] );
+			$this->generate_description( $args );
 		}
 
 		/**
@@ -1213,14 +1213,53 @@ endwhile;
 			return sprintf( '%s_settings[%s]', $this->option_group, $id );
 		}
 
-		/**
+/**
 		 * Generate: Description
 		 *
 		 * @param mixed $description Field description.
 		 */
-		public function generate_description( $description ) {
-			if ( $description && '' !== $description ) {
-				echo '<p class="description">' . wp_kses_post( $description ) . '</p>';
+		public function generate_description( $args ) {
+			$classes      = 'wpsf-description';
+			$description  = ( ! empty( $args['desc'] ) ) ? $args['desc'] : false;
+			$descriptions = array();
+
+			// Add the main description.
+			if ( $description ) {
+				$descriptions[] = array(
+					'classes'     => $classes,
+					'value'       => $args['value'],
+					'description' => $description,
+				);
+			}
+
+			// Output any conditional descriptions that exist.
+			if ( 'select' === $args['type'] && ! empty( $args['conditional_desc'] ) && is_array( $args['conditional_desc'] ) ) {
+
+				foreach ( $args['conditional_desc'] as $value => $conditional_description ) {
+
+					if ( $conditional_description ) {
+						// Add a class to hide descriptions for other values.
+						if ( $args['value'] !== $value ) {
+							$classes .= ' wpsf-hide-description';
+						}
+
+						$descriptions[] = array(
+							'classes'     => $classes,
+							'value'       => $value,
+							'description' => $conditional_description,
+						);
+					}
+				}
+			}
+
+			// Output all descriptions.
+			foreach ( $descriptions as $description_data ) {
+				printf(
+					'<p class="%s" data-value="%s">%s</p>',
+					esc_attr( $description_data['classes'] ),
+					esc_attr( $description_data['value'] ),
+					wp_kses_post( $description_data['description'] )
+				);
 			}
 		}
 

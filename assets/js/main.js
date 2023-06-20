@@ -36,7 +36,7 @@
 
 			wpsf.setup_timepickers();
 			wpsf.setup_datepickers();
-
+			wpsf.setup_selects();
 		},
 
 		/**
@@ -215,6 +215,18 @@
 				if ( ! $( this ).val() && datepicker.settings && datepicker.settings.altField ) {
 					$( datepicker.settings.altField ).val( '' );
 				}
+			});
+		},
+
+		/**
+		 * Set up selects
+		 */
+		setup_selects: function() {
+			// Show/Hide descriptions based on selected value.
+			$( document ).on( 'change', '.form-table select', function() {
+				var value = $(this).val();
+				$(this).siblings( '.wpsf-description' ).hide();
+				$(this).siblings( `.wpsf-description[data-value="${value}"]` ).show();
 			});
 		},
 

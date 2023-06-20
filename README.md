@@ -136,6 +136,7 @@ Valid `fields` values are:
 * `id` - Field ID
 * `title` - Field title
 * `desc` - Field description
+* `conditional_desc` - Array of conditional field value descriptions (for select)
 * `placeholder` - Field placeholder
 * `type` - Field type (text/password/textarea/select/radio/checkbox/checkboxes/color/file/editor/code_editor)
 * `default` - Default value (or selected option)
