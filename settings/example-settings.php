@@ -143,6 +143,7 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				),
 				'type'             => 'select',
 				'default'          => 'green',
+        'multiple'         => false, // Can be 'true'.
 				'choices'          => array(
 					'red'   => 'Red',
 					'green' => 'Green',
