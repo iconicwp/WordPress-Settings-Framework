@@ -252,6 +252,8 @@
 				wpsf.reindex_group( $group );
 
 				wpsf.trigger_dynamic_fields();
+				
+				$row.trigger('wpsfGroupRowAdded', [$row]);
 
 				return false;
 
