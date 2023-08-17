@@ -1339,6 +1339,10 @@ endwhile;
 			$saved_settings             = get_option( $this->option_group . '_settings' );
 			$settings[ $settings_name ] = array();
 
+			if ( ! $this->settings ) {
+				return $settings[ $settings_name ];
+			}
+			
 			foreach ( $this->settings as $section ) {
 				if ( empty( $section['fields'] ) ) {
 					continue;
