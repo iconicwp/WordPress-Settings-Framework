@@ -187,6 +187,10 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * @param array $args Settings page arguments.
 		 */
 		public function add_settings_page( $args ) {
+			if ( ! $this->settings_page ) {
+				return;
+			}
+			
 			$defaults = array(
 				'parent_slug' => false,
 				'page_slug'   => '',
