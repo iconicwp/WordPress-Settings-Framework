@@ -373,6 +373,9 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			wp_enqueue_style( 'jquery-ui-timepicker' );
 			wp_enqueue_style( 'jquery-ui-css' );
 			wp_enqueue_style( 'wpsf' );
+
+			// Dequeue global style inlined by WordPress since WP 5.9.
+			wp_dequeue_style( 'global-styles' );
 		}
 
 		/**
