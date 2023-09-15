@@ -1054,6 +1054,11 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			$args['value'] = esc_attr( $args['value'] );
 			$button_id     = sprintf( '%s_button', $args['id'] );
 
+			/**
+			 * Hook in to generate a file preview e.g. image thumbnail.
+			 */
+			do_action( 'wpsf_file_field_preview', $args['value'], $args );
+
 			echo sprintf( '<input type="text" name="%s" id="%s" value="%s" class="regular-text %s"> ', esc_attr( $args['name'] ), esc_attr( $args['id'] ), esc_html( $args['value'] ), esc_attr( $args['class'] ) );
 
 			echo sprintf( '<input type="button" class="button wpsf-browse" id="%s" value="%s" />', esc_attr( $button_id ), esc_html__( 'Browse', 'wpsf' ) );
