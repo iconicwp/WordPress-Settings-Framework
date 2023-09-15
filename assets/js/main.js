@@ -690,4 +690,7 @@
 
 	$( document ).ready( wpsf.on_ready );
 
+	// Expose WPSF methods for use elsewhere.
+	window.wpsf = wpsf;
+
 }( jQuery, document ));
