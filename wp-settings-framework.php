@@ -78,6 +78,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			'class'        => '',
 			'subfields'    => array(),
 			'autocomplete' => '',
+			'attributes'   => array(),
 		);
 
 		/**
@@ -583,7 +584,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		public function generate_text_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
 
-			echo '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="regular-text ' . esc_attr( $args['class'] ) . '" />';
+			echo '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="regular-text ' . esc_attr( $args['class'] ) . '" ' . $this->array_to_html_atts( $args['attributes'] ) . '/>';
 
 			$this->generate_description( $args );
 		}
@@ -596,7 +597,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		public function generate_hidden_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
 
-			echo '<input type="hidden" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '"  class="hidden-field ' . esc_attr( $args['class'] ) . '" />';
+			echo '<input type="hidden" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '"  class="hidden-field ' . esc_attr( $args['class'] ) . '" ' . $this->array_to_html_atts( $args['attributes'] ) . '/>';
 		}
 
 		/**
@@ -607,7 +608,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		public function generate_number_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
 
-			echo '<input type="number" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="regular-text ' . esc_attr( $args['class'] ) . '" />';
+			echo '<input type="number" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="regular-text ' . esc_attr( $args['class'] ) . '" ' . $this->array_to_html_atts( $args['attributes'] ) . '/>';
 
 			$this->generate_description( $args );
 		}
@@ -622,7 +623,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			$timepicker = ( ! empty( $args['timepicker'] ) ) ? htmlentities( wp_json_encode( $args['timepicker'] ) ) : null;
 
-			echo '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" class="timepicker regular-text ' . esc_attr( $args['class'] ) . '" data-timepicker="' . esc_attr( $timepicker ) . '" />';
+			echo '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" class="timepicker regular-text ' . esc_attr( $args['class'] ) . '" data-timepicker="' . esc_attr( $timepicker ) . '" ' . $this->array_to_html_atts( $args['attributes'] ) . '/>';
 
 			$this->generate_description( $args );
 		}
@@ -637,7 +638,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			$datepicker = ( ! empty( $args['datepicker'] ) ) ? htmlentities( wp_json_encode( $args['datepicker'] ) ) : null;
 
-			echo '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" class="datepicker regular-text ' . esc_attr( $args['class'] ) . '" data-datepicker="' . esc_attr( $datepicker ) . '" />';
+			echo '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" class="datepicker regular-text ' . esc_attr( $args['class'] ) . '" data-datepicker="' . esc_attr( $datepicker ) . '" ' . $this->array_to_html_atts( $args['attributes'] ) . '/>';
 
 			$this->generate_description( $args );
 		}
@@ -890,7 +891,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			$values = (array) $args['value'];
 			$values = array_map( 'strval', $values );
 
-			echo '<select ' . esc_html( $multiple ) . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" class="' . esc_attr( $args['class'] ) . '" >';
+			echo '<select ' . esc_html( $multiple ) . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" class="' . esc_attr( $args['class'] ) . '" ' . $this->array_to_html_atts( $args['attributes'] ) . '/>';
 
 			foreach ( $args['choices'] as $value => $text ) {
 				if ( is_array( $text ) ) {
@@ -920,7 +921,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		public function generate_password_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
 
-			echo '<input type="password" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="regular-text ' . esc_attr( $args['class'] ) . '" autocomplete="' . esc_attr( $args['autocomplete'] ) . '"/>';
+			echo '<input type="password" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="regular-text ' . esc_attr( $args['class'] ) . '" autocomplete="' . esc_attr( $args['autocomplete'] ) . '" ' . $this->array_to_html_atts( $args['attributes'] ) . '/>';
 
 			$this->generate_description( $args );
 		}
@@ -933,7 +934,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		public function generate_textarea_field( $args ) {
 			$args['value'] = esc_html( esc_attr( $args['value'] ) );
 
-			echo '<textarea name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" rows="5" cols="60" class="' . esc_attr( $args['class'] ) . '">' . esc_html( $args['value'] ) . '</textarea>';
+			echo '<textarea name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" rows="5" cols="60" class="' . esc_attr( $args['class'] ) . '" ' . $this->array_to_html_atts( $args['attributes'] ) . '/>' . esc_html( $args['value'] ) . '</textarea>';
 
 			$this->generate_description( $args );
 		}
@@ -1619,6 +1620,27 @@ endwhile;
 			update_option( $option_group . '_settings', $settings_data );
 
 			wp_send_json_success();
+		}
+
+		/**
+		 * Helper: Array to HTML Attributes
+		 */
+		public static function array_to_html_atts( $array = array() ) {
+			if ( ! is_array( $array ) || empty( $array ) ) {
+				return false;
+			}
+
+			$return = '';
+
+			foreach ( $array as $key => $value ) {
+				if ( '' === $value ) {
+					continue;
+				}
+
+				$return .= sprintf( '%s="%s" ', $key, esc_attr( $value ) );
+			}
+
+			return $return;
 		}
 	}
 }
