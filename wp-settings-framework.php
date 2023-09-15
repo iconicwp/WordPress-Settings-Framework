@@ -79,6 +79,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			'subfields'    => array(),
 			'autocomplete' => '',
 			'attributes'   => array(),
+			'custom_args'  => array(),
 		);
 
 		/**
@@ -1237,6 +1238,7 @@ endwhile;
 			if ( $description ) {
 				$descriptions[] = array(
 					'classes'     => $classes,
+					// Serialize group field data to prevent errors.
 					'value'       => ( is_array( $args['value'] ) ) ? serialize( $args['value'] ) : $args['value'],
 					'description' => $description,
 				);
