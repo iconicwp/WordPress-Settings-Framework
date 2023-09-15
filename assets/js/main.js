@@ -326,7 +326,7 @@
 					$( this ).addClass( 'alternate' );
 				}
 
-				$( this ).find( "input" ).each( function() {
+				$( this ).find( 'input, select' ).each( function() {
 					var this_input = this,
 						name = jQuery( this ).attr( 'name' );
 
