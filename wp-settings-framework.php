@@ -702,7 +702,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			$value     = (array) $args['value'];
 			$row_count = ( ! empty( $value ) ) ? count( $value ) : 1;
 
-			echo '<table class="widefat wpsf-group" cellspacing="0">';
+			echo '<table id="group-' . esc_attr( str_replace( '_', '-', $args['id'] ) ) . '" class="' . esc_attr( $args['class'] ) . ' widefat wpsf-group" cellspacing="0">';
 
 			echo '<tbody>';
 
