@@ -716,6 +716,8 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 			echo '</table>';
 
+			$this->generate_description( $args );
+
 			printf(
 				'<script type="text/html" id="%s_template">%s</script>',
 				esc_attr( $args['id'] ),
@@ -1235,7 +1237,7 @@ endwhile;
 			if ( $description ) {
 				$descriptions[] = array(
 					'classes'     => $classes,
-					'value'       => $args['value'],
+					'value'       => ( is_array( $args['value'] ) ) ? serialize( $args['value'] ) : $args['value'],
 					'description' => $description,
 				);
 			}
