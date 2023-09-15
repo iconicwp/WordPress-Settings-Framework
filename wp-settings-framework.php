@@ -936,8 +936,10 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 */
 		public function generate_textarea_field( $args ) {
 			$args['value'] = esc_html( esc_attr( $args['value'] ) );
+			$rows = ( ! empty( $args['attributes']['rows'] ) ) ? absint( $args['attributes']['rows'] ) : 5;
+			$cols = ( ! empty( $args['attributes']['cols'] ) ) ? absint( $args['attributes']['cols'] ) : 60;
 
-			echo '<textarea name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" rows="5" cols="60" class="' . esc_attr( $args['class'] ) . '" ' . $this->array_to_html_atts( $args['attributes'] ) . '/>' . esc_html( $args['value'] ) . '</textarea>';
+			echo '<textarea name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" rows="' . esc_attr( $rows ) . '" cols="' . esc_attr( $cols ) . '" class="' . esc_attr( $args['class'] ) . '" ' . $this->array_to_html_atts( $args['attributes'] ) . '/>' . esc_html( $args['value'] ) . '</textarea>';
 
 			$this->generate_description( $args );
 		}
