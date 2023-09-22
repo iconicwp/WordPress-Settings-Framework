@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <ruleset name="WooCommerce Coding Standards">
     <description>Generally-applicable sniffs for WooCommerce plugins</description>
+    
+    <!-- Files -->
+    <file>.</file>
 
     <!-- Configs -->
     <config name="minimum_supported_wp_version" value="4.7"/>
