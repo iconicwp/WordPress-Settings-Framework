@@ -36,6 +36,7 @@
 
 			wpsf.setup_timepickers();
 			wpsf.setup_datepickers();
+			wpsf.setup_selects();
 			wpsf.setup_datetimepickers();
 
 		},
@@ -233,6 +234,18 @@
 		},
 
 		/**
+		 * Set up selects
+		 */
+		setup_selects: function() {
+			// Show/Hide descriptions based on selected value.
+			$( document ).on( 'change', '.form-table select', function() {
+				var value = $(this).val();
+				$(this).siblings( '.wpsf-description' ).hide();
+				$(this).siblings( `.wpsf-description[data-value="${value}"]` ).show();
+			});
+		},
+
+		/**
 		 * Setup repeatable groups
 		 */
 		setup_groups: function() {
@@ -254,6 +267,8 @@
 				wpsf.reindex_group( $group );
 
 				wpsf.trigger_dynamic_fields();
+
+				$row.trigger('wpsfGroupRowAdded', [$row]);
 
 				return false;
 
@@ -326,7 +341,7 @@
 					$( this ).addClass( 'alternate' );
 				}
 
-				$( this ).find( "input" ).each( function() {
+				$( this ).find( 'input, select' ).each( function() {
 					var this_input = this,
 						name = jQuery( this ).attr( 'name' );
 
@@ -689,5 +704,8 @@
 	};
 
 	$( document ).ready( wpsf.on_ready );
+
+	// Expose WPSF methods for use elsewhere.
+	window.wpsf = wpsf;
 
 }( jQuery, document ));

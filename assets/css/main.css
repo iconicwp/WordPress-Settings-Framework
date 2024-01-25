@@ -173,7 +173,7 @@
 	margin: 0 0 15px;
 }
 
-.wpsf-notices h2 + .notice {
+.wpsf-notices h2+.notice {
 	margin-top: 20px;
 }
 
@@ -429,7 +429,7 @@ p.submit {
 	margin-top: -3px;
 }
 
-.wpsf-section label.switch input { 
+.wpsf-section label.switch input {
 	opacity: 0;
 	width: 0;
 	height: 0;
@@ -461,11 +461,11 @@ p.submit {
 	transition: .2s;
 }
 
-.wpsf-section label.switch input:checked + .slider {
+.wpsf-section label.switch input:checked+.slider {
 	background-color: #2196F3;
 }
 
-.wpsf-section label.switch input:checked + .slider:before {
+.wpsf-section label.switch input:checked+.slider:before {
 	-webkit-transform: translateX(26px);
 	-ms-transform: translateX(26px);
 	transform: translateX(26px);
@@ -474,6 +474,7 @@ p.submit {
 /* $. End Toggle */
 
 @media screen and (max-width: 782px) {
+
 	.wpsf-section input[type="checkbox"],
 	.wpsf-section input[type="radio"] {
 		vertical-align: middle;
@@ -535,13 +536,23 @@ p.submit {
 
 /* $. Subtitle */
 
-.wpsf-subtitle {
+.wpsf-subtitle,
+.wpsf-description {
 	font-weight: 400;
 	display: block;
-	font-size: 12px;
+	font-size: 12px !important;
 	color: #888;
 	font-style: italic;
 	margin: 15px 0 0;
+}
+
+.wpsf-description {
+	max-width: 380px;
+	margin-top: 15px !important;
+}
+
+.wpsf-hide-description {
+	display: none;
 }
 
 /* $. Import */
@@ -553,14 +564,14 @@ p.submit {
 }
 
 .wpsf-import input[type=file] {
-    display: none;
+	display: none;
 }
 
 .wpsf-import__file {
-    position: relative;
-    display: inline-block;
-    width: 200px;
-    overflow: hidden;
+	position: relative;
+	display: inline-block;
+	width: 200px;
+	overflow: hidden;
 }
 
 
@@ -586,12 +597,12 @@ p.submit {
 		padding: 10px;
 	}
 
-	.wpsf-section .form-table > tbody > tr > td {
+	.wpsf-section .form-table>tbody>tr>td {
 		padding-left: 0;
 		padding-right: 0;
 	}
 
-	.wpsf-section .form-table > tbody > tr > td:last-child {
+	.wpsf-section .form-table>tbody>tr>td:last-child {
 		padding-bottom: 20px;
 	}
 }
@@ -651,8 +662,8 @@ ul.wpsf-visual-field--image-radio img {
 
 .wpsf-visual-field__item label {
 	display: block;
-    border-radius: 4px;
-    cursor: pointer;
+	border-radius: 4px;
+	cursor: pointer;
 	user-select: none;
 }
 
@@ -671,17 +682,17 @@ ul.wpsf-visual-field--image-radio img {
 }
 
 .wpsf-visual-field-image-radio__img_wrap {
-    height: 135px;
-    display: flex;
+	height: 135px;
+	display: flex;
 	border-bottom: 1px solid #c9c9cd;
 }
 
 .wpsf-visual-field__item-text {
-    color: #1d2327;
+	color: #1d2327;
 	font-weight: bold;
 	display: inline;
 }
 
 .wpsf-visual-field__item-footer {
-    padding: 12px 19px;
+	padding: 12px 19px;
 }
