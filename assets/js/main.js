@@ -233,18 +233,6 @@
 		},
 
 		/**
-		 * Set up datetimepickers
-		 */
-		setup_datetimepickers: function() {
-
-			$( '.datetimepicker' ).each( function() {
-				var datetimepicker_args = $( this ).data( 'datetimepicker' );
-				flatpickr(this, datetimepicker_args);
-			} );
-
-		},
-
-		/**
 		 * Set up selects
 		 */
 		setup_selects: function() {
