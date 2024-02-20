@@ -1416,9 +1416,25 @@ endwhile;
 				}
 				?>
 				">
+				<?php
+				/**
+				 * Hook: execute callback before the tab content for a given tab.
+				 *
+				 * @hook wpsf_before_tab_content_<option_group>_<tab_id>
+				 */
+				do_action( 'wpsf_before_tab_content_' . sprintf( '%s_%s', $this->option_group, $tab_data['id'] ) );
+				?>
 					<div class="postbox">
 						<?php do_settings_sections( sprintf( '%s_%s', $this->option_group, $tab_data['id'] ) ); ?>
 					</div>
+				<?php
+				/**
+				 * Hook: execute callback after the tab content for a given tab.
+				 *
+				 * @hook wpsf_after_tab_content_<option_group>_<tab_id>
+				 */
+				do_action( 'wpsf_after_tab_content_' . sprintf( '%s_%s', $this->option_group, $tab_data['id'] ) );
+				?>	
 				</div>
 				<?php
 				$i ++;
