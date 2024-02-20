@@ -192,6 +192,8 @@ Actions & Filters
 * `wpsf_do_settings_sections_[option_group]` - Settings form fields HTMLoutput (inside the `<form>`)
 * `wpsf_before_tab_links_[option_group]` - Before tabs HTML is output
 * `wpsf_after_tab_links_[option_group]` - After tabs HTML is output
+* `wpsf_before_tab_content_[option_group]_[tab_id]` - Before the tab content is output (inside the tab)
+* `wpsf_after_tab_content_[option_group]_[tab_id]` - After the tab content in output (inside the tab)
 
 Credits
 -------
