@@ -161,6 +161,9 @@
 				$( '.wpsf-tab' ).removeClass( 'wpsf-tab--active' );
 				$tab.addClass( 'wpsf-tab--active' );
 
+				// Refresh codemirror editors
+				$('.CodeMirror').each(function () { this.CodeMirror.refresh() });
+
 				wpsf.tabs.set_tab_id( tab_id );
 			},
 
