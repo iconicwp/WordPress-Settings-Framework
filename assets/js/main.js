@@ -630,7 +630,7 @@
 						return;
 					}
 
-					if ( ! confirm( 'Are you sure you want to overrid existing setting?' ) ) {
+					if ( ! confirm( 'Are you sure you want to override existing setting?' ) ) {
 						return;
 					}
 
