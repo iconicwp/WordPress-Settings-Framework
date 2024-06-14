@@ -319,6 +319,15 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 				true
 			);
 
+			$flatpickr_js_path = 'assets/vendor/flatpickr/flatpickr.min.js';
+			wp_register_script(
+				'flatpickr-datetimepicker',
+				$this->options_url . $flatpickr_js_path,
+				array(),
+				filemtime( $this->options_path . $jqtimepicker_js_path ),
+				true
+			);
+
 			$wpsf_js_path = 'assets/js/main.js';
 			wp_register_script(
 				'wpsf',
@@ -336,6 +345,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			wp_enqueue_script( 'jquery-ui-core' );
 			wp_enqueue_script( 'jquery-ui-datepicker' );
 			wp_enqueue_script( 'jquery-ui-timepicker' );
+			wp_enqueue_script( 'flatpickr-datetimepicker' );
 			wp_enqueue_script( 'wpsf' );
 
 			$data = array(
@@ -346,6 +356,14 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			wp_localize_script( 'wpsf', 'wpsf_vars', $data );
 
 			// Styles.
+			$flatpickr_css_path = 'assets/vendor/flatpickr/flatpickr.min.css';
+			wp_register_style(
+				'flatpickr-datetimepicker',
+				$this->options_url . $flatpickr_css_path,
+				array(),
+				filemtime( $this->options_path . $flatpickr_css_path )
+			);
+
 			$jqtimepicker_css_path = 'assets/vendor/jquery-timepicker/jquery.ui.timepicker.css';
 			wp_register_style(
 				'jquery-ui-timepicker',
@@ -374,6 +392,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			wp_enqueue_style( 'thickbox' );
 			wp_enqueue_style( 'jquery-ui-timepicker' );
 			wp_enqueue_style( 'jquery-ui-css' );
+			wp_enqueue_style( 'flatpickr-datetimepicker' );
 			wp_enqueue_style( 'wpsf' );
 
 			// Dequeue global style inlined by WordPress since WP 5.9.
@@ -645,6 +664,21 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		}
 
 		/**
+		 * Generate: DateTime field
+		 *
+		 * @param array $args Field arguments.
+		 */
+		public function generate_datetime_field( $args ) {
+			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
+
+			$datetimepicker = ( ! empty( $args['datetimepicker'] ) ) ? htmlentities( wp_json_encode( $args['datetimepicker'] ) ) : null;
+
+			echo '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $args['value'] ) . '" class="datetimepicker regular-text ' . esc_attr( $args['class'] ) . '" data-datetimepicker="' . esc_attr( $datetimepicker ) . '" />';
+
+			$this->generate_description( $args['desc'] );
+		}
+
+		/**
 		 * Generate Export Field.
 		 *
 		 * @param array $args Field arguments.
@@ -829,7 +863,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 * @return string|bool
 		 */
 		public function generate_group_row_template( $args, $blank = false, $row = 0 ) {
-			$row_template = false;
+			$row_template = '';
 			$row_id       = ( ! empty( $args['value'][ $row ]['row_id'] ) ) ? $args['value'][ $row ]['row_id'] : $row;
 			$row_id_value = ( $blank ) ? '' : $row_id;
 
@@ -1380,7 +1414,7 @@ endwhile;
 					} else {
 						$setting_key = ( $this->has_tabs() ) ? sprintf( '%s_%s_%s', $section['tab_id'], $section['section_id'], $field['id'] ) : sprintf( '%s_%s', $section['section_id'], $field['id'] );
 					}
-					
+
 					if ( isset( $saved_settings[ $setting_key ] ) ) {
 						$settings[ $settings_name ][ $setting_key ] = $saved_settings[ $setting_key ];
 					} else {

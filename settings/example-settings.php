@@ -54,7 +54,7 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				'title'      => 'Time Picker',
 				'desc'       => 'This is a description.',
 				'type'       => 'time',
-				'timepicker' => array(), // Array of timepicker options (http://fgelinas.com/code/timepicker).
+				'timepicker' => array(), // Array of timepicker options (https://web.archive.org/web/20220122113558/https://fgelinas.com/code/timepicker/).
 			),
 			array(
 				'id'         => 'date',
@@ -62,6 +62,15 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				'desc'       => 'This is a description.',
 				'type'       => 'date',
 				'datepicker' => array(), // Array of datepicker options (http://api.jqueryui.com/datepicker/).
+			),
+			array(
+				'id'             => 'datetime',
+				'title'          => 'DateTime Picker',
+				'desc'           => 'This is a description.',
+				'type'           => 'datetime',
+				'datetimepicker' => array(
+					'enableTime' => true,
+				), // Array of datetimepicker options (https://flatpickr.js.org/).
 			),
 			array(
 				'id'      => 'image_radio',

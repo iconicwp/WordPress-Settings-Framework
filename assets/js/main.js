@@ -37,6 +37,8 @@
 			wpsf.setup_timepickers();
 			wpsf.setup_datepickers();
 			wpsf.setup_selects();
+			wpsf.setup_datetimepickers();
+
 		},
 
 		/**
@@ -219,6 +221,18 @@
 		},
 
 		/**
+		 * Set up datetimepickers
+		 */
+		setup_datetimepickers: function() {
+
+			$( '.datetimepicker' ).each( function() {
+				var datetimepicker_args = $( this ).data( 'datetimepicker' );
+				flatpickr(this, datetimepicker_args);
+			} );
+
+		},
+
+		/**
 		 * Set up selects
 		 */
 		setup_selects: function() {
@@ -252,7 +266,7 @@
 				wpsf.reindex_group( $group );
 
 				wpsf.trigger_dynamic_fields();
-				
+
 				$row.trigger('wpsfGroupRowAdded', [$row]);
 
 				return false;
