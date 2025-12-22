@@ -985,7 +985,12 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			$checked       = ( $args['value'] ) ? 'checked="checked"' : '';
 
 			echo '<input type="hidden" name="' . esc_attr( $args['name'] ) . '" value="0" />';
-			echo '<label class="switch"><input type="checkbox" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" class="' . esc_attr( $args['class'] ) . '" ' . esc_html( $checked ) . '> ' . esc_html( $args['desc'] ) . '<span class="slider"></span></label>';
+			echo '<label class="switch">
+					<input type="checkbox" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" class="' . esc_attr( $args['class'] ) . 
+					'" ' . esc_html( $checked ) . '> ' .
+					'<span class="slider"></span>
+				</label>';
+			echo '<span class="wpsf-description wpsf-toggle-field-description">' . esc_html( $args['desc'] ) . '</span>';
 		}
 
 		/**
