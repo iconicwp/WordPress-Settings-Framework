@@ -1300,7 +1300,7 @@ endwhile;
 			 */
 			do_action( 'wpsf_before_settings_' . $this->option_group );
 			?>
-			<form action="options.php" method="post" novalidate enctype="multipart/form-data">
+			<form id="wpsf-form" action="options.php" method="post" novalidate enctype="multipart/form-data">
 				<?php
 				/**
 				 * Hook: execute callback before the settings fields for a given group.
@@ -1476,7 +1476,7 @@ endwhile;
 				}
 				?>
 				<li class="wpsf-nav__item wpsf-nav__item--last">
-					<input type="submit" class="button-primary wpsf-button-submit" value="<?php esc_attr_e( 'Save Changes' ); ?>">
+					<input form="wpsf-form" type="submit" class="button-primary wpsf-button-submit" value="<?php esc_attr_e( 'Save Changes' ); ?>">
 				</li>
 			</ul>
 
