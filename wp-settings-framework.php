@@ -982,7 +982,6 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 */
 		public function generate_toggle_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
-			// $checked       = ( $args['value'] ) ? 'checked="checked"' : '';
 
 			echo '<input type="hidden" name="' . esc_attr( $args['name'] ) . '" value="0" />';
 			echo '<label class="switch">
