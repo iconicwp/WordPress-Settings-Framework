@@ -346,8 +346,8 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				'title'   => 'Will show Additional Settings Group if toggled',
 				'flux-checkout',
 				'type'    => 'toggle',
-				'desc'    => 'This is a description of a toggle field.',
-				'default' => false,
+				'desc'    => 'This is a description of the toggle field.',
+				'default' => true,
 			),
 		),
 	);

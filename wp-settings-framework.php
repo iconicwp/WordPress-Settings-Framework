@@ -982,12 +982,12 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 		 */
 		public function generate_toggle_field( $args ) {
 			$args['value'] = esc_attr( stripslashes( $args['value'] ) );
-			$checked       = ( $args['value'] ) ? 'checked="checked"' : '';
+			// $checked       = ( $args['value'] ) ? 'checked="checked"' : '';
 
 			echo '<input type="hidden" name="' . esc_attr( $args['name'] ) . '" value="0" />';
 			echo '<label class="switch">
 					<input type="checkbox" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" class="' . esc_attr( $args['class'] ) . 
-					'" ' . esc_html( $checked ) . '> ' .
+					'" ' . checked( true, (bool) $args['value'], false ) . '> ' .
 					'<span class="slider"></span>
 				</label>';
 			echo '<span class="wpsf-description wpsf-toggle-field-description">' . esc_html( $args['desc'] ) . '</span>';
