@@ -221,14 +221,38 @@
 		/**
 		 * Set up selects
 		 */
-		setup_selects: function() {
-			// Show/Hide descriptions based on selected value.
-			$( document ).on( 'change', '.form-table select', function() {
-				var value = $(this).val();
-				$(this).siblings( '.wpsf-description' ).hide();
-				$(this).siblings( `.wpsf-description[data-value="${value}"]` ).show();
-			});
-		},
+
+setup_selects: function() {
+    $( document ).on( 'change', '.form-table select', function() {
+        var value = $(this).val() ?? '';
+        var $allDescriptions = $(this).siblings( '.wpsf-description' );
+        
+        // Only processing this, if there are multiple descriptions
+        // (which indicates conditional_desc is being used)
+        if ($allDescriptions.length <= 1) {
+            // Only one description = just the main desc, don't touch it!
+            return;
+        }
+        
+        // Multiple descriptions exist, so manage visibility
+        var $valueDescriptions = $allDescriptions.filter( '[data-value]' );
+        var $defaultDescription = $allDescriptions.not('[data-value]');
+
+        if ( $valueDescriptions.length > 0 ) {
+            // Hide only the conditional descriptions, NOT the default one
+            $valueDescriptions.hide();
+            
+            var $target = $valueDescriptions.filter( '[data-value="' + value + '"]' );
+            
+            if ( $target.length > 0 ) {
+                $target.show();
+            }
+            
+            // Always keep the default description visible
+            $defaultDescription.show();
+        }
+    });
+},
 
 		/**
 		 * Setup repeatable groups
