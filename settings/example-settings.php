@@ -286,6 +286,17 @@ function wpsf_tabless_settings( $wpsf_settings ) {
 				'default'  => 'text',
 			),
 			array(
+					'id'          => 'choice_bug_text',
+					'type'        => 'select',
+					'title'       => 'test bug',
+					'desc'        => 'sample description',
+					'default'     => 'mask',
+					'choices'     => array(
+						'option1'  => 'Option One',
+						'option2'  => 'Option Two',
+					),
+			),
+			array(
 				'id'       => 'show-if-option-1',
 				'title'    => 'Show if Option 1',
 				'subtitle' => 'Will show if Option 1 is set.',
