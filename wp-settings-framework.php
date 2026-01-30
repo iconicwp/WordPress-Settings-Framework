@@ -417,6 +417,7 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 						if ( isset( $section['section_description'] ) && $section['section_description'] ) {
 							echo '<div class="wpsf-section-description wpsf-section-description--' . esc_attr( $section['section_id'] ) . '">' . wp_kses_post( $section['section_description'] ) . '</div>';
 						}
+						do_action( 'wpsf_after_section_intro_' . $section['section_id'] );
 						break;
 					}
 				}
