@@ -1,5 +1,10 @@
 {
     "name": "iconicwp/wordpress-settings-framework",
+    "description": "A WordPress settings framework to speed up development.",
+    "require": {
+        "php": ">=7.4.0"
+    },
+    "license": "GPL-2.0-or-later",
     "authors": [
         {
             "name": "Iconic",
@@ -8,5 +13,13 @@
     ],
     "require-dev": {
         "woocommerce/woocommerce-sniffs": "^0.1.0"
+    },
+    "scripts": {
+        "format": "vendor/bin/phpcbf -p"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }
