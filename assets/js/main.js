@@ -37,6 +37,7 @@
 			wpsf.setup_timepickers();
 			wpsf.setup_datepickers();
 			wpsf.setup_selects();
+			wpsf.setup_select2();
 		},
 
 		/**
@@ -228,6 +229,65 @@
 				$(this).siblings( '.wpsf-description' ).hide();
 				$(this).siblings( `.wpsf-description[data-value="${value}"]` ).show();
 			});
+		},
+
+		/**
+		 * Set up select2 fields
+		 */
+		setup_select2: function() {
+			if ( typeof $.fn.select2 !== 'undefined' ) {
+				$( '.wpsf-select2' ).each( function() {
+					var $this = $( this ),
+					    params = {};
+
+					var isAjax = $this.data( 'ajax' );
+					
+					if ( isAjax ) {
+						var action = $this.data( 'ajax-action' );
+						var minLength = $this.data( 'minimum-input-length' ) || 3;
+
+						params = {
+							minimumInputLength: minLength,
+							ajax: {
+								url: ( typeof ajaxurl !== 'undefined' ? ajaxurl : '/wp-admin/admin-ajax.php' ),
+								dataType: 'json',
+								delay: 250,
+								data: function ( search_params ) {
+									return {
+										q: search_params.term,
+										action: action
+									};
+								},
+								processResults: function ( data ) {
+									var options = [];
+									if ( data ) {
+										$.each( data, function( index, text ) {
+											if ( Array.isArray(text) && text.length >= 2 ) {
+												options.push( { id: text[0], text: text[1] } );
+											} else if ( text.id && text.text ) {
+												options.push( text );
+											} else {
+												options.push( { id: index, text: text } );
+											}
+										});
+									}
+									return {
+										results: options
+									};
+								},
+								cache: true
+							}
+						};
+					}
+
+					var placeholder = $this.data( 'placeholder' );
+					if ( placeholder ) {
+						params.placeholder = placeholder;
+					}
+
+					$this.select2( params );
+				} );
+			}
 		},
 
 		/**

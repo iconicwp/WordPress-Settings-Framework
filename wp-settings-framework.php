@@ -338,6 +338,9 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 			wp_enqueue_script( 'jquery-ui-timepicker' );
 			wp_enqueue_script( 'wpsf' );
 
+			wp_enqueue_style( 'select2', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css', array(), '4.1.0-rc.0' );
+			wp_enqueue_script( 'select2', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', array( 'jquery' ), '4.1.0-rc.0', true );
+
 			$data = array(
 				'select_file'          => esc_html__( 'Please select a file to import', 'wpsf' ),
 				'invalid_file'         => esc_html__( 'Invalid file', 'wpsf' ),
@@ -909,6 +912,66 @@ if ( ! class_exists( 'WordPressSettingsFramework' ) ) {
 
 				$selected = in_array( (string) $value, $values, true ) ? ' selected="selected" ' : '';
 				echo sprintf( '<option value="%s" %s>%s</option>', esc_attr( $value ), esc_html( $selected ), esc_html( $text ) );
+			}
+
+			echo '</select>';
+
+			$this->generate_description( $args );
+		}
+
+		/**
+		 * Generate: Select2 field
+		 *
+		 * @param array $args Field arguments.
+		 */
+		public function generate_select2_field( $args ) {
+			$is_multiple = isset( $args['multiple'] ) && filter_var( $args['multiple'], FILTER_VALIDATE_BOOLEAN );
+			$multiple    = $is_multiple ? ' multiple="true" ' : ' ';
+
+			if ( $is_multiple ) {
+				$args['name'] .= '[]';
+			}
+
+			$args['class'] .= ' wpsf-select2';
+
+			$values = (array) $args['value'];
+			$values = array_map( 'strval', $values );
+
+			$is_ajax = isset( $args['ajax'] ) && filter_var( $args['ajax'], FILTER_VALIDATE_BOOLEAN );
+
+			if ( $is_ajax ) {
+				$args['attributes']['data-ajax']                 = 'true';
+				$args['attributes']['data-ajax-action']          = isset( $args['ajax_action'] ) ? esc_attr( $args['ajax_action'] ) : '';
+				$args['attributes']['data-minimum-input-length'] = isset( $args['minimum_input_length'] ) ? absint( $args['minimum_input_length'] ) : 3;
+			}
+			
+			if ( ! empty( $args['placeholder'] ) ) {
+				$args['attributes']['data-placeholder'] = esc_attr( $args['placeholder'] );
+			}
+
+			echo '<select ' . esc_html( $multiple ) . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" class="' . esc_attr( $args['class'] ) . '" ' . $this->array_to_html_atts( $args['attributes'] ) . ' style="width: 100%; max-width: 25em;">';
+
+			if ( ! empty( $args['choices'] ) && is_array( $args['choices'] ) ) {
+				foreach ( $args['choices'] as $value => $text ) {
+					if ( is_array( $text ) ) {
+						echo sprintf( '<optgroup label="%s">', esc_html( $value ) );
+						foreach ( $text as $group_value => $group_text ) {
+							$selected = in_array( (string) $group_value, $values, true ) ? ' selected="selected" ' : '';
+							echo sprintf( '<option value="%s" %s>%s</option>', esc_attr( $group_value ), esc_html( $selected ), esc_html( $group_text ) );
+						}
+						echo '</optgroup>';
+						continue;
+					}
+
+					$selected = in_array( (string) $value, $values, true ) ? ' selected="selected" ' : '';
+					echo sprintf( '<option value="%s" %s>%s</option>', esc_attr( $value ), esc_html( $selected ), esc_html( $text ) );
+				}
+			} elseif ( $is_ajax ) {
+				foreach ( $values as $val ) {
+					if ( ! empty( $val ) ) {
+						echo sprintf( '<option value="%s" selected="selected">%s</option>', esc_attr( $val ), esc_html( $val ) );
+					}
+				}
 			}
 
 			echo '</select>';
