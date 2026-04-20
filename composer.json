@@ -1,9 +1,9 @@
 {
-    "name": "iconicwp/wordpress-settings-framework",
+    "name": "ideawp/wordpress-settings-framework",
     "authors": [
         {
-            "name": "Iconic",
-            "email": "support@iconicwp.com"
+            "name": "IdeaWP",
+            "email": "support@ideawp.com"
         }
     ],
     "require-dev": {
